@@ -69,4 +69,32 @@ class Fixed extends CI_Controller
 		// Load the views with the data
 		$this->load->view('fixed/articles', $data);
 	}
+
+
+	// Report.php Controller
+	public function like()
+	{
+		$id = $this->input->post('id');
+		// Increment like count in database
+		$this->db->set('likes', 'likes + 1', FALSE);
+		$this->db->where('id', $id);
+		$this->db->update('reports');
+
+		// Return the updated like count
+		$like_count = $this->db->select('likes')->where('id', $id)->get('reports')->row()->likes;
+		echo json_encode(['likes' => $like_count]);
+	}
+
+	public function unlike()
+	{
+		$id = $this->input->post('id');
+		// Increment unlike count in database
+		$this->db->set('unlikes', 'unlikes + 1', FALSE);
+		$this->db->where('id', $id);
+		$this->db->update('reports');
+
+		// Return the updated unlike count
+		$unlike_count = $this->db->select('unlikes')->where('id', $id)->get('reports')->row()->unlikes;
+		echo json_encode(['unlikes' => $unlike_count]);
+	}
 }

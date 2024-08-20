@@ -17,7 +17,11 @@
 
     <!-- jQuery and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 
 
     <style>
@@ -389,6 +393,39 @@
             padding: 0 5px;
             /* Add some spacing */
         }
+
+        .toast-light {
+            background-color: #ffffff;
+            /* White background */
+            color: #000000;
+            /* Black text color */
+            border: 1px solid #dddddd;
+            /* Light grey border */
+        }
+
+        .toast-light .toast-title {
+            color: #000000;
+            /* Black title text color */
+        }
+
+        .toast-light .toast-message {
+            color: #666666;
+            /* Dark grey message text color */
+        }
+
+        .toast-light .toast-success {
+            background-color: #e8f5e9;
+            /* Light green background for success */
+            color: #2e7d32;
+            /* Dark green text color */
+        }
+
+        .toast-light .toast-error {
+            background-color: #fbe9e7;
+            /* Light red background for error */
+            color: #c62828;
+            /* Dark red text color */
+        }
     </style>
 </head>
 
@@ -471,8 +508,25 @@
     <div class="page-content page-2">
         <div class="comment-section">
             <div class="reaction-icons">
-                <button class="btn btn-sm btn-light mr-3"><i class="fa-regular fa-thumbs-up"></i></i></button>
-                <button class="btn btn-sm btn-light mr-3"><i class="fa-regular fa-thumbs-down"></i></i></button>
+                <button class="btn btn-sm btn-light mr-3 position-relative" id="btn-like" data-id="<?= $viewreports['id'] ?>">
+                    <i class="fa-regular fa-thumbs-up"></i>
+                    <?php if ($viewreports['likes'] > 0): ?>
+                        <span class="badge badge-pill badge-danger" style="position: absolute; top: -10px; right: -10px;" id="like-badge-<?= $viewreports['id'] ?>">
+                            <?= $viewreports['likes'] ?>
+                        </span>
+                    <?php endif; ?>
+                </button>
+
+                <button class="btn btn-sm btn-light mr-3 position-relative" id="btn-unlike" data-id="<?= $viewreports['id'] ?>">
+                    <i class="fa-regular fa-thumbs-down"></i>
+                    <?php if ($viewreports['unlikes'] > 0): ?>
+                        <span class="badge badge-pill badge-danger" style="position: absolute; top: -10px; right: -10px;" id="unlike-badge-<?= $viewreports['id'] ?>">
+                            <?= $viewreports['unlikes'] ?>
+                        </span>
+                    <?php endif; ?>
+                </button>
+
+
                 <button class="btn btn-sm btn-light mr-3" data-toggle="modal" data-target="#shareModal">
                     <i class="fa-solid fa-share-nodes"></i>
                 </button>
@@ -545,10 +599,13 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.19/jquery.touchSwipe.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         // Removed JavaScript that toggles the 'red' class
@@ -595,6 +652,146 @@
             });
         });
     </script>
+
+    <script>
+        $(document).ready(function() {
+            // Event handler for the like button
+            $('#btn-like').on('click', function() {
+                var reportId = $(this).data('id');
+                $.ajax({
+                    url: '<?= site_url('fixed/like'); ?>',
+                    type: 'POST',
+                    data: {
+                        id: reportId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log(response); // Log the response to check the format
+
+                        if (response.likes !== undefined) {
+                            var likesCount = parseInt(response.likes, 10); // Convert to integer
+                            var likeBadge = $('#like-badge-' + reportId);
+
+                            if (likesCount > 0) {
+                                if (likeBadge.length) {
+                                    // If badge exists, update the count
+                                    likeBadge.text(likesCount);
+                                } else {
+                                    // If badge does not exist, create it
+                                    $('#btn-like[data-id="' + reportId + '"]').append(
+                                        '<span class="badge badge-pill badge-danger" style="position: absolute; top: -10px; right: -10px;" id="like-badge-' + reportId + '">' + likesCount + '</span>'
+                                    );
+                                }
+                            } else {
+                                // If likesCount is 0, remove the badge if it exists
+                                likeBadge.remove();
+                            }
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'You liked this articles.',
+                                toast: true,
+                                position: 'top-end',
+                                timer: 2000,
+                                showConfirmButton: false,
+                                background: '#f8f9fa', // Light background color
+                                customClass: {
+                                    container: 'swal2-container',
+                                    title: 'swal2-title',
+                                    popup: 'swal2-popup'
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr.responseText); // Debugging: Log any error response
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Failed to like the report.',
+                            toast: true,
+                            position: 'top-end',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            background: '#f8f9fa', // Light background color
+                            customClass: {
+                                container: 'swal2-container',
+                                title: 'swal2-title',
+                                popup: 'swal2-popup'
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Event handler for the unlike button
+            $('#btn-unlike').on('click', function() {
+                var reportId = $(this).data('id');
+                $.ajax({
+                    url: '<?= site_url('fixed/unlike'); ?>',
+                    type: 'POST',
+                    data: {
+                        id: reportId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log(response); // Log the response to check the format
+
+                        if (response.unlikes !== undefined) {
+                            var unlikesCount = parseInt(response.unlikes, 10); // Convert to integer
+                            var unlikeBadge = $('#unlike-badge-' + reportId);
+
+                            if (unlikesCount > 0) {
+                                if (unlikeBadge.length) {
+                                    // If badge exists, update the count
+                                    unlikeBadge.text(unlikesCount);
+                                } else {
+                                    // If badge does not exist, create it
+                                    $('#btn-unlike[data-id="' + reportId + '"]').append(
+                                        '<span class="badge badge-pill badge-danger" style="position: absolute; top: -10px; right: -10px;" id="unlike-badge-' + reportId + '">' + unlikesCount + '</span>'
+                                    );
+                                }
+                            } else {
+                                // If unlikesCount is 0, remove the badge if it exists
+                                unlikeBadge.remove();
+                            }
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'You unliked this articles.',
+                                toast: true,
+                                position: 'top-end',
+                                timer: 2000,
+                                showConfirmButton: false,
+                                background: '#f8f9fa', // Light background color
+                                customClass: {
+                                    container: 'swal2-container',
+                                    title: 'swal2-title',
+                                    popup: 'swal2-popup'
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr.responseText); // Debugging: Log any error response
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Failed to unlike the report.',
+                            toast: true,
+                            position: 'top-end',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            background: '#f8f9fa', // Light background color
+                            customClass: {
+                                container: 'swal2-container',
+                                title: 'swal2-title',
+                                popup: 'swal2-popup'
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+
 
 </body>
 
