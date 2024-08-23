@@ -7,7 +7,7 @@ class Home extends CI_Controller
 	public function index()
 	{
 		// Fetch the latest videos from the 'videos' table
-		$this->db->order_by('created_at', 'DESC');
+		$this->db->order_by('RAND()');
 		$this->db->limit(6);
 		$query = $this->db->get('videos');
 		$data['videos'] = $query->result();

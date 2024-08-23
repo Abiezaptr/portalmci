@@ -7,4 +7,5 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['view-report/(:any)'] = 'fixed/view_report/$1';
 $route['view-article/(:any)'] = 'fixed/view_article/$1';
+$route['comments/(:any)'] = 'fixed/comment/$1';
 $route['contact-us'] = 'contact/index';

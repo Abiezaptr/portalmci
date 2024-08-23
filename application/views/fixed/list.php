@@ -1,4 +1,16 @@
 <!-- New section for "Our latest news" -->
+<style>
+    .placeholder {
+        background-color: #e0e0e0;
+        height: 200px;
+        /* Adjust this height according to your image size */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+</style>
+
 <div class="page-content mb-1">
     <br><br><br>
     <nav aria-label="breadcrumb">
@@ -12,10 +24,12 @@
         </ol>
     </nav>
     <br>
-    <h5 class="mt-5">Latest Report</h5>
+
+    <!-- carousel report -->
+    <h5 class="mt-5">Report</h5>
     <hr>
     <br>
-    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="5000">
+    <div id="carouselExampleControls1" class="carousel slide" data-ride="carousel" data-interval="5000">
         <div class="carousel-inner">
             <?php if (!empty($reports)) : ?>
                 <?php $chunks = array_chunk($reports, 4); ?>
@@ -31,7 +45,6 @@
                                         <a href="<?= site_url('view-article/' . urlencode($title)) ?>">
 
                                         <?php else : ?>
-                                            <!-- <a href="<?php echo base_url('uploads/report/' . $report['file']); ?>" target="_blank"> -->
                                             <?php
                                             $title = str_replace(' ', '-', $report['title']);
                                             ?>
@@ -40,6 +53,9 @@
                                             <div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">
                                                 <div class="skeleton">
                                                     <img src="<?php echo base_url('uploads/image/' . $report['image']); ?>" class="card-img-top" alt="">
+                                                    <div class="card-body">
+                                                        <p class="card-text text-dark"><small><?php echo htmlspecialchars($report['title']); ?></small></p>
+                                                    </div>
                                                 </div>
                                             </div>
                                             </a>
@@ -56,11 +72,130 @@
         <br><br><br><br>
         <ol class="carousel-indicators custom-indicators mt-4">
             <?php foreach ($chunks as $index => $chunk) : ?>
-                <li data-target="#carouselExampleControls" data-slide-to="<?php echo $index; ?>" class="<?php echo $index === 0 ? 'active' : ''; ?>"></li>
+                <li data-target="#carouselExampleControls1" data-slide-to="<?php echo $index; ?>" class="<?php echo $index === 0 ? 'active' : ''; ?>"></li>
             <?php endforeach; ?>
         </ol>
     </div>
 
+    <!-- carousel articles -->
+    <h5 class="mt-3">Articles</h5>
+    <hr>
+    <br>
+    <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel" data-interval="5000">
+        <div class="carousel-inner">
+            <?php if (!empty($articles)) : ?>
+                <?php $chunks = array_chunk($articles, 4); ?>
+                <?php foreach ($chunks as $index => $chunk) : ?>
+                    <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
+                        <div class="row">
+                            <?php foreach ($chunk as $report) : ?>
+                                <div class="col-md-3 d-flex">
+                                    <?php if ($report['type'] === 'article') : ?>
+                                        <?php
+                                        $title = str_replace(' ', '-', $report['title']);
+                                        ?>
+                                        <a href="<?= site_url('view-article/' . urlencode($title)) ?>">
+
+                                        <?php else : ?>
+                                            <?php
+                                            $title = str_replace(' ', '-', $report['title']);
+                                            ?>
+                                            <a href="<?= site_url('view-report/' . urlencode($title)) ?>">
+                                            <?php endif; ?>
+                                            <div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto; display: flex; flex-direction: column; height: 100%;">
+                                                <div class="skeleton" style="height: 200px; display: flex; align-items: center; justify-content: center; text-align: center;">
+                                                    <img src="<?php echo base_url('uploads/image/' . $report['image']); ?>" class="card-img-top" alt="" style="height: 200px; object-fit: cover; display: none;">
+                                                </div>
+                                                <div class="card-body" style="padding: 0.5rem; display: flex; flex-direction: column; justify-content: flex-start;">
+                                                    <p class="card-text text-dark" style="margin: 0;">
+                                                        <small>
+                                                            <?php
+                                                            $title = htmlspecialchars($report['title']);
+                                                            echo mb_strimwidth($title, 0, 60, '...');
+                                                            ?>
+                                                        </small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            </a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <p>No reports found.</p>
+            <?php endif; ?>
+        </div>
+
+        <br><br><br><br>
+        <ol class="carousel-indicators custom-indicators mt-4">
+            <?php foreach ($chunks as $index => $chunk) : ?>
+                <li data-target="#carouselExampleControls2" data-slide-to="<?php echo $index; ?>" class="<?php echo $index === 0 ? 'active' : ''; ?>"></li>
+            <?php endforeach; ?>
+        </ol>
+    </div>
+
+    <!-- carousel videos -->
+    <h5 class="mt-3">Videos</h5>
+    <hr>
+    <br>
+    <div id="carouselExampleControls3" class="carousel slide" data-ride="carousel" data-interval="5000">
+        <div class="carousel-inner">
+            <?php if (!empty($videos)) : ?>
+                <?php $video = array_chunk($videos, 4); ?>
+                <?php foreach ($video as $index => $chunk) : ?>
+                    <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
+                        <div class="row">
+                            <?php foreach ($chunk as $report) : ?>
+                                <?php
+                                // Extract the YouTube video ID from the link
+                                parse_str(parse_url($report->link, PHP_URL_QUERY), $url_params);
+                                $video_id = isset($url_params['v']) ? $url_params['v'] : basename(parse_url($report->link, PHP_URL_PATH));
+                                $thumbnail = "https://img.youtube.com/vi/{$video_id}/hqdefault.jpg";
+                                ?>
+                                <div class="col-md-3">
+                                    <a href="<?= $report->link ?>">
+                                        <!-- <div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">
+                                            <div class="skeleton">
+                                                <img src="<?= $thumbnail ?>" class="card-img-top" alt="">
+                                                <div class="card-body">
+                                                    <p class="card-text text-dark"><small>Your video description here.</small></p>
+                                                </div>
+                                            </div>
+                                        </div> -->
+
+                                        <div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">
+                                            <a href="<?= $report->link ?>" target="_blank" class="card-img-wrapper position-relative">
+                                                <div class="skeleton">
+                                                    <img src="<?= $thumbnail ?>" class="card-img-top" alt="Video Thumbnail">
+                                                    <div class="play-icon-overlay">
+                                                        <i class="fas fa-play-circle"></i>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <div class="card-body">
+                                                <p class="card-text"><small>Your video description here.</small></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <p>No reports found.</p>
+            <?php endif; ?>
+        </div>
+
+        <br><br><br><br>
+        <ol class="carousel-indicators custom-indicators mt-4">
+            <?php foreach ($video as $index => $chunk) : ?>
+                <li data-target="#carouselExampleControls3" data-slide-to="<?php echo $index; ?>" class="<?php echo $index === 0 ? 'active' : ''; ?>"></li>
+            <?php endforeach; ?>
+        </ol>
+    </div>
 </div>
 
 <div class="page-content page-2" id="page-2">
