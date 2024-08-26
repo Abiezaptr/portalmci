@@ -32,6 +32,12 @@ class Home extends CI_Controller
 		// Pass the image URL to the view for dynamic background
 		$data['background_image'] = base_url('uploads/images/' . $data['articleReport']['image']);
 
+		$data['specificReport'] = $this->db->select('*')
+			->from('reports')
+			->like('title', 'Are mobile and fixed broadband')
+			->limit(1)
+			->get()
+			->row_array(); // Fetch one row as an array
 
 		// Load the view with the video data
 		$this->load->view('template/landing/header', $data);
