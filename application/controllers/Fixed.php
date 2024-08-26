@@ -206,4 +206,16 @@ class Fixed extends CI_Controller
 			redirect('comments/' . $id_report . '?error=Failed to add comment');
 		}
 	}
+
+	public function filter_comments()
+	{
+		$order = $this->input->get('order', TRUE) ?: 'terbaru';
+		$id_report = $this->input->get('id_report', TRUE);
+
+		$this->db->where('id_report', $id_report);
+		$this->db->order_by('created_at', $order === 'terbaru' ? 'DESC' : 'ASC');
+		$query = $this->db->get('comments');
+		$comments = $query->result_array();
+		echo json_encode(['comments' => $comments]);
+	}
 }

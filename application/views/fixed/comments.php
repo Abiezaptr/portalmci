@@ -573,7 +573,10 @@
                             <p class="card-text small"><?php echo date('d/m/Y h:i', strtotime($date_report)); ?> WIB</p> <!-- Date --> <!-- Date -->
                             <p class="card-text small"><?= htmlspecialchars($desc) ?></p> <!-- Article description -->
                             <br>
-                            <a href="" class="text-white" style="position: absolute; bottom: 20px;"><small>Kembali ke artikel...</small></a> <!-- Back link -->
+                            <?php
+                            $title = str_replace(' ', '-', $page_title);
+                            ?>
+                            <a href="<?= site_url('view-article/' . urlencode($title)) ?>" class="text-white" style="position: absolute; bottom: 20px;"><small>Kembali ke artikel...</small></a>
                         </div>
                     </div>
                 </div>
@@ -598,31 +601,33 @@
 
                 <h6 class="mt-4"><small><?= count($comments) ?> Komentar</small></h6> <!-- Display the number of comments -->
                 <div class="btn-group mb-3" role="group">
-                    <button type="button" class="btn btn-danger btn-sm filter-btn active" data-filter="terbaru">Terbaru</button>
-                    <button type="button" class="btn btn-danger btn-sm filter-btn" data-filter="terlama">Terlama</button>
+                    <button type="button" class="btn btn-danger btn-sm filter-btn active" data-filter="terbaru" onclick="filterComments('terbaru')">Terbaru</button>
+                    <button type="button" class="btn btn-danger btn-sm filter-btn" data-filter="terlama" onclick="filterComments('terlama')">Terlama</button>
                 </div>
 
-                <?php if (!empty($comments)): ?>
-                    <?php foreach ($comments as $comment): ?>
-                        <div class="card mt-2">
-                            <div class="card-body">
-                                <div class="comment-item d-flex align-items-center">
-                                    <img src="<?= base_url('assets/images/consumer.png') ?>" alt="Author" class="author-image" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;">
-                                    <div>
-                                        <strong><?= htmlspecialchars($comment['name']) ?></strong>
-                                        <br>
-                                        <span class="comment-text"><?= htmlspecialchars($comment['comment_text']) ?></span>
+                <div id="commentsContainer">
+                    <?php if (!empty($comments)): ?>
+                        <?php foreach ($comments as $comment): ?>
+                            <div class="card mt-2">
+                                <div class="card-body">
+                                    <div class="comment-item d-flex align-items-center">
+                                        <img src="<?= base_url('assets/images/consumer.png') ?>" alt="Author" class="author-image" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;">
+                                        <div>
+                                            <strong><?= htmlspecialchars($comment['name']) ?></strong>
+                                            <br>
+                                            <span class="comment-text"><?= htmlspecialchars($comment['comment_text']) ?></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center">
+                            <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No Comments" style="width: 100px; height: auto;">
                         </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="text-center">
-                        <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No Comments" style="width: 100px; height: auto;">
-                    </div>
-                    <p class="text-center"><small>Belum ada komentar. Jadilah yang pertama untuk berkomentar!</small></p>
-                <?php endif; ?>
+                        <p class="text-center"><small>Belum ada komentar. Jadilah yang pertama untuk berkomentar!</small></p>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
@@ -907,6 +912,51 @@
                 });
             });
         });
+    </script>
+
+    <script>
+        function filterComments(order) {
+            const id_report = <?= $report_id ?>; // Assuming $report_id is available in the view
+            $.ajax({
+                url: "<?= site_url('fixed/filter_comments') ?>",
+                type: "GET",
+                data: {
+                    order: order,
+                    id_report: id_report
+                },
+                dataType: "json",
+                success: function(response) {
+                    let commentsHtml = '';
+                    if (response.comments.length > 0) {
+                        response.comments.forEach(function(comment) {
+                            commentsHtml += `
+                            <div class="card mt-2">
+                                <div class="card-body">
+                                    <div class="comment-item d-flex align-items-center">
+                                        <img src="<?= base_url('assets/images/consumer.png') ?>" alt="Author" class="author-image" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;">
+                                        <div>
+                                            <strong>${comment.name}</strong>
+                                            <br>
+                                            <span class="comment-text">${comment.comment_text}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+                    } else {
+                        commentsHtml = `
+                        <div class="text-center">
+                            <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No Comments" style="width: 100px; height: auto;">
+                        </div>
+                        <p class="text-center"><small>Belum ada komentar. Jadilah yang pertama untuk berkomentar!</small></p>`;
+                    }
+                    $('#commentsContainer').html(commentsHtml);
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
     </script>
 
 </body>
