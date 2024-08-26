@@ -22,7 +22,8 @@ class Home extends CI_Controller
 		$data['reports'] = $reports;
 
 		$data['articleReport'] = $this->db->select('*')
-			->from('reports')('title', 'Factors influencing the effects of the Starlink Satellite Project on the internet service provider market in Thailand')
+			->from('reports')
+			->where('title', 'Factors influencing the effects of the Starlink Satellite Project on the internet service provider market in Thailand')
 			->limit(1)
 			->get()
 			->row_array(); // Fetch the latest article report
