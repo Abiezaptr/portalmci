@@ -1,3 +1,14 @@
+<style>
+    .report-title {
+        max-width: 900px;
+        /* Adjust the width as needed */
+        word-wrap: break-word;
+    }
+
+    .report-title .subtitle {
+        display: block;
+    }
+</style>
 <div id="page-1">
     <div class="hero-section">
         <video id="bg-video" autoplay muted loop class="bg-video">
@@ -5,33 +16,38 @@
             Your browser does not support the video tag.
         </video>
         <div class="content">
-            <!-- <h2>Together with our members, <br>we make connectivity work for all.</h2> -->
             <?php
-            $title = htmlspecialchars($articleReport['title']);
-            $maxLength = 60; // Set the maximum character length before breaking
+            // Display the specific report with name like 'Are mobile and fixed broadband'
+            if (!empty($specificReport)) {
+                $title = htmlspecialchars($specificReport['title']);
+                $maxLength = 100; // Set the maximum character length before breaking
 
-            if (strlen($title) > $maxLength) {
-                // Find the last space within the max length to break the title
-                $breakPoint = strrpos(substr($title, 0, $maxLength), ' ');
-                if ($breakPoint !== false) {
-                    $newTitle = substr($title, 0, $breakPoint); // Title up to the break point
-                    $remainingTitle = substr($title, $breakPoint + 1); // Remaining title
+                if (strlen($title) > $maxLength) {
+                    // Find the last space within the max length to break the title
+                    $breakPoint = strrpos(substr($title, 0, $maxLength), ' ');
+                    if ($breakPoint !== false) {
+                        $newTitle = substr($title, 0, $breakPoint); // Title up to the break point
+                        $remainingTitle = substr($title, $breakPoint + 1); // Remaining title
+                    } else {
+                        $newTitle = $title; // If no space found, keep the title as is
+                        $remainingTitle = '';
+                    }
                 } else {
-                    $newTitle = $title; // If no space found, keep the title as is
+                    $newTitle = $title; // If within limit, keep the title as is
                     $remainingTitle = '';
                 }
-            } else {
-                $newTitle = $title; // If within limit, keep the title as is
-                $remainingTitle = '';
+            ?>
+                <h2 class="report-title">
+                    <?php echo $newTitle; ?><br>
+                    <?php if ($remainingTitle): ?>
+                        <span class="subtitle"><?php echo $remainingTitle; ?></span>
+                    <?php endif; ?>
+                </h2>
+                <br>
+                <a href="<?= site_url('view-article/' . urlencode(str_replace(' ', '-', $specificReport['title']))) ?>" class="custom-btn mt-5">More on what we do</a>
+            <?php
             }
             ?>
-            <h2>
-                <?php echo $newTitle; ?><br>
-                <?php if ($remainingTitle): ?>
-                    <span class="subtitle"><?php echo $remainingTitle; ?></span>
-                <?php endif; ?>
-            </h2>
-            <button class="custom-btn mt-3">More on what we do</button>
         </div>
         <div class="scroll-down mb-4" id="scroll-down">
             <small>Scroll down</small><br>

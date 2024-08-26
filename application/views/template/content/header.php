@@ -300,6 +300,21 @@
             display: inline-block;
         }
 
+        .play-icon-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: white;
+            opacity: 0.7;
+            cursor: pointer;
+        }
+
+        .play-icon-overlay:hover {
+            opacity: 1;
+        }
+
         .footer {
             background-color: #ffffff;
             /* White background */

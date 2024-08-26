@@ -426,6 +426,72 @@
             color: #c62828;
             /* Dark red text color */
         }
+
+        .bg-maroon {
+            background-color: #c42323 !important;
+            /* Define the maroon color */
+        }
+
+        .filter-btn {
+            background-color: white;
+            color: black;
+            border: 1px solid #ccc;
+        }
+
+        .filter-btn.active {
+            background-color: #c42323;
+            color: white;
+        }
+
+        .comment-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fff;
+            max-width: 900px;
+            /* Align to the left */
+            margin-left: 0;
+            margin-right: auto;
+            /* Alternatively, use margin: 0; to remove any extra spacing */
+        }
+
+        #commentInput {
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: none;
+            outline: none;
+            width: 100%;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #ddd;
+            margin: 0;
+        }
+
+        .card-footer .btn {
+            border-radius: 5px;
+            background-color: #c42323;
+            color: white;
+            font-weight: bold;
+        }
+
+        .card-footer .btn:hover {
+            background-color: #DC143C;
+            /* Changed to light color */
+        }
+
+        .card-footer {
+            border-top: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #charCount {
+            font-size: 12px;
+            margin: 0;
+        }
     </style>
 </head>
 
@@ -476,139 +542,91 @@
         </div>
     </nav>
 
-    <!-- New section for "Our latest news" -->
-    <div class="page-content page-2 mb-1 mt-5">
+    <div class="page-content page-2 mt-5">
         <!-- New section for breadcrumb navigation -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb" style="list-style: none; padding: 0; margin: 0;">
                 <li class="breadcrumb-item" style="display: inline; color: black;">
                     <a href="<?= site_url('home') ?>" style="color: black; text-decoration: none;">Home</a>
                 </li>
+                <li class="breadcrumb-item" aria-current="page" style="display: inline; color: black;">
+                    Fixed
+                </li>
                 <li class="breadcrumb-item active" aria-current="page" style="color: rgb(177, 41, 41); display: inline;">
-                    Articles
+                    Comments Articles
                 </li>
             </ol>
         </nav>
-
-        <p class="mt-5"><small><?php echo date('l j M, Y', strtotime($viewreports['created_at'])); ?></small></p>
-        <h2><b><?php echo $page_title; ?></b></h2>
     </div>
 
     <div class="page-content">
-
-        <div class="article-body mt-2" style="color: gray;">
-            <p>
-                <?php echo $viewreports['content']; ?>
-            </p>
-            <br>
-            <p><a href="<?php echo base_url('uploads/articles/fixed/' . $viewreports['file']); ?>" target="_blank" class="text-danger">Read more...</a></p>
-        </div>
-    </div>
-
-    <div class="page-content page-2">
-        <div class="comment-section">
-            <div class="reaction-icons">
-                <button class="btn btn-sm btn-light mr-3 position-relative" id="btn-like" data-id="<?= $viewreports['id'] ?>">
-                    <i class="fa-regular fa-thumbs-up"></i>
-                    <?php if ($viewreports['likes'] > 0): ?>
-                        <span class="badge badge-pill badge-danger" style="position: absolute; top: -10px; right: -10px;" id="like-badge-<?= $viewreports['id'] ?>">
-                            <?= $viewreports['likes'] ?>
-                        </span>
-                    <?php endif; ?>
-                </button>
-
-                <button class="btn btn-sm btn-light mr-3 position-relative" id="btn-unlike" data-id="<?= $viewreports['id'] ?>">
-                    <i class="fa-regular fa-thumbs-down"></i>
-                    <?php if ($viewreports['unlikes'] > 0): ?>
-                        <span class="badge badge-pill badge-danger" style="position: absolute; top: -10px; right: -10px;" id="unlike-badge-<?= $viewreports['id'] ?>">
-                            <?= $viewreports['unlikes'] ?>
-                        </span>
-                    <?php endif; ?>
-                </button>
-
-                <button class="btn btn-sm btn-light mr-3" data-toggle="modal" data-target="#shareModal">
-                    <i class="fa-solid fa-share-nodes"></i>
-                </button>
-
-                <a href="<?= site_url('comments/' . $viewreports['id']) ?>" class="btn btn-sm btn-light mr-3 position-relative">
-                    <i class="fa-regular fa-comment"></i>
-                    <?php if ($comment_count > 0): ?>
-                        <span class="badge badge-pill badge-danger" style="position: absolute; top: -10px; right: -10px;">
-                            <?= $comment_count ?> <!-- Menampilkan jumlah komentar secara dinamis -->
-                        </span>
-                    <?php endif; ?>
-                </a>
+        <div class="article-body">
+            <!-- Article Card -->
+            <div class="card text-white bg-maroon mb-5"> <!-- Changed bg-dark to bg-maroon -->
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <img src="<?= base_url('uploads/image/' . $image_report) ?>" class="card-img" alt="Article Image" style="height: 220px; object-fit: cover;"> <!-- Set fixed height and object-fit -->
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><?= htmlspecialchars($page_title) ?></h5> <!-- Display the dynamic page title -->
+                            <p class="card-text small"><?php echo date('d/m/Y h:i', strtotime($date_report)); ?> WIB</p> <!-- Date --> <!-- Date -->
+                            <p class="card-text small"><?= htmlspecialchars($desc) ?></p> <!-- Article description -->
+                            <br>
+                            <?php
+                            $title = str_replace(' ', '-', $page_title);
+                            ?>
+                            <a href="<?= site_url('view-article/' . urlencode($title)) ?>" class="text-white" style="position: absolute; bottom: 20px;"><small>Kembali ke artikel...</small></a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="comment-section">
-            <div class="comment-box mt-4">
-                <?php if (count($comments) > 0): ?>
-                    <p>Komentar</p>
-                <?php endif; ?>
+            <!-- Comments Section -->
+            <div class="comment-section">
+                <h6>Berikan Komentar</h6>
+                <div class="comment-card mt-4">
+                    <form id="commentForm" action="<?= site_url('fixed/add_comment') ?>" method="post">
+                        <div class="input-group mb-3">
+                            <textarea class="form-control" name="comment" id="commentInput" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>
+                            <input type="hidden" name="id_report" value="<?= $report_id ?>">
+                        </div>
+                        <div class="divider"></div>
+                        <div class="card-footer">
+                            <small id="charCount" class="form-text text-muted">1000 Karakter tersisa</small>
+                            <button class="btn btn-danger btn-sm" type="submit">Kirim <i class="fa-regular fa-paper-plane"></i></button>
+                        </div>
+                    </form>
+                </div>
 
-                <?php if (!empty($comments)): ?>
-                    <?php foreach ($comments as $comment): ?>
-                        <div class="card mt-2">
-                            <div class="card-body">
-                                <div class="comment-item d-flex align-items-center">
-                                    <img src="<?= base_url('assets/images/consumer.png') ?>" alt="Author" class="author-image" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;">
-                                    <div>
-                                        <strong><?= htmlspecialchars($comment['name']) ?></strong>
-                                        <br>
-                                        <span class="comment-text"><?= htmlspecialchars($comment['comment_text']) ?></span>
+                <h6 class="mt-4"><small><?= count($comments) ?> Komentar</small></h6> <!-- Display the number of comments -->
+                <div class="btn-group mb-3" role="group">
+                    <button type="button" class="btn btn-danger btn-sm filter-btn active" data-filter="terbaru" onclick="filterComments('terbaru')">Terbaru</button>
+                    <button type="button" class="btn btn-danger btn-sm filter-btn" data-filter="terlama" onclick="filterComments('terlama')">Terlama</button>
+                </div>
+
+                <div id="commentsContainer">
+                    <?php if (!empty($comments)): ?>
+                        <?php foreach ($comments as $comment): ?>
+                            <div class="card mt-2">
+                                <div class="card-body">
+                                    <div class="comment-item d-flex align-items-center">
+                                        <img src="<?= base_url('assets/images/consumer.png') ?>" alt="Author" class="author-image" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;">
+                                        <div>
+                                            <strong><?= htmlspecialchars($comment['name']) ?></strong>
+                                            <br>
+                                            <span class="comment-text"><?= htmlspecialchars($comment['comment_text']) ?></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center">
+                            <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No Comments" style="width: 100px; height: auto;">
                         </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="text-center">
-                        <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No Comments" style="width: 100px; height: auto;">
-                    </div>
-                    <p class="text-center"><small>Belum ada komentar. Jadilah yang pertama untuk berkomentar!</small></p>
-                <?php endif; ?>
-
-                <br>
-                <?php if (count($comments) > 0): ?>
-                    <a href="<?= site_url('comments/' . $viewreports['id']) ?>" style="color: #007BFF; text-decoration: underline;">
-                        <?= count($comments) ?> Komentar
-                    </a>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Modal structure -->
-    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="shareModalLabel"><?php echo $page_title; ?></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body text-center">
-                    <p>Bagikan artikel ini melalui</p>
-                    <div class="d-flex justify-content-center">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode(current_url()) ?>" class="btn btn-outline-primary btn-circle mx-2" target="_blank">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a href="https://twitter.com/intent/tweet?url=<?= urlencode(current_url()) ?>&text=<?= urlencode($page_title) ?>" class="btn btn-outline-dark btn-circle mx-2" target="_blank">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="https://api.whatsapp.com/send?text=<?= urlencode(current_url()) ?>" class="btn btn-outline-success btn-circle mx-2" target="_blank">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                        <a href="mailto:?subject=<?= urlencode($page_title) ?>&body=<?= urlencode(current_url()) ?>" class="btn btn-outline-secondary btn-circle mx-2">
-                            <i class="fa-solid fa-envelope"></i>
-                        </a>
-                        <a href="#" class="btn btn-outline-secondary btn-circle mx-2" onclick="navigator.clipboard.writeText('<?= current_url() ?>'); alert('Link copied to clipboard!');">
-                            <i class="fa-solid fa-link"></i>
-                        </a>
-                    </div>
+                        <p class="text-center"><small>Belum ada komentar. Jadilah yang pertama untuk berkomentar!</small></p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -624,7 +642,17 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // Removed JavaScript that toggles the 'red' class
+        function updateCharacterCount() {
+            const maxLength = 1000;
+            const currentLength = document.getElementById('commentInput').value.length;
+            const remainingChars = maxLength - currentLength;
+            document.getElementById('charCount').textContent = `${remainingChars} Karakter tersisa`;
+        }
+
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
     </script>
 
     <script>
@@ -807,7 +835,129 @@
         });
     </script>
 
+    <script>
+        <?php if ($this->session->flashdata('message')): ?>
+            Swal.fire({
+                title: 'Success',
+                text: '<?php echo $this->session->flashdata('message'); ?>',
+                toast: true,
+                position: 'top-end',
+                timer: 2000,
+                showConfirmButton: false,
+                background: '#f8f9fa', // Light background color
+                customClass: {
+                    container: 'swal2-container',
+                    title: 'swal2-title',
+                    popup: 'swal2-popup'
+                }
+            });
+        <?php endif; ?>
 
+        <?php if ($this->session->flashdata('error')): ?>
+            Swal.fire({
+                title: 'Success',
+                text: '<?php echo $this->session->flashdata('error'); ?>',
+                toast: true,
+                position: 'top-end',
+                timer: 2000,
+                showConfirmButton: false,
+                background: '#f8f9fa', // Light background color
+                customClass: {
+                    container: 'swal2-container',
+                    title: 'swal2-title',
+                    popup: 'swal2-popup'
+                }
+            });
+        <?php endif; ?>
+    </script>
+
+    <script>
+        document.getElementById('commentForm').addEventListener('submit', function(event) {
+
+            const restrictedWords = [
+
+                'anjing', 'tai', 'babi', 'jorok', 'sara', 'kontol', 'memek', 'ngentot', 'goblok', 'tolol', 'bangsat',
+                'brengsek', 'kampret', 'setan', 'iblis', 'perek', 'lonte', 'pelacur', 'sundal', 'bajingan', 'keparat',
+
+                'monyet', 'asu', 'jancok', 'pantek', 'pepek', 'pukimak', 'kimak', 'bitch', 'fuck', 'shit', 'asshole',
+
+                'bastard', 'cunt', 'dick', 'pussy', 'slut', 'whore', 'faggot', 'nigger', 'chink', 'kike', 'spic', 'wetback'
+
+            ]; // Add more words as needed
+
+            const comment = document.getElementById('commentInput').value.toLowerCase();
+
+            for (let word of restrictedWords) {
+                if (comment.includes(word)) {
+                    alert('Komentar mengandung kata yang tidak diperbolehkan.');
+                    event.preventDefault();
+
+                    return;
+
+                }
+            }
+
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    // Add your filtering logic here
+                });
+            });
+        });
+    </script>
+
+    <script>
+        function filterComments(order) {
+            const id_report = <?= $report_id ?>; // Assuming $report_id is available in the view
+            $.ajax({
+                url: "<?= site_url('fixed/filter_comments') ?>",
+                type: "GET",
+                data: {
+                    order: order,
+                    id_report: id_report
+                },
+                dataType: "json",
+                success: function(response) {
+                    let commentsHtml = '';
+                    if (response.comments.length > 0) {
+                        response.comments.forEach(function(comment) {
+                            commentsHtml += `
+                            <div class="card mt-2">
+                                <div class="card-body">
+                                    <div class="comment-item d-flex align-items-center">
+                                        <img src="<?= base_url('assets/images/consumer.png') ?>" alt="Author" class="author-image" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;">
+                                        <div>
+                                            <strong>${comment.name}</strong>
+                                            <br>
+                                            <span class="comment-text">${comment.comment_text}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+                    } else {
+                        commentsHtml = `
+                        <div class="text-center">
+                            <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No Comments" style="width: 100px; height: auto;">
+                        </div>
+                        <p class="text-center"><small>Belum ada komentar. Jadilah yang pertama untuk berkomentar!</small></p>`;
+                    }
+                    $('#commentsContainer').html(commentsHtml);
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+    </script>
 
 </body>
 
