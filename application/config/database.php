@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'mcirepositori_v2',
+	'hostname' => '10.49.143.153',
+	'username' => 'datamart_user',
+	'password' => 'P@ssw0rd.123',
+	'database' => 'db_mciportal',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
