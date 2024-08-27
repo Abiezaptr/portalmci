@@ -657,8 +657,10 @@
 
     <!-- New section for "Our latest news" -->
     <div class="news-section">
+        <a href="<?php echo site_url('fixed/view_pdf/' . $viewreports['id']); ?>" target="_blank" class="btn-download text-white">View Report</a>
 
-        <a href="<?php echo base_url('uploads/report/' . $viewreports['file']); ?>" target="_blank" class="btn-download text-white">Download report</a>
+
+        <!-- <a href="<?php echo base_url('uploads/report/' . $viewreports['file']); ?>" target="_blank" class="btn-download text-white">Download report</a> -->
     </div>
 
     <div class="page-content">
