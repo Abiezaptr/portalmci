@@ -501,7 +501,8 @@
                 <?php echo $viewreports['content']; ?>
             </p>
             <br>
-            <p><a href="<?php echo base_url('uploads/articles/fixed/' . $viewreports['file']); ?>" target="_blank" class="text-danger">Read more...</a></p>
+            <!-- <p><a href="<?php echo base_url('uploads/articles/fixed/' . $viewreports['file']); ?>" target="_blank" class="text-danger">Read more...</a></p> -->
+            <p><a href="<?php echo site_url('read-article/' . $viewreports['id']); ?>" target="_blank" class="text-danger">Read more...</a></p>
         </div>
     </div>
 

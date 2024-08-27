@@ -84,7 +84,26 @@ class Fixed extends CI_Controller
 		$this->load->view('fixed/view_pdf', $data);
 	}
 
+	public function view_pdf_article($id)
+	{
+		// Query to get the report based on the ID
+		$data['viewreports'] = $this->db->select('*')
+			->from('reports')
+			->where('id', $id)
+			->get()
+			->row_array();
 
+		// Check if the data is available
+		if (empty($data['viewreports'])) {
+			show_404();  // Show 404 page if no data found
+		}
+
+		// Pass the file name to the view
+		$data['file_name'] = $data['viewreports']['file'];
+
+		// Load the view with the PDF viewer
+		$this->load->view('fixed/view_pdf_article', $data);
+	}
 
 	public function view_article($title)
 	{
