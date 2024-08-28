@@ -12,7 +12,7 @@
 <div id="page-1">
     <div class="hero-section">
         <video id="bg-video" autoplay muted loop class="bg-video">
-            <source src="video.mp4" type="video/mp4">
+            <source src="<?= base_url('assets/video.mp4') ?>" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <div class="content">

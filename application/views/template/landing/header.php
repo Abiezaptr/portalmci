@@ -39,7 +39,10 @@
             height: 100%;
             object-fit: cover;
             z-index: -1;
+            filter: brightness(0.5);
+            /* Atur kecerahan, angka lebih rendah membuat video lebih gelap */
         }
+
 
         .hero-section .content {
             position: absolute;
