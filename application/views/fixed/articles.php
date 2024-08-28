@@ -594,13 +594,13 @@
                 <div class="modal-body text-center">
                     <p>Bagikan artikel ini melalui</p>
                     <div class="d-flex justify-content-center">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode(current_url()) ?>" class="btn btn-outline-primary btn-circle mx-2" target="_blank">
+                        <a class="btn btn-outline-primary btn-circle mx-2" disabled>
                             <i class="fab fa-facebook"></i>
                         </a>
-                        <a href="https://twitter.com/intent/tweet?url=<?= urlencode(current_url()) ?>&text=<?= urlencode($page_title) ?>" class="btn btn-outline-dark btn-circle mx-2" target="_blank">
+                        <a class="btn btn-outline-dark btn-circle mx-2" disabled>
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="https://api.whatsapp.com/send?text=<?= urlencode(current_url()) ?>" class="btn btn-outline-success btn-circle mx-2" target="_blank">
+                        <a class="btn btn-outline-success btn-circle mx-2" disabled>
                             <i class="fab fa-whatsapp"></i>
                         </a>
                         <a href="mailto:?subject=<?= urlencode($page_title) ?>&body=<?= urlencode(current_url()) ?>" class="btn btn-outline-secondary btn-circle mx-2">
