@@ -675,6 +675,7 @@
                         <div class="comment-card mt-4">
                             <form id="commentForm" action="<?= site_url('fixed/add_comment_user') ?>" method="post">
                                 <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
+                                <input type="hidden" name="id_report" value="<?= $comment['id_report'] ?>">
                                 <div class="input-group mb-3">
                                     <textarea class="form-control" name="reply_text" id="commentInput" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>
                                 </div>

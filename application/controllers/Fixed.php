@@ -418,31 +418,47 @@ class Fixed extends CI_Controller
 
 	public function add_comment_user()
 	{
-		// ambil data dari form
+		// Ambil data dari form
 		$reply_text = $this->input->post('reply_text');
 		$comment_id  = $this->input->post('comment_id');
+		$id_report = $this->input->post('id_report'); // Pastikan id_report dikirim dari form
 
-		// masukan data ke database
+		// Masukkan data ke database
 		$this->db->insert(
 			'replies',
 			[
 				'name' => 'Unknown',
 				'reply_text' => $reply_text,
-				'comment_id' => $comment_id // Corrected here as well
+				'comment_id' => $comment_id
 			]
 		);
 
-		// Check if the insert was successful
+		// Cek apakah insert berhasil
 		if ($this->db->affected_rows() > 0) {
+			// Ambil title dari tabel reports berdasarkan id_report
+			$report = $this->db->get_where('reports', ['id' => $id_report])->row();
+
+			if ($report) {
+				$title = $report->title; // Ambil title dari report
+
+				// Ubah title menjadi URL-friendly format
+				$url_title = urlencode(str_replace(' ', '-', $title));
+			} else {
+				// Jika tidak ditemukan, gunakan id_report sebagai fallback
+				$url_title = $id_report;
+			}
+
 			// Set success flashdata
 			$this->session->set_flashdata('message', 'Comment added successfully!');
-			// Redirect to comments page of the report
-			redirect('comments/' . $id_report);
+
+			// Redirect ke halaman view-article dengan title yang diformat
+			redirect('view-article/' . $url_title);
 		} else {
 			// Set error flashdata
 			$this->session->set_flashdata('error', 'Failed to add comment');
-			// Redirect back with an error message
-			redirect('comments/' . $id_report . '?error=Failed to add comment');
+
+			// Redirect kembali dengan pesan error
+			redirect('view-article/' . $id_report . '?error=Failed to add comment');
 		}
 	}
 }
