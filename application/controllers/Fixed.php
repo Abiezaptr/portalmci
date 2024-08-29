@@ -105,6 +105,47 @@ class Fixed extends CI_Controller
 		$this->load->view('fixed/view_pdf_article', $data);
 	}
 
+	// public function view_article($title)
+	// {
+	// 	// Convert hyphens back to spaces
+	// 	$decoded_title = str_replace('-', ' ', urldecode($title));
+
+	// 	// Query to get data from the 'reports' table where the title matches
+	// 	$data['viewreports'] = $this->db->select('*')
+	// 		->from('reports')
+	// 		->where('title', $decoded_title)
+	// 		->get()
+	// 		->row_array();
+
+	// 	// Check if the article exists
+	// 	if (!$data['viewreports']) {
+	// 		show_404(); // Show 404 error if the article is not found
+	// 		return;
+	// 	}
+
+	// 	// Get the report ID from the retrieved article data
+	// 	$report_id = $data['viewreports']['id'];
+
+	// 	// Query to get comments related to this report
+	// 	$data['comments'] = $this->db->select('*')
+	// 		->from('comments')
+	// 		->where('id_report', $report_id)
+	// 		->order_by('created_at', 'ASC') // Sort comments by creation time
+	// 		->get()
+	// 		->result_array();
+
+	// 	// Query to get the count of comments related to this report
+	// 	$data['comment_count'] = $this->db->where('id_report', $data['viewreports']['id'])
+	// 		->from('comments')
+	// 		->count_all_results();
+
+	// 	// Pass the title to the view
+	// 	$data['page_title'] = $data['viewreports']['title'];
+
+	// 	// Load the views with the data
+	// 	$this->load->view('fixed/articles', $data);
+	// }
+
 	public function view_article($title)
 	{
 		// Convert hyphens back to spaces
@@ -127,15 +168,38 @@ class Fixed extends CI_Controller
 		$report_id = $data['viewreports']['id'];
 
 		// Query to get comments related to this report
-		$data['comments'] = $this->db->select('*')
+		$comments = $this->db->select('comments.*, replies.id AS reply_id, replies.name AS reply_name, replies.reply_text, replies.likes AS reply_likes, replies.unlikes AS reply_unlikes, replies.created_at AS reply_created_at')
 			->from('comments')
-			->where('id_report', $report_id)
-			->order_by('created_at', 'ASC') // Sort comments by creation time
+			->join('replies', 'replies.comment_id = comments.id', 'left')
+			->where('comments.id_report', $report_id)
+			->order_by('comments.created_at', 'ASC')
+			->order_by('replies.created_at', 'DESC') // Order replies within each comment
 			->get()
 			->result_array();
 
+		// Organize comments and replies
+		$data['comments'] = [];
+		foreach ($comments as $comment) {
+			if (!isset($data['comments'][$comment['id']])) {
+				$data['comments'][$comment['id']] = $comment;
+				$data['comments'][$comment['id']]['replies'] = [];
+			}
+			if ($comment['reply_id']) {
+				if (count($data['comments'][$comment['id']]['replies']) < 1) {
+					$data['comments'][$comment['id']]['replies'][] = [
+						'id' => $comment['reply_id'],
+						'name' => $comment['reply_name'],
+						'reply_text' => $comment['reply_text'],
+						'likes' => $comment['reply_likes'],
+						'unlikes' => $comment['reply_unlikes'],
+						'created_at' => $comment['reply_created_at']
+					];
+				}
+			}
+		}
+
 		// Query to get the count of comments related to this report
-		$data['comment_count'] = $this->db->where('id_report', $data['viewreports']['id'])
+		$data['comment_count'] = $this->db->where('id_report', $report_id)
 			->from('comments')
 			->count_all_results();
 
@@ -145,6 +209,8 @@ class Fixed extends CI_Controller
 		// Load the views with the data
 		$this->load->view('fixed/articles', $data);
 	}
+
+
 
 	public function comment($id)
 	{
@@ -259,5 +325,61 @@ class Fixed extends CI_Controller
 		$query = $this->db->get('comments');
 		$comments = $query->result_array();
 		echo json_encode(['comments' => $comments]);
+	}
+
+	public function likeComment()
+	{
+		$id = $this->input->post('id');
+		// Increment like count in database
+		$this->db->set('likes', 'likes + 1', FALSE);
+		$this->db->where('id', $id);
+		$this->db->update('comments');
+
+		// Return the updated like count
+		$like_count = $this->db->select('likes')->where('id', $id)->get('comments')->row()->likes;
+		echo json_encode(['likes' => $like_count]);
+	}
+
+	public function unlikeComment()
+	{
+		$id = $this->input->post('id');
+		// Increment unlike count in database
+		$this->db->set('unlikes', 'unlikes + 1', FALSE);
+		$this->db->where('id', $id);
+		$this->db->update('comments');
+
+		// Return the updated unlike count
+		$unlike_count = $this->db->select('unlikes')->where('id', $id)->get('comments')->row()->unlikes;
+		echo json_encode(['unlikes' => $unlike_count]);
+	}
+
+	public function add_comment_user()
+	{
+		// ambil data dari form
+		$reply_text = $this->input->post('reply_text');
+		$comment_id  = $this->input->post('comment_id');
+
+		// masukan data ke database
+		$this->db->insert(
+			'replies',
+			[
+				'name' => 'Unknown',
+				'reply_text' => $reply_text,
+				'comment_id' => $comment_id // Corrected here as well
+			]
+		);
+
+		// Check if the insert was successful
+		if ($this->db->affected_rows() > 0) {
+			// Set success flashdata
+			$this->session->set_flashdata('message', 'Comment added successfully!');
+			// Redirect to comments page of the report
+			redirect('comments/' . $id_report);
+		} else {
+			// Set error flashdata
+			$this->session->set_flashdata('error', 'Failed to add comment');
+			// Redirect back with an error message
+			redirect('comments/' . $id_report . '?error=Failed to add comment');
+		}
 	}
 }
