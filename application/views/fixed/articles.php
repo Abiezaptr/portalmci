@@ -614,9 +614,8 @@
                                     </div>
                                 </div>
 
-                                <!-- Display replies for this comment inside the same card -->
                                 <?php if (!empty($comment['replies'])): ?>
-                                    <div class="replies mt-3">
+                                    <div class="replies mt-3" id="replies-<?= $comment['id'] ?>">
                                         <?php foreach ($comment['replies'] as $reply): ?>
                                             <div class="card mt-2 ms-4">
                                                 <div class="card-body">
@@ -628,7 +627,7 @@
                                                                 <br>
                                                                 <span class="comment-time" data-timestamp="<?= $reply['created_at'] ?>" style="font-size: 0.75rem; color: gray;"><small><?= timeAgo($reply['created_at']) ?></small></span>
                                                                 <br>
-                                                                <span class="comment-text"><?= htmlspecialchars($reply['reply_text']) ?></span>
+                                                                <span class="comment-text"><span class="text-muted"><small>@<?= htmlspecialchars($comment['comment_name']) ?></small></span>&nbsp; <?= htmlspecialchars($reply['reply_text']) ?></span>
                                                             </div>
                                                             <div class="like-unlike mt-3 d-flex align-items-center">
                                                                 <button class="btn btn-link text-muted p-0 me-3" onclick="likeReply(<?= $reply['id'] ?>)">
@@ -636,6 +635,9 @@
                                                                 </button>&nbsp;&nbsp;&nbsp;&nbsp;
                                                                 <button class="btn btn-link text-muted p-0 me-3" onclick="unlikeReply(<?= $reply['id'] ?>)">
                                                                     <i class="fa-regular fa-thumbs-down fa-xs"></i> <span class="ms-1 small"><?= $reply['unlikes'] ?></span>
+                                                                </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <button class="btn btn-link text-muted p-0 ms-3" data-toggle="modal" data-target="#replyUserModal<?= $comment['id'] ?>">
+                                                                    <small>Balas</small>
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -644,6 +646,10 @@
                                             </div>
                                         <?php endforeach; ?>
                                     </div>
+                                    <!-- Show/Hide button placed below the replies -->
+                                    <button class="btn btn-link text-primary p-0 mt-4 ms-4" onclick="toggleReplies(<?= $comment['id'] ?>)">
+                                        <small>Sembunyikan balasan</small>
+                                    </button>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -654,13 +660,6 @@
                         <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No Comments" style="width: 100px; height: auto;">
                     </div>
                     <p class="text-center"><small>Belum ada komentar. Jadilah yang pertama untuk berkomentar!</small></p>
-                <?php endif; ?>
-
-                <br>
-                <?php if (count($comments) > 0): ?>
-                    <a href="<?= site_url('comments/' . $viewreports['id']) ?>" style="color: #007BFF; text-decoration: underline;">
-                        <?= count($comments) ?> Komentar
-                    </a>
                 <?php endif; ?>
             </div>
         </div>
@@ -738,6 +737,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.19/jquery.touchSwipe.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function toggleReplies(commentId) {
+            const repliesSection = document.getElementById('replies-' + commentId);
+            const toggleButton = repliesSection.nextElementSibling;
+
+            if (repliesSection.style.display === 'none') {
+                repliesSection.style.display = 'block';
+                toggleButton.innerHTML = '<small>Sembunyikan balasan</small>';
+            } else {
+                repliesSection.style.display = 'none';
+                toggleButton.innerHTML = '<small>Tampilkan balasan</small>';
+            }
+        }
+    </script>
+
 
     <script>
         function updateCharacterCount() {

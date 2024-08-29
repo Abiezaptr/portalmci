@@ -146,6 +146,70 @@ class Fixed extends CI_Controller
 	// 	$this->load->view('fixed/articles', $data);
 	// }
 
+	// public function view_article($title)
+	// {
+	// 	// Convert hyphens back to spaces
+	// 	$decoded_title = str_replace('-', ' ', urldecode($title));
+
+	// 	// Query to get data from the 'reports' table where the title matches
+	// 	$data['viewreports'] = $this->db->select('*')
+	// 		->from('reports')
+	// 		->where('title', $decoded_title)
+	// 		->get()
+	// 		->row_array();
+
+	// 	// Check if the article exists
+	// 	if (!$data['viewreports']) {
+	// 		show_404(); // Show 404 error if the article is not found
+	// 		return;
+	// 	}
+
+	// 	// Get the report ID from the retrieved article data
+	// 	$report_id = $data['viewreports']['id'];
+
+	// 	// Query to get comments related to this report
+	// 	$comments = $this->db->select('comments.*, replies.id AS reply_id, replies.name AS reply_name, replies.reply_text, replies.likes AS reply_likes, replies.unlikes AS reply_unlikes, replies.created_at AS reply_created_at')
+	// 		->from('comments')
+	// 		->join('replies', 'replies.comment_id = comments.id', 'left')
+	// 		->where('comments.id_report', $report_id)
+	// 		->order_by('comments.created_at', 'ASC')
+	// 		->order_by('replies.created_at', 'DESC') // Order replies within each comment
+	// 		->get()
+	// 		->result_array();
+
+	// 	// Organize comments and replies
+	// 	$data['comments'] = [];
+	// 	foreach ($comments as $comment) {
+	// 		if (!isset($data['comments'][$comment['id']])) {
+	// 			$data['comments'][$comment['id']] = $comment;
+	// 			$data['comments'][$comment['id']]['replies'] = [];
+	// 		}
+	// 		if ($comment['reply_id']) {
+	// 			if (count($data['comments'][$comment['id']]['replies']) < 1) {
+	// 				$data['comments'][$comment['id']]['replies'][] = [
+	// 					'id' => $comment['reply_id'],
+	// 					'name' => $comment['reply_name'],
+	// 					'reply_text' => $comment['reply_text'],
+	// 					'likes' => $comment['reply_likes'],
+	// 					'unlikes' => $comment['reply_unlikes'],
+	// 					'created_at' => $comment['reply_created_at']
+	// 				];
+	// 			}
+	// 		}
+	// 	}
+
+	// 	// Query to get the count of comments related to this report
+	// 	$data['comment_count'] = $this->db->where('id_report', $report_id)
+	// 		->from('comments')
+	// 		->count_all_results();
+
+	// 	// Pass the title to the view
+	// 	$data['page_title'] = $data['viewreports']['title'];
+
+	// 	// Load the views with the data
+	// 	$this->load->view('fixed/articles', $data);
+	// }
+
 	public function view_article($title)
 	{
 		// Convert hyphens back to spaces
@@ -183,9 +247,10 @@ class Fixed extends CI_Controller
 			if (!isset($data['comments'][$comment['id']])) {
 				$data['comments'][$comment['id']] = $comment;
 				$data['comments'][$comment['id']]['replies'] = [];
+				$data['comments'][$comment['id']]['comment_name'] = $comment['name']; // Add the comment author name
 			}
 			if ($comment['reply_id']) {
-				if (count($data['comments'][$comment['id']]['replies']) < 1) {
+				if (count($data['comments'][$comment['id']]['replies']) < 2) {
 					$data['comments'][$comment['id']]['replies'][] = [
 						'id' => $comment['reply_id'],
 						'name' => $comment['reply_name'],
@@ -209,8 +274,6 @@ class Fixed extends CI_Controller
 		// Load the views with the data
 		$this->load->view('fixed/articles', $data);
 	}
-
-
 
 	public function comment($id)
 	{
