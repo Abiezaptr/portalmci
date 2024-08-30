@@ -617,7 +617,7 @@
                                 <?php if (!empty($comment['replies'])): ?>
                                     <div class="replies mt-3" id="replies-<?= $comment['id'] ?>">
                                         <?php foreach ($comment['replies'] as $reply): ?>
-                                            <div class="card mt-2 ms-4">
+                                            <div class="card mt-2 ms-4 reply-card">
                                                 <div class="card-body">
                                                     <div class="comment-item d-flex">
                                                         <img src="<?= base_url('assets/images/consumer.png') ?>" alt="Author" class="author-image" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;">
@@ -627,7 +627,7 @@
                                                                 <br>
                                                                 <span class="comment-time" data-timestamp="<?= $reply['created_at'] ?>" style="font-size: 0.75rem; color: gray;"><small><?= timeAgo($reply['created_at']) ?></small></span>
                                                                 <br>
-                                                                <span class="comment-text"><span class="text-muted"><small>@<?= htmlspecialchars($comment['comment_name']) ?></small></span>&nbsp; <?= htmlspecialchars($reply['reply_text']) ?></span>
+                                                                <span class="comment-text"><span class="text-muted"><small>@<?= htmlspecialchars($reply['parent_name']) ?></small></span>&nbsp; <?= htmlspecialchars($reply['reply_text']) ?></span>
                                                             </div>
                                                             <div class="like-unlike mt-3 d-flex align-items-center">
                                                                 <button class="btn btn-link text-muted p-0 me-3" onclick="likeReply(<?= $reply['id'] ?>)">
@@ -636,7 +636,7 @@
                                                                 <button class="btn btn-link text-muted p-0 me-3" onclick="unlikeReply(<?= $reply['id'] ?>)">
                                                                     <i class="fa-regular fa-thumbs-down fa-xs"></i> <span class="ms-1 small"><?= $reply['unlikes'] ?></span>
                                                                 </button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                <button class="btn btn-link text-muted p-0 ms-3" data-toggle="modal" data-target="#replyUserModal<?= $comment['id'] ?>">
+                                                                <button class="btn btn-link text-muted p-0 ms-3" data-toggle="modal" data-target="#replyUserModal<?= $reply['id'] ?>">
                                                                     <small>Balas</small>
                                                                 </button>
                                                             </div>
@@ -653,7 +653,6 @@
                                 <?php endif; ?>
                             </div>
                         </div>
-
                     <?php endforeach; ?>
                 <?php else: ?>
                     <div class="text-center">
@@ -694,7 +693,35 @@
         </div>
     <?php endforeach; ?>
 
+    <?php foreach ($comment['replies'] as $reply): ?>
+        <div class="modal fade" id="replyUserModal<?= $reply['id'] ?>" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <h6>Berikan Komentar</h6>
+                        <div class="comment-card mt-4">
+                            <form id="commentForm" action="<?= site_url('fixed/add_reply_user') ?>" method="post">
+                                <!-- Hidden field for comment_id -->
+                                <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
+                                <input type="hidden" name="parent_id" value="<?= $reply['id'] ?>">
+                                <input type="hidden" name="id_report" value="<?= $comment['id_report'] ?>">
 
+                                <div class="input-group mb-3">
+                                    <textarea class="form-control" name="reply_text" id="commentInput" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>
+                                </div>
+                                <small id="charCount" class="form-text text-muted">1000 Karakter tersisa</small>
+                                <div class="divider"></div>
+                                <br>
+                                <div class="card-footer">
+                                    <button class="btn btn-danger btn-sm btn-block" type="submit">Kirim <i class="fa-regular fa-paper-plane"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
 
     <!-- Modal structure -->
     <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">

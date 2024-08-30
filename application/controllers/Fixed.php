@@ -105,111 +105,6 @@ class Fixed extends CI_Controller
 		$this->load->view('fixed/view_pdf_article', $data);
 	}
 
-	// public function view_article($title)
-	// {
-	// 	// Convert hyphens back to spaces
-	// 	$decoded_title = str_replace('-', ' ', urldecode($title));
-
-	// 	// Query to get data from the 'reports' table where the title matches
-	// 	$data['viewreports'] = $this->db->select('*')
-	// 		->from('reports')
-	// 		->where('title', $decoded_title)
-	// 		->get()
-	// 		->row_array();
-
-	// 	// Check if the article exists
-	// 	if (!$data['viewreports']) {
-	// 		show_404(); // Show 404 error if the article is not found
-	// 		return;
-	// 	}
-
-	// 	// Get the report ID from the retrieved article data
-	// 	$report_id = $data['viewreports']['id'];
-
-	// 	// Query to get comments related to this report
-	// 	$data['comments'] = $this->db->select('*')
-	// 		->from('comments')
-	// 		->where('id_report', $report_id)
-	// 		->order_by('created_at', 'ASC') // Sort comments by creation time
-	// 		->get()
-	// 		->result_array();
-
-	// 	// Query to get the count of comments related to this report
-	// 	$data['comment_count'] = $this->db->where('id_report', $data['viewreports']['id'])
-	// 		->from('comments')
-	// 		->count_all_results();
-
-	// 	// Pass the title to the view
-	// 	$data['page_title'] = $data['viewreports']['title'];
-
-	// 	// Load the views with the data
-	// 	$this->load->view('fixed/articles', $data);
-	// }
-
-	// public function view_article($title)
-	// {
-	// 	// Convert hyphens back to spaces
-	// 	$decoded_title = str_replace('-', ' ', urldecode($title));
-
-	// 	// Query to get data from the 'reports' table where the title matches
-	// 	$data['viewreports'] = $this->db->select('*')
-	// 		->from('reports')
-	// 		->where('title', $decoded_title)
-	// 		->get()
-	// 		->row_array();
-
-	// 	// Check if the article exists
-	// 	if (!$data['viewreports']) {
-	// 		show_404(); // Show 404 error if the article is not found
-	// 		return;
-	// 	}
-
-	// 	// Get the report ID from the retrieved article data
-	// 	$report_id = $data['viewreports']['id'];
-
-	// 	// Query to get comments related to this report
-	// 	$comments = $this->db->select('comments.*, replies.id AS reply_id, replies.name AS reply_name, replies.reply_text, replies.likes AS reply_likes, replies.unlikes AS reply_unlikes, replies.created_at AS reply_created_at')
-	// 		->from('comments')
-	// 		->join('replies', 'replies.comment_id = comments.id', 'left')
-	// 		->where('comments.id_report', $report_id)
-	// 		->order_by('comments.created_at', 'ASC')
-	// 		->order_by('replies.created_at', 'DESC') // Order replies within each comment
-	// 		->get()
-	// 		->result_array();
-
-	// 	// Organize comments and replies
-	// 	$data['comments'] = [];
-	// 	foreach ($comments as $comment) {
-	// 		if (!isset($data['comments'][$comment['id']])) {
-	// 			$data['comments'][$comment['id']] = $comment;
-	// 			$data['comments'][$comment['id']]['replies'] = [];
-	// 		}
-	// 		if ($comment['reply_id']) {
-	// 			if (count($data['comments'][$comment['id']]['replies']) < 1) {
-	// 				$data['comments'][$comment['id']]['replies'][] = [
-	// 					'id' => $comment['reply_id'],
-	// 					'name' => $comment['reply_name'],
-	// 					'reply_text' => $comment['reply_text'],
-	// 					'likes' => $comment['reply_likes'],
-	// 					'unlikes' => $comment['reply_unlikes'],
-	// 					'created_at' => $comment['reply_created_at']
-	// 				];
-	// 			}
-	// 		}
-	// 	}
-
-	// 	// Query to get the count of comments related to this report
-	// 	$data['comment_count'] = $this->db->where('id_report', $report_id)
-	// 		->from('comments')
-	// 		->count_all_results();
-
-	// 	// Pass the title to the view
-	// 	$data['page_title'] = $data['viewreports']['title'];
-
-	// 	// Load the views with the data
-	// 	$this->load->view('fixed/articles', $data);
-	// }
-
 	public function view_article($title)
 	{
 		// Convert hyphens back to spaces
@@ -231,13 +126,22 @@ class Fixed extends CI_Controller
 		// Get the report ID from the retrieved article data
 		$report_id = $data['viewreports']['id'];
 
-		// Query to get comments related to this report
-		$comments = $this->db->select('comments.*, replies.id AS reply_id, replies.name AS reply_name, replies.reply_text, replies.likes AS reply_likes, replies.unlikes AS reply_unlikes, replies.created_at AS reply_created_at')
+		// Query to get comments and their replies with parent names
+		$comments = $this->db->select('comments.*, 
+                        replies.id AS reply_id, 
+                        replies.name AS reply_name, 
+                        replies.reply_text, 
+                        replies.likes AS reply_likes, 
+                        replies.unlikes AS reply_unlikes, 
+                        replies.created_at AS reply_created_at, 
+                        replies.parent_id AS reply_parent_id,
+                        parent_replies.name AS parent_name') // Get the parent reply's name
 			->from('comments')
 			->join('replies', 'replies.comment_id = comments.id', 'left')
+			->join('replies as parent_replies', 'replies.parent_id = parent_replies.id', 'left') // Join to get the parent reply name
 			->where('comments.id_report', $report_id)
 			->order_by('comments.created_at', 'ASC')
-			->order_by('replies.created_at', 'DESC') // Order replies within each comment
+			->order_by('replies.created_at', 'ASC')
 			->get()
 			->result_array();
 
@@ -250,16 +154,18 @@ class Fixed extends CI_Controller
 				$data['comments'][$comment['id']]['comment_name'] = $comment['name']; // Add the comment author name
 			}
 			if ($comment['reply_id']) {
-				if (count($data['comments'][$comment['id']]['replies']) < 2) {
-					$data['comments'][$comment['id']]['replies'][] = [
-						'id' => $comment['reply_id'],
-						'name' => $comment['reply_name'],
-						'reply_text' => $comment['reply_text'],
-						'likes' => $comment['reply_likes'],
-						'unlikes' => $comment['reply_unlikes'],
-						'created_at' => $comment['reply_created_at']
-					];
-				}
+				$reply = [
+					'id' => $comment['reply_id'],
+					'name' => $comment['reply_name'],
+					'reply_text' => $comment['reply_text'],
+					'likes' => $comment['reply_likes'],
+					'unlikes' => $comment['reply_unlikes'],
+					'created_at' => $comment['reply_created_at'],
+					'parent_id' => $comment['reply_parent_id'],
+					'parent_name' => $comment['parent_name'] ? $comment['parent_name'] : $comment['name'] // Use comment's name if parent_name is NULL
+				];
+				// Add replies to their respective parent comments
+				$data['comments'][$comment['id']]['replies'][] = $reply;
 			}
 		}
 
@@ -274,6 +180,7 @@ class Fixed extends CI_Controller
 		// Load the views with the data
 		$this->load->view('fixed/articles', $data);
 	}
+
 
 	public function comment($id)
 	{
@@ -461,6 +368,53 @@ class Fixed extends CI_Controller
 			redirect('view-article/' . $id_report . '?error=Failed to add comment');
 		}
 	}
+
+	public function add_reply_user()
+	{
+		$comment_id = $this->input->post('comment_id');
+		$parent_id = $this->input->post('parent_id'); // Mengambil parent_id dari balasan yang sedang dibalas
+		$id_report = $this->input->post('id_report');
+
+		$data = [
+			'comment_id' => $comment_id,
+			'parent_id' => $parent_id, // Ini akan menyimpan ID dari balasan yang sedang dibalas
+			'name' => 'Unknown',
+			'reply_text' => $this->input->post('reply_text'),
+			'likes' => 0,
+			'unlikes' => 0,
+		];
+
+		$this->db->insert('replies', $data);
+
+		// Cek apakah insert berhasil
+		if ($this->db->affected_rows() > 0) {
+			// Ambil title dari tabel reports berdasarkan id_report
+			$report = $this->db->get_where('reports', ['id' => $id_report])->row();
+
+			if ($report) {
+				$title = $report->title; // Ambil title dari report
+
+				// Ubah title menjadi URL-friendly format
+				$url_title = urlencode(str_replace(' ', '-', $title));
+			} else {
+				// Jika tidak ditemukan, gunakan id_report sebagai fallback
+				$url_title = $id_report;
+			}
+
+			// Set success flashdata
+			$this->session->set_flashdata('message', 'Comment added successfully!');
+
+			// Redirect ke halaman view-article dengan title yang diformat
+			redirect('view-article/' . $url_title);
+		} else {
+			// Set error flashdata
+			$this->session->set_flashdata('error', 'Failed to add comment');
+
+			// Redirect kembali dengan pesan error
+			redirect('view-article/' . $id_report . '?error=Failed to add comment');
+		}
+	}
+
 
 	public function likeReply()
 	{
