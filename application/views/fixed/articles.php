@@ -896,6 +896,68 @@
     </script>
 
     <script>
+        function likeReply(id) {
+            $.ajax({
+                url: '<?= site_url('fixed/likeReply') ?>',
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    $('button[onclick="likeReply(' + id + ')"] span').text(data.likes);
+
+                    // Show success message using SweetAlert
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'You liked this comment.',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        background: '#f8f9fa', // Light background color
+                        customClass: {
+                            container: 'swal2-container',
+                            title: 'swal2-title',
+                            popup: 'swal2-popup'
+                        }
+                    });
+                }
+            });
+        }
+
+        function unlikeReply(id) {
+            $.ajax({
+                url: '<?= site_url('fixed/unlikeReply') ?>',
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    $('button[onclick="unlikeReply(' + id + ')"] span').text(data.unlikes);
+
+                    // Show success message using SweetAlert
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'You unliked this comment.',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        background: '#f8f9fa', // Light background color
+                        customClass: {
+                            container: 'swal2-container',
+                            title: 'swal2-title',
+                            popup: 'swal2-popup'
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const scrollDown = document.getElementById('scroll-down');
             const page1 = document.getElementById('page-1');

@@ -461,4 +461,29 @@ class Fixed extends CI_Controller
 			redirect('view-article/' . $id_report . '?error=Failed to add comment');
 		}
 	}
+
+	public function likeReply()
+	{
+		$id = $this->input->post('id');
+		// Increment like count in database
+		$this->db->set('likes', 'likes + 1', FALSE);
+		$this->db->where('id', $id);
+		$this->db->update('replies');
+
+		// Return the updated like count
+		$like_count = $this->db->select('likes')->where('id', $id)->get('replies')->row()->likes;
+		echo json_encode(['likes' => $like_count]);
+	}
+
+	public function unlikeReply()
+	{
+		$id = $this->input->post('id');
+		$this->db->set('unlikes', 'unlikes + 1', FALSE);
+		$this->db->where('id', $id);
+		$this->db->update('replies');
+
+		// Return the updated unlike count
+		$unlike_count = $this->db->select('unlikes')->where('id', $id)->get('replies')->row()->unlikes;
+		echo json_encode(['unlikes' => $unlike_count]);
+	}
 }
