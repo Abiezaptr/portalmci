@@ -693,35 +693,38 @@
         </div>
     <?php endforeach; ?>
 
-    <?php foreach ($comment['replies'] as $reply): ?>
-        <div class="modal fade" id="replyUserModal<?= $reply['id'] ?>" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <h6>Berikan Komentar</h6>
-                        <div class="comment-card mt-4">
-                            <form id="commentForm" action="<?= site_url('fixed/add_reply_user') ?>" method="post">
-                                <!-- Hidden field for comment_id -->
-                                <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
-                                <input type="hidden" name="parent_id" value="<?= $reply['id'] ?>">
-                                <input type="hidden" name="id_report" value="<?= $comment['id_report'] ?>">
+    <?php if (!empty($comment['replies'])): ?>
+        <?php foreach ($comment['replies'] as $reply): ?>
+            <div class="modal fade" id="replyUserModal<?= htmlspecialchars($reply['id']) ?>" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body text-center">
+                            <h6>Berikan Komentar</h6>
+                            <div class="comment-card mt-4">
+                                <form id="commentForm" action="<?= site_url('fixed/add_reply_user') ?>" method="post">
+                                    <!-- Hidden fields for comment_id, parent_id, and id_report -->
+                                    <input type="hidden" name="comment_id" value="<?= htmlspecialchars($comment['id']) ?>">
+                                    <input type="hidden" name="parent_id" value="<?= htmlspecialchars($reply['id']) ?>">
+                                    <input type="hidden" name="id_report" value="<?= htmlspecialchars($comment['id_report']) ?>">
 
-                                <div class="input-group mb-3">
-                                    <textarea class="form-control" name="reply_text" id="commentInput" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>
-                                </div>
-                                <small id="charCount" class="form-text text-muted">1000 Karakter tersisa</small>
-                                <div class="divider"></div>
-                                <br>
-                                <div class="card-footer">
-                                    <button class="btn btn-danger btn-sm btn-block" type="submit">Kirim <i class="fa-regular fa-paper-plane"></i></button>
-                                </div>
-                            </form>
+                                    <div class="input-group mb-3">
+                                        <textarea class="form-control" name="reply_text" id="commentInput<?= htmlspecialchars($reply['id']) ?>" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>
+                                    </div>
+                                    <small id="charCount" class="form-text text-muted">1000 Karakter tersisa</small>
+                                    <div class="divider"></div>
+                                    <br>
+                                    <div class="card-footer">
+                                        <button class="btn btn-danger btn-sm btn-block" type="submit">Kirim <i class="fa-regular fa-paper-plane"></i></button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
 
     <!-- Modal structure -->
     <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
