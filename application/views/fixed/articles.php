@@ -606,6 +606,7 @@
                         </div>
                     </form>
                 </div>
+                <br>
 
                 <?php if (!empty($comments)): ?>
                     <?php foreach ($comments as $comment): ?>
