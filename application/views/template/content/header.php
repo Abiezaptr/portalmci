@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixed | MCI Online Repository</title>
+    <title><?= $title; ?> | MCI Online Repository</title>
     <link rel="icon" type="image/png" sizes="96x96" href="<?= base_url('assets') ?>/images/favicon.png">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
@@ -425,6 +425,10 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
+            <?php
+            // Dapatkan segmen URI saat ini
+            $current_uri = $this->uri->segment(1);
+            ?>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="#" id="mobileMenu" role="button" aria-haspopup="true" aria-expanded="false">Mobile</a>
@@ -443,11 +447,11 @@
                         </div>
                     </div>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item <?= ($current_uri == 'fixed') ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= site_url('fixed') ?>">Fixed</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Digital Insight</a>
+                <li class="nav-item <?= ($current_uri == 'digital-insight') ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= site_url('digital-insight') ?>">Digital Insight</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Global</a>

@@ -6,6 +6,7 @@ class Fixed extends CI_Controller
 
 	public function index()
 	{
+		$data['title'] = 'Fixed';
 		// Query to get data from the 'reports' table where category is 'fixed' and type is 'pdf'
 		$data['reports'] = $this->db->where('category', 'fixed')
 			->where('type', 'pdf')
@@ -22,13 +23,14 @@ class Fixed extends CI_Controller
 		$data['videos'] = $this->db->where('category', 'fixed')->get('videos')->result();
 
 		// Load the views with the data
-		$this->load->view('template/content/header');
+		$this->load->view('template/content/header', $data);
 		$this->load->view('fixed/list', $data);
 		$this->load->view('template/content/footer');
 	}
 
 	public function view_report($title)
 	{
+		$data['title'] = 'View Report';
 		// Convert hyphens back to spaces
 		$decoded_title = str_replace('-', ' ', urldecode($title));
 
@@ -65,6 +67,7 @@ class Fixed extends CI_Controller
 
 	public function view_pdf($id)
 	{
+		$data['title'] = 'View PDF';
 		// Query to get the report based on the ID
 		$data['viewreports'] = $this->db->select('*')
 			->from('reports')
@@ -86,6 +89,7 @@ class Fixed extends CI_Controller
 
 	public function view_pdf_article($id)
 	{
+		$data['title'] = 'View Article';
 		// Query to get the report based on the ID
 		$data['viewreports'] = $this->db->select('*')
 			->from('reports')
@@ -107,6 +111,7 @@ class Fixed extends CI_Controller
 
 	public function view_article($title)
 	{
+		$data['title'] = 'View Article';
 		// Convert hyphens back to spaces
 		$decoded_title = str_replace('-', ' ', urldecode($title));
 
@@ -184,6 +189,7 @@ class Fixed extends CI_Controller
 
 	public function comment($id)
 	{
+		$data['title'] = 'Comment';
 		// Join comments with reports table
 		$this->db->select('comments.*, reports.id as report_id, reports.title as report_title, reports.created_at as date_report, reports.image as image_report, reports.desc'); // Select fields from both tables
 		$this->db->from('comments');
