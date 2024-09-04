@@ -188,6 +188,115 @@ class Fixed extends CI_Controller
 	}
 
 
+	// public function comment($id)
+	// {
+	// 	$data['title'] = 'Comment';
+	// 	// Join comments with reports table
+	// 	$this->db->select('comments.*, reports.id as report_id, reports.title as report_title, reports.created_at as date_report, reports.image as image_report, reports.desc'); // Select fields from both tables
+	// 	$this->db->from('comments');
+	// 	$this->db->join('reports', 'comments.id_report = reports.id'); // Assuming 'id' is the primary key in reports
+	// 	$this->db->where('comments.id_report', $id);
+	// 	$this->db->order_by('comments.created_at', 'DESC');
+	// 	$query = $this->db->get();
+
+	// 	$data['comments'] = $query->result_array(); // Get comments as an array
+
+	// 	// Set the page title to the report title if comments exist
+	// 	if (!empty($data['comments'])) {
+	// 		$data['page_title'] = $data['comments'][0]['report_title']; // Set page title to the report title
+	// 		$data['image_report'] = $data['comments'][0]['image_report']; // Get the report image
+	// 		$data['desc'] = $data['comments'][0]['desc']; // Get the report image
+	// 		$data['date_report'] = $data['comments'][0]['date_report']; // Get the report image
+	// 		$data['report_id'] = $data['comments'][0]['report_id']; // Get the report image
+	// 	} else {
+	// 		// Fetch report details even if there are no comments
+	// 		$this->db->select('id as report_id, title as report_title, created_at as date_report, image as image_report, desc');
+	// 		$this->db->from('reports');
+	// 		$this->db->where('id', $id);
+	// 		$report_query = $this->db->get();
+	// 		$report = $report_query->row_array();
+
+	// 		if ($report) {
+	// 			$data['page_title'] = $report['report_title']; // Set page title to the report title
+	// 			$data['image_report'] = $report['image_report']; // Get the report image
+	// 			$data['desc'] = $report['desc']; // Get the report description
+	// 			$data['date_report'] = $report['date_report']; // Get the report date
+	// 			$data['report_id'] = $report['report_id']; // Get the report ID
+	// 		} else {
+	// 			$data['page_title'] = 'Fixed Articles'; // Fallback title if no comments
+	// 			$data['image_report'] = 'Image not found'; // No image if no comments
+	// 			$data['desc'] = 'Description not found'; // No description if no comments
+	// 			$data['date_report'] = 'Date not found'; // No date if no comments
+	// 			$data['report_id'] = $id; // Use the provided ID
+	// 		}
+	// 	}
+
+	// 	// Load the view and pass the comments data
+	// 	$this->load->view('fixed/comments', $data);
+	// }
+
+	public function comment($id)
+	{
+		$data['title'] = 'Comment';
+
+		// Join comments with reports table
+		$this->db->select('comments.*, reports.id as report_id, reports.title as report_title, reports.created_at as date_report, reports.image as image_report, reports.desc');
+		$this->db->from('comments');
+		$this->db->join('reports', 'comments.id_report = reports.id'); // Assuming 'id' is the primary key in reports
+		$this->db->where('comments.id_report', $id);
+		$this->db->order_by('comments.created_at', 'DESC');
+		$query = $this->db->get();
+
+		$data['comments'] = $query->result_array(); // Get comments as an array
+
+		// Fetch replies for each comment
+		foreach ($data['comments'] as &$comment) {
+			$this->db->select('replies.*, parent_replies.name as parent_name');
+			$this->db->from('replies');
+			$this->db->join('replies as parent_replies', 'replies.parent_id = parent_replies.id', 'left'); // Join to get the parent reply name
+			$this->db->where('replies.comment_id', $comment['id']);
+			$this->db->order_by('replies.created_at', 'ASC');
+			$reply_query = $this->db->get();
+
+			$comment['replies'] = $reply_query->result_array(); // Add replies to the respective comment
+		}
+
+		// Set the page title to the report title if comments exist
+		if (!empty($data['comments'])) {
+			$data['page_title'] = $data['comments'][0]['report_title']; // Set page title to the report title
+			$data['image_report'] = $data['comments'][0]['image_report']; // Get the report image
+			$data['desc'] = $data['comments'][0]['desc']; // Get the report description
+			$data['date_report'] = $data['comments'][0]['date_report']; // Get the report date
+			$data['report_id'] = $data['comments'][0]['report_id']; // Get the report ID
+		} else {
+			// Fetch report details even if there are no comments
+			$this->db->select('id as report_id, title as report_title, created_at as date_report, image as image_report, desc');
+			$this->db->from('reports');
+			$this->db->where('id', $id);
+			$report_query = $this->db->get();
+			$report = $report_query->row_array();
+
+			if ($report) {
+				$data['page_title'] = $report['report_title']; // Set page title to the report title
+				$data['image_report'] = $report['image_report']; // Get the report image
+				$data['desc'] = $report['desc']; // Get the report description
+				$data['date_report'] = $report['date_report']; // Get the report date
+				$data['report_id'] = $report['report_id']; // Get the report ID
+			} else {
+				$data['page_title'] = 'Fixed Articles'; // Fallback title if no comments
+				$data['image_report'] = 'Image not found'; // No image if no comments
+				$data['desc'] = 'Description not found'; // No description if no comments
+				$data['date_report'] = 'Date not found'; // No date if no comments
+				$data['report_id'] = $id; // Use the provided ID
+			}
+		}
+
+		// Load the view and pass the comments data
+		$this->load->view('fixed/comments', $data);
+	}
+
+
+	// Report.php Controller
 	public function like()
 	{
 		$id = $this->input->post('id');
