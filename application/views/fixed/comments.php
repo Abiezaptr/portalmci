@@ -584,40 +584,129 @@
 
             <!-- Comments Section -->
             <div class="comment-section">
-                <h6>Berikan Komentar</h6>
-                <div class="comment-card mt-4">
-                    <form id="commentForm" action="<?= site_url('fixed/add_comment') ?>" method="post">
-                        <div class="input-group mb-3">
-                            <textarea class="form-control" name="comment" id="commentInput" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>
-                            <input type="hidden" name="id_report" value="<?= $report_id ?>">
-                        </div>
-                        <div class="divider"></div>
-                        <div class="card-footer">
-                            <small id="charCount" class="form-text text-muted">1000 Karakter tersisa</small>
-                            <button class="btn btn-danger btn-sm" type="submit">Kirim <i class="fa-regular fa-paper-plane"></i></button>
-                        </div>
-                    </form>
-                </div>
+                <div class="comment-box mt-4">
+                    <?php if (count($comments) > 0): ?>
+                        <p>Komentar</p>
+                    <?php endif; ?>
 
-                <h6 class="mt-4"><small><?= count($comments) ?> Komentar</small></h6> <!-- Display the number of comments -->
-                <div class="btn-group mb-3" role="group">
-                    <button type="button" class="btn btn-danger btn-sm filter-btn active" data-filter="terbaru" onclick="filterComments('terbaru')">Terbaru</button>
-                    <button type="button" class="btn btn-danger btn-sm filter-btn" data-filter="terlama" onclick="filterComments('terlama')">Terlama</button>
-                </div>
+                    <div class="comment-card mt-4">
+                        <form id="commentForm" action="<?= site_url('fixed/add_comment') ?>" method="post">
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" name="comment" id="commentInput" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>
+                                <input type="hidden" name="id_report" value="<?= $report_id ?>">
+                            </div>
+                            <div class="divider"></div>
+                            <div class="card-footer">
+                                <small id="charCount" class="form-text text-muted">1000 Karakter tersisa</small>
+                                <button class="btn btn-danger btn-sm" type="submit">Kirim <i class="fa-regular fa-paper-plane"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                    <br>
 
-                <div id="commentsContainer">
                     <?php if (!empty($comments)): ?>
                         <?php foreach ($comments as $comment): ?>
+                            <?php
+                            // Ensure timezone is set correctly
+                            date_default_timezone_set('Asia/Jakarta');
+
+                            // Define the timeAgo function directly in the view
+                            if (!function_exists('timeAgo')) {
+                                function timeAgo($datetime, $full = false)
+                                {
+                                    $now = new DateTime();
+                                    $ago = new DateTime($datetime);
+                                    $diff = $now->diff($ago);
+
+                                    $diff->w = floor($diff->d / 7);
+                                    $diff->d -= $diff->w * 7;
+
+                                    $string = array(
+                                        'y' => 'year',
+                                        'm' => 'month',
+                                        'w' => 'week',
+                                        'd' => 'day',
+                                        'h' => 'hour',
+                                        'i' => 'minute',
+                                        's' => 'second',
+                                    );
+                                    foreach ($string as $k => &$v) {
+                                        if ($diff->$k) {
+                                            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+                                        } else {
+                                            unset($string[$k]);
+                                        }
+                                    }
+
+                                    if (!$full) $string = array_slice($string, 0, 1);
+                                    return $string ? implode(', ', $string) . ' ago' : 'just now';
+                                }
+                            }
+                            ?>
+
                             <div class="card mt-2">
                                 <div class="card-body">
-                                    <div class="comment-item d-flex align-items-center">
+                                    <div class="comment-item d-flex">
                                         <img src="<?= base_url('assets/images/consumer.png') ?>" alt="Author" class="author-image" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;">
-                                        <div>
-                                            <strong><?= htmlspecialchars($comment['name']) ?></strong>
-                                            <br>
-                                            <span class="comment-text"><?= htmlspecialchars($comment['comment_text']) ?></span>
+                                        <div class="d-flex flex-column">
+                                            <div>
+                                                <strong><?= htmlspecialchars($comment['name']) ?></strong>
+                                                <br>
+                                                <span class="comment-time" data-timestamp="<?= $comment['created_at'] ?>" style="font-size: 0.75rem; color: gray;"><small><?= timeAgo($comment['created_at']) ?></small></span>
+                                                <br>
+                                                <span class="comment-text"><?= htmlspecialchars($comment['comment_text']) ?></span>
+                                            </div>
+                                            <div class="like-unlike mt-3 d-flex align-items-center">
+                                                <button class="btn btn-link text-muted p-0 me-3" onclick="likeComment(<?= $comment['id'] ?>)">
+                                                    <i class="fa-regular fa-thumbs-up fa-xs"></i> <span class="ms-1 small"><?= $comment['likes'] ?></span>
+                                                </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <button class="btn btn-link text-muted p-0 me-3" onclick="unlikeComment(<?= $comment['id'] ?>)">
+                                                    <i class="fa-regular fa-thumbs-down fa-xs"></i> <span class="ms-1 small"><?= $comment['unlikes'] ?></span>
+                                                </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <button class="btn btn-link text-muted p-0 ms-3" data-toggle="modal" data-target="#replyModal<?= $comment['id'] ?>">
+                                                    <small>Balas</small>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <?php if (!empty($comment['replies'])): ?>
+                                        <div class="replies mt-3" id="replies-<?= $comment['id'] ?>">
+                                            <?php foreach ($comment['replies'] as $reply): ?>
+                                                <div class="card mt-2 ms-4 reply-card">
+                                                    <div class="card-body">
+                                                        <div class="comment-item d-flex">
+                                                            <img src="<?= base_url('assets/images/consumer.png') ?>" alt="Author" class="author-image" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;">
+                                                            <div class="d-flex flex-column">
+                                                                <div>
+                                                                    <strong><?= htmlspecialchars($reply['name']) ?></strong>
+                                                                    <br>
+                                                                    <span class="comment-time" data-timestamp="<?= $reply['created_at'] ?>" style="font-size: 0.75rem; color: gray;"><small><?= timeAgo($reply['created_at']) ?></small></span>
+                                                                    <br>
+                                                                    <span class="comment-text"><span class="text-muted"><small>@<?= htmlspecialchars($reply['parent_name']) ?></small></span>&nbsp; <?= htmlspecialchars($reply['reply_text']) ?></span>
+                                                                </div>
+                                                                <div class="like-unlike mt-3 d-flex align-items-center">
+                                                                    <button class="btn btn-link text-muted p-0 me-3" onclick="likeReply(<?= $reply['id'] ?>)">
+                                                                        <i class="fa-regular fa-thumbs-up fa-xs"></i> <span class="ms-1 small"><?= $reply['likes'] ?></span>
+                                                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <button class="btn btn-link text-muted p-0 me-3" onclick="unlikeReply(<?= $reply['id'] ?>)">
+                                                                        <i class="fa-regular fa-thumbs-down fa-xs"></i> <span class="ms-1 small"><?= $reply['unlikes'] ?></span>
+                                                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <button class="btn btn-link text-muted p-0 ms-3" data-toggle="modal" data-target="#replyUserModal<?= $reply['id'] ?>">
+                                                                        <small>Balas</small>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <!-- Show/Hide button placed below the replies -->
+                                        <button class="btn btn-link text-primary p-0 mt-4 ms-4" onclick="toggleReplies(<?= $comment['id'] ?>)">
+                                            <small>Sembunyikan balasan</small>
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -632,6 +721,66 @@
         </div>
     </div>
 
+    <?php foreach ($comments as $comment): ?>
+        <div class="modal fade" id="replyModal<?= $comment['id'] ?>" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <h6>Berikan Komentar</h6>
+                        <div class="comment-card mt-4">
+                            <form id="commentForm" action="<?= site_url('fixed/add_comment_user') ?>" method="post">
+                                <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
+                                <input type="hidden" name="id_report" value="<?= $comment['id_report'] ?>">
+                                <div class="input-group mb-3">
+                                    <textarea class="form-control" name="reply_text" id="commentInput" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>
+                                </div>
+                                <small id="charCount" class="form-text text-muted">1000 Karakter tersisa</small>
+                                <div class="divider"></div>
+                                <br>
+                                <div class="card-footer">
+                                    <button class="btn btn-danger btn-sm btn-block" type="submit">Kirim <i class="fa-regular fa-paper-plane"></i></button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+
+    <?php if (!empty($comment['replies'])): ?>
+        <?php foreach ($comment['replies'] as $reply): ?>
+            <div class="modal fade" id="replyUserModal<?= htmlspecialchars($reply['id']) ?>" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body text-center">
+                            <h6>Berikan Komentar</h6>
+                            <div class="comment-card mt-4">
+                                <form id="commentForm" action="<?= site_url('fixed/add_reply_user') ?>" method="post">
+                                    <!-- Hidden fields for comment_id, parent_id, and id_report -->
+                                    <input type="hidden" name="comment_id" value="<?= htmlspecialchars($comment['id']) ?>">
+                                    <input type="hidden" name="parent_id" value="<?= htmlspecialchars($reply['id']) ?>">
+                                    <input type="hidden" name="id_report" value="<?= htmlspecialchars($comment['id_report']) ?>">
+
+                                    <div class="input-group mb-3">
+                                        <textarea class="form-control" name="reply_text" id="commentInput<?= htmlspecialchars($reply['id']) ?>" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>
+                                    </div>
+                                    <small id="charCount" class="form-text text-muted">1000 Karakter tersisa</small>
+                                    <div class="divider"></div>
+                                    <br>
+                                    <div class="card-footer">
+                                        <button class="btn btn-danger btn-sm btn-block" type="submit">Kirim <i class="fa-regular fa-paper-plane"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
@@ -640,6 +789,36 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.19/jquery.touchSwipe.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- <script>
+        function updateCharacterCount() {
+            const maxLength = 1000;
+            const currentLength = document.getElementById('commentInput').value.length;
+            const remainingChars = maxLength - currentLength;
+            document.getElementById('charCount').textContent = `${remainingChars} Karakter tersisa`;
+        }
+
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+    </script> -->
+
+    <script>
+        function toggleReplies(commentId) {
+            const repliesSection = document.getElementById('replies-' + commentId);
+            const toggleButton = repliesSection.nextElementSibling;
+
+            if (repliesSection.style.display === 'none') {
+                repliesSection.style.display = 'block';
+                toggleButton.innerHTML = '<small>Sembunyikan balasan</small>';
+            } else {
+                repliesSection.style.display = 'none';
+                toggleButton.innerHTML = '<small>Tampilkan balasan</small>';
+            }
+        }
+    </script>
+
 
     <script>
         function updateCharacterCount() {
@@ -652,6 +831,194 @@
         function autoResize(textarea) {
             textarea.style.height = 'auto';
             textarea.style.height = textarea.scrollHeight + 'px';
+        }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function timeAgo(dateString) {
+                const date = new Date(dateString);
+                const now = new Date();
+                const seconds = Math.floor((now - date) / 1000);
+                const interval = Math.floor(seconds / 31536000);
+
+                let output = '';
+
+                if (interval > 1) {
+                    output = interval + ' years ago';
+                } else if (interval === 1) {
+                    output = '1 year ago';
+                } else {
+                    const interval = Math.floor(seconds / 2592000);
+                    if (interval > 1) {
+                        output = interval + ' months ago';
+                    } else if (interval === 1) {
+                        output = '1 month ago';
+                    } else {
+                        const interval = Math.floor(seconds / 86400);
+                        if (interval > 1) {
+                            output = interval + ' days ago';
+                        } else if (interval === 1) {
+                            output = '1 day ago';
+                        } else {
+                            const interval = Math.floor(seconds / 3600);
+                            if (interval > 1) {
+                                output = interval + ' hours ago';
+                            } else if (interval === 1) {
+                                output = '1 hour ago';
+                            } else {
+                                const interval = Math.floor(seconds / 60);
+                                if (interval > 1) {
+                                    output = interval + ' minutes ago';
+                                } else if (interval === 1) {
+                                    output = '1 minute ago';
+                                } else {
+                                    output = 'just now';
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return output;
+            }
+
+            function updateTimes() {
+                document.querySelectorAll('.comment-time').forEach(function(element) {
+                    const timestamp = element.dataset.timestamp;
+                    element.textContent = timeAgo(timestamp);
+                });
+            }
+
+            // Initial update
+            updateTimes();
+
+            // Update times every minute
+            setInterval(updateTimes, 60000);
+        });
+    </script>
+
+    <script>
+        function likeComment(id) {
+            $.ajax({
+                url: '<?= site_url('fixed/likeComment') ?>',
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    $('button[onclick="likeComment(' + id + ')"] span').text(data.likes);
+
+                    // Show success message using SweetAlert
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'You liked this comment.',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        background: '#f8f9fa', // Light background color
+                        customClass: {
+                            container: 'swal2-container',
+                            title: 'swal2-title',
+                            popup: 'swal2-popup'
+                        }
+                    });
+                }
+            });
+        }
+
+        function unlikeComment(id) {
+            $.ajax({
+                url: '<?= site_url('fixed/unlikeComment') ?>',
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    $('button[onclick="unlikeComment(' + id + ')"] span').text(data.unlikes);
+
+                    // Show success message using SweetAlert
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'You unliked this comment.',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        background: '#f8f9fa', // Light background color
+                        customClass: {
+                            container: 'swal2-container',
+                            title: 'swal2-title',
+                            popup: 'swal2-popup'
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function likeReply(id) {
+            $.ajax({
+                url: '<?= site_url('fixed/likeReply') ?>',
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    $('button[onclick="likeReply(' + id + ')"] span').text(data.likes);
+
+                    // Show success message using SweetAlert
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'You liked this comment.',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        background: '#f8f9fa', // Light background color
+                        customClass: {
+                            container: 'swal2-container',
+                            title: 'swal2-title',
+                            popup: 'swal2-popup'
+                        }
+                    });
+                }
+            });
+        }
+
+        function unlikeReply(id) {
+            $.ajax({
+                url: '<?= site_url('fixed/unlikeReply') ?>',
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    $('button[onclick="unlikeReply(' + id + ')"] span').text(data.unlikes);
+
+                    // Show success message using SweetAlert
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'You unliked this comment.',
+                        toast: true,
+                        position: 'top-end',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        background: '#f8f9fa', // Light background color
+                        customClass: {
+                            container: 'swal2-container',
+                            title: 'swal2-title',
+                            popup: 'swal2-popup'
+                        }
+                    });
+                }
+            });
         }
     </script>
 

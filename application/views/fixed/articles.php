@@ -426,6 +426,51 @@
             color: #c62828;
             /* Dark red text color */
         }
+
+        .comment-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fff;
+            max-width: 900px;
+            /* Align to the left */
+            margin-left: 0;
+            margin-right: auto;
+            /* Alternatively, use margin: 0; to remove any extra spacing */
+        }
+
+        #commentInput {
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: none;
+            outline: none;
+            width: 100%;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #ddd;
+            margin: 0;
+        }
+
+        .card-footer .btn {
+            border-radius: 5px;
+            background-color: #c42323;
+            color: white;
+            font-weight: bold;
+        }
+
+        .card-footer .btn:hover {
+            background-color: #DC143C;
+            /* Changed to light color */
+        }
+
+        .card-footer {
+            border-top: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 
@@ -531,7 +576,7 @@
                     <i class="fa-solid fa-share-nodes"></i>
                 </button>
 
-                <a href="<?= site_url('comments/' . $viewreports['id']) ?>" class="btn btn-sm btn-light mr-3 position-relative">
+                <a class="btn btn-sm btn-light mr-3 position-relative">
                     <i class="fa-regular fa-comment"></i>
                     <?php if ($comment_count > 0): ?>
                         <span class="badge badge-pill badge-danger" style="position: absolute; top: -10px; right: -10px;">
@@ -547,6 +592,20 @@
                 <?php if (count($comments) > 0): ?>
                     <p>Komentar</p>
                 <?php endif; ?>
+
+                <div class="comment-card mt-4">
+                    <form id="commentForm" action="<?= site_url('fixed/add_comment') ?>" method="post">
+                        <div class="input-group mb-3">
+                            <textarea class="form-control" name="comment" id="commentInput" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>
+                            <input type="hidden" name="id_report" value="<?= $report_id ?>">
+                        </div>
+                        <div class="divider"></div>
+                        <div class="card-footer">
+                            <small id="charCount" class="form-text text-muted">1000 Karakter tersisa</small>
+                            <button class="btn btn-danger btn-sm" type="submit">Kirim <i class="fa-regular fa-paper-plane"></i></button>
+                        </div>
+                    </form>
+                </div>
 
                 <?php if (!empty($comments)): ?>
                     <?php foreach ($comments as $comment): ?>
