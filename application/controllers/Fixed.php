@@ -235,65 +235,65 @@ class Fixed extends CI_Controller
 	// 	$this->load->view('fixed/comments', $data);
 	// }
 
-	public function comment($id)
-	{
-		$data['title'] = 'Comment';
+	// public function comment($id)
+	// {
+	// 	$data['title'] = 'Comment';
 
-		// Join comments with reports table
-		$this->db->select('comments.*, reports.id as report_id, reports.title as report_title, reports.created_at as date_report, reports.image as image_report, reports.desc');
-		$this->db->from('comments');
-		$this->db->join('reports', 'comments.id_report = reports.id'); // Assuming 'id' is the primary key in reports
-		$this->db->where('comments.id_report', $id);
-		$this->db->order_by('comments.created_at', 'DESC');
-		$query = $this->db->get();
+	// 	// Join comments with reports table
+	// 	$this->db->select('comments.*, reports.id as report_id, reports.title as report_title, reports.created_at as date_report, reports.image as image_report, reports.desc');
+	// 	$this->db->from('comments');
+	// 	$this->db->join('reports', 'comments.id_report = reports.id'); // Assuming 'id' is the primary key in reports
+	// 	$this->db->where('comments.id_report', $id);
+	// 	$this->db->order_by('comments.created_at', 'DESC');
+	// 	$query = $this->db->get();
 
-		$data['comments'] = $query->result_array(); // Get comments as an array
+	// 	$data['comments'] = $query->result_array(); // Get comments as an array
 
-		// Fetch replies for each comment
-		foreach ($data['comments'] as &$comment) {
-			$this->db->select('replies.*, parent_replies.name as parent_name');
-			$this->db->from('replies');
-			$this->db->join('replies as parent_replies', 'replies.parent_id = parent_replies.id', 'left'); // Join to get the parent reply name
-			$this->db->where('replies.comment_id', $comment['id']);
-			$this->db->order_by('replies.created_at', 'ASC');
-			$reply_query = $this->db->get();
+	// 	// Fetch replies for each comment
+	// 	foreach ($data['comments'] as &$comment) {
+	// 		$this->db->select('replies.*, parent_replies.name as parent_name');
+	// 		$this->db->from('replies');
+	// 		$this->db->join('replies as parent_replies', 'replies.parent_id = parent_replies.id', 'left'); // Join to get the parent reply name
+	// 		$this->db->where('replies.comment_id', $comment['id']);
+	// 		$this->db->order_by('replies.created_at', 'ASC');
+	// 		$reply_query = $this->db->get();
 
-			$comment['replies'] = $reply_query->result_array(); // Add replies to the respective comment
-		}
+	// 		$comment['replies'] = $reply_query->result_array(); // Add replies to the respective comment
+	// 	}
 
-		// Set the page title to the report title if comments exist
-		if (!empty($data['comments'])) {
-			$data['page_title'] = $data['comments'][0]['report_title']; // Set page title to the report title
-			$data['image_report'] = $data['comments'][0]['image_report']; // Get the report image
-			$data['desc'] = $data['comments'][0]['desc']; // Get the report description
-			$data['date_report'] = $data['comments'][0]['date_report']; // Get the report date
-			$data['report_id'] = $data['comments'][0]['report_id']; // Get the report ID
-		} else {
-			// Fetch report details even if there are no comments
-			$this->db->select('id as report_id, title as report_title, created_at as date_report, image as image_report, desc');
-			$this->db->from('reports');
-			$this->db->where('id', $id);
-			$report_query = $this->db->get();
-			$report = $report_query->row_array();
+	// 	// Set the page title to the report title if comments exist
+	// 	if (!empty($data['comments'])) {
+	// 		$data['page_title'] = $data['comments'][0]['report_title']; // Set page title to the report title
+	// 		$data['image_report'] = $data['comments'][0]['image_report']; // Get the report image
+	// 		$data['desc'] = $data['comments'][0]['desc']; // Get the report description
+	// 		$data['date_report'] = $data['comments'][0]['date_report']; // Get the report date
+	// 		$data['report_id'] = $data['comments'][0]['report_id']; // Get the report ID
+	// 	} else {
+	// 		// Fetch report details even if there are no comments
+	// 		$this->db->select('id as report_id, title as report_title, created_at as date_report, image as image_report, desc');
+	// 		$this->db->from('reports');
+	// 		$this->db->where('id', $id);
+	// 		$report_query = $this->db->get();
+	// 		$report = $report_query->row_array();
 
-			if ($report) {
-				$data['page_title'] = $report['report_title']; // Set page title to the report title
-				$data['image_report'] = $report['image_report']; // Get the report image
-				$data['desc'] = $report['desc']; // Get the report description
-				$data['date_report'] = $report['date_report']; // Get the report date
-				$data['report_id'] = $report['report_id']; // Get the report ID
-			} else {
-				$data['page_title'] = 'Fixed Articles'; // Fallback title if no comments
-				$data['image_report'] = 'Image not found'; // No image if no comments
-				$data['desc'] = 'Description not found'; // No description if no comments
-				$data['date_report'] = 'Date not found'; // No date if no comments
-				$data['report_id'] = $id; // Use the provided ID
-			}
-		}
+	// 		if ($report) {
+	// 			$data['page_title'] = $report['report_title']; // Set page title to the report title
+	// 			$data['image_report'] = $report['image_report']; // Get the report image
+	// 			$data['desc'] = $report['desc']; // Get the report description
+	// 			$data['date_report'] = $report['date_report']; // Get the report date
+	// 			$data['report_id'] = $report['report_id']; // Get the report ID
+	// 		} else {
+	// 			$data['page_title'] = 'Fixed Articles'; // Fallback title if no comments
+	// 			$data['image_report'] = 'Image not found'; // No image if no comments
+	// 			$data['desc'] = 'Description not found'; // No description if no comments
+	// 			$data['date_report'] = 'Date not found'; // No date if no comments
+	// 			$data['report_id'] = $id; // Use the provided ID
+	// 		}
+	// 	}
 
-		// Load the view and pass the comments data
-		$this->load->view('fixed/comments', $data);
-	}
+	// 	// Load the view and pass the comments data
+	// 	$this->load->view('fixed/comments', $data);
+	// }
 
 
 	// Report.php Controller
@@ -325,11 +325,11 @@ class Fixed extends CI_Controller
 
 	public function add_comment()
 	{
-		// ambil data dari form
+		// Ambil data dari form
 		$comment = $this->input->post('comment');
 		$id_report = $this->input->post('id_report');
 
-		// masukan data ke database
+		// Masukkan data ke database
 		$this->db->insert(
 			'comments',
 			[
@@ -339,17 +339,32 @@ class Fixed extends CI_Controller
 			]
 		);
 
-		// Check if the insert was successful
+		// Cek apakah insert berhasil
 		if ($this->db->affected_rows() > 0) {
+			// Ambil title dari tabel reports berdasarkan id_report
+			$report = $this->db->get_where('reports', ['id' => $id_report])->row();
+
+			if ($report) {
+				$title = $report->title; // Ambil title dari report
+
+				// Ubah title menjadi URL-friendly format
+				$url_title = urlencode(str_replace(' ', '-', $title));
+			} else {
+				// Jika tidak ditemukan, gunakan id_report sebagai fallback
+				$url_title = $id_report;
+			}
+
 			// Set success flashdata
 			$this->session->set_flashdata('message', 'Comment added successfully!');
-			// Redirect to comments page of the report
-			redirect('comments/' . $id_report);
+
+			// Redirect ke halaman view-article dengan title yang diformat
+			redirect('view-article/' . $url_title);
 		} else {
 			// Set error flashdata
 			$this->session->set_flashdata('error', 'Failed to add comment');
-			// Redirect back with an error message
-			redirect('comments/' . $id_report . '?error=Failed to add comment');
+
+			// Redirect kembali dengan pesan error
+			redirect('view-article/' . $id_report . '?error=Failed to add comment');
 		}
 	}
 
@@ -482,7 +497,6 @@ class Fixed extends CI_Controller
 			redirect('view-article/' . $id_report . '?error=Failed to add comment');
 		}
 	}
-
 
 	public function likeReply()
 	{
