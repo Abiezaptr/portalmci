@@ -201,7 +201,7 @@
 <div class="page-content page-2" id="page-2">
     <h2>Quick links</h2>
     <div class="btn-container">
-        <a href="https://192.168.0.178/mcitsel" target="_blank" class="btn-quick btn-danger">Libraries</a>
+        <a href="https://10.2.114.197/mcirepository" target="_blank" class="btn-quick btn-danger">Libraries</a>
         <button class="btn-quick btn-danger">Articles</button>
         <button class="btn-quick btn-danger">Forum</button>
         <button class="btn-quick btn-danger">Events</button>
