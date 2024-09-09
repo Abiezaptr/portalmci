@@ -1,30 +1,30 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Digital extends CI_Controller
+class Mobile extends CI_Controller
 {
 
     public function index()
     {
-        $data['title'] = 'Digital Insight';
+        $data['title'] = 'Mobile';
         // Query to get data from the 'reports' table where category is 'digital' and type is 'pdf'
-        $data['reports'] = $this->db->where('category', 'digital insight')
+        $data['reports'] = $this->db->where('category', 'mobile')
             ->where('type', 'pdf')
             ->get('reports')
             ->result_array();
 
         // Query to get data from the 'reports' table where category is 'fixed' and type is 'articles'
-        $data['articles'] = $this->db->where('category', 'digital insight')
+        $data['articles'] = $this->db->where('category', 'mobile')
             ->where('type', 'article')
             ->get('reports')
             ->result_array();
 
         // Query to get data from the 'videos' table where category is 'fixed'
-        $data['videos'] = $this->db->where('category', 'digital insight')->get('videos')->result();
+        $data['videos'] = $this->db->where('category', 'mobile')->get('videos')->result();
 
         // Load the views with the data
         $this->load->view('template/content/header', $data);
-        $this->load->view('digital/list', $data);
+        $this->load->view('mobile/list', $data);
         $this->load->view('template/content/footer');
     }
 

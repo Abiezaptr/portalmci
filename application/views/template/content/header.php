@@ -430,7 +430,7 @@
             $current_uri = $this->uri->segment(1);
             ?>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link" href="#" id="mobileMenu" role="button" aria-haspopup="true" aria-expanded="false">Mobile</a>
                     <div class="dropdown-menu" aria-labelledby="mobileMenu">
                         <span class="ml-3 mb-4"><b>Mobile</b> &nbsp; - &nbsp; <span style="font-weight: 100;">Quickly find what you need from our curated library of resources.</span></span>
@@ -446,6 +446,9 @@
                             </div>
                         </div>
                     </div>
+                </li> -->
+                <li class="nav-item <?= ($current_uri == 'mobile') ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= site_url('mobile') ?>">Mobile</a>
                 </li>
                 <li class="nav-item <?= ($current_uri == 'fixed') ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= site_url('fixed') ?>">Fixed</a>

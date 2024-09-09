@@ -19,7 +19,7 @@
                 <a href="<?= site_url('home') ?>" style="color: black; text-decoration: none;">Home</a>
             </li>
             <li class="breadcrumb-item active" aria-current="page" style="color: rgb(177, 41, 41); display: inline;">
-                Digital Insight
+                Mobile
             </li>
         </ol>
     </nav>
