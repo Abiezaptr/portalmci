@@ -11,8 +11,6 @@ application/logs/*
 application/config/
 
 
-/uploads/
-
 composer.lock
 
 user_guide_src/build/*
