@@ -156,15 +156,6 @@
                                 ?>
                                 <div class="col-md-3">
                                     <a href="<?= $report->link ?>">
-                                        <!-- <div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">
-                                            <div class="skeleton">
-                                                <img src="<?= $thumbnail ?>" class="card-img-top" alt="">
-                                                <div class="card-body">
-                                                    <p class="card-text text-dark"><small>Your video description here.</small></p>
-                                                </div>
-                                            </div>
-                                        </div> -->
-
                                         <div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">
                                             <a href="<?= $report->link ?>" target="_blank" class="card-img-wrapper position-relative">
                                                 <div class="skeleton">
@@ -175,7 +166,18 @@
                                                 </div>
                                             </a>
                                             <div class="card-body">
-                                                <p class="card-text"><small>Your video description here.</small></p>
+                                                <p class="card-text">
+                                                    <small>
+                                                        <?php
+                                                        $maxLength = 100; // Set the maximum length
+                                                        if (strlen($report->description) > $maxLength) {
+                                                            echo substr($report->description, 0, $maxLength) . '...';
+                                                        } else {
+                                                            echo $report->description;
+                                                        }
+                                                        ?>
+                                                    </small>
+                                                </p>
                                             </div>
                                         </div>
                                     </a>

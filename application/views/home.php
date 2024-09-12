@@ -171,7 +171,18 @@
                         </div>
                     </a>
                     <div class="card-body">
-                        <p class="card-text"><small>Your video description here.</small></p>
+                        <p class="card-text">
+                            <small>
+                                <?php
+                                $maxLength = 140; // Set the maximum length
+                                if (strlen($video->description) > $maxLength) {
+                                    echo substr($video->description, 0, $maxLength) . '...';
+                                } else {
+                                    echo $video->description;
+                                }
+                                ?>
+                            </small>
+                        </p>
                     </div>
                 </div>
             </div>
