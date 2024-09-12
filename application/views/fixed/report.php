@@ -643,7 +643,7 @@
                     <a class="nav-link" href="<?= site_url('digital-insight') ?>">Digital Insight</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Global</a>
+                    <a class="nav-link" href="<?= site_url('global') ?>">Global</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<?= site_url('contact') ?>">Contact Us</a>
