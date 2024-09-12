@@ -8,7 +8,13 @@ application/logs/*
 
 !application/*/.htaccess
 
-application/config/
+# Jangan ignore folder config
+!application/config/
+
+# Ignore file autoload.php, config.php, dan database.php dalam folder config
+application/config/autoload.php
+application/config/config.php
+application/config/database.php
 
 
 composer.lock
