@@ -456,8 +456,8 @@
                 <li class="nav-item <?= ($current_uri == 'digital-insight') ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= site_url('digital-insight') ?>">Digital Insight</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Global</a>
+                <li class="nav-item <?= ($current_uri == 'global') ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= site_url('global') ?>">Global</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<?= site_url('contact-us') ?>">Contact Us</a>
