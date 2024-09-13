@@ -199,16 +199,13 @@
                     </div>
                 <?php endforeach; ?>
             <?php else : ?>
-                <div class="text-center">
-                    <img src="<?= base_url('assets/9315315.jpg') ?>" alt="No Videos" style="width: 150px; height: auto;">
-                </div>
-                <p class="text-center"><small>There are no insight videos available yet. Please check back later for the latest video.</small></p>
+                <p>No reports found.</p>
             <?php endif; ?>
         </div>
 
         <br><br><br><br>
         <ol class="carousel-indicators custom-indicators mt-4">
-            <?php foreach ($videos as $index => $chunk) : ?>
+            <?php foreach ($video as $index => $chunk) : ?>
                 <li data-target="#carouselExampleControls3" data-slide-to="<?php echo $index; ?>" class="<?php echo $index === 0 ? 'active' : ''; ?>"></li>
             <?php endforeach; ?>
         </ol>
