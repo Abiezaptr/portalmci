@@ -54,7 +54,18 @@
                                                 <div class="skeleton">
                                                     <img src="<?php echo base_url('uploads/image/' . $report['image']); ?>" class="card-img-top" alt="">
                                                     <div class="card-body">
-                                                        <p class="card-text text-dark"><small><?php echo htmlspecialchars($report['title']); ?></small></p>
+                                                        <p class="card-text text-dark">
+                                                            <small>
+                                                                <?php
+                                                                $maxLength = 50; // Set the maximum length
+                                                                if (strlen($report['title']) > $maxLength) {
+                                                                    echo substr($report['title'], 0, $maxLength) . '...';
+                                                                } else {
+                                                                    echo $report['title'];
+                                                                }
+                                                                ?>
+                                                            </small>
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
