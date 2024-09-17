@@ -384,13 +384,31 @@
 
         /* New styles for the news section */
         .news-section {
+            position: relative;
+            /* Make sure the position is relative */
             background: url('<?php echo base_url('uploads/image/' . $viewreports['image']); ?>') no-repeat center center;
             background-size: cover;
             color: white;
             padding: 200px;
             text-align: left;
             padding-left: 100px;
+            z-index: 1;
+            /* Set a higher z-index to make the content appear on top of the overlay */
         }
+
+        .news-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            /* Adjust the color and opacity */
+            z-index: -1;
+            /* Put the overlay behind the content */
+        }
+
 
         .news-section h2 {
             font-size: 2rem;
@@ -609,7 +627,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top red">
         <a class="navbar-brand" id="brand-title" href="<?= site_url('home') ?>"><b>MCI ONLINE REPOSITORY</b></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -723,35 +741,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.19/jquery.touchSwipe.min.js"></script>
 
     <script>
+        // Ensure 'red' class is added on scroll (not necessary since the class is already added by default)
         window.addEventListener('scroll', function() {
             const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 0) {
-                navbar.classList.add('red');
-            } else {
-                navbar.classList.remove('red');
-            }
+            navbar.classList.add('red'); // This ensures the 'red' class is present
         });
 
+        // Add 'red' class on mobile menu hover
         document.getElementById('mobileMenu').addEventListener('mouseover', function() {
             const navbar = document.querySelector('.navbar');
             navbar.classList.add('red');
         });
 
+        // Add 'red' class on fixed menu hover
         document.getElementById('fixedMenu').addEventListener('mouseover', function() {
             const navbar = document.querySelector('.navbar');
             navbar.classList.add('red');
         });
 
-        document.querySelector('.navbar-nav').addEventListener('mouseleave', function() {
-            const page1 = document.getElementById('page-1');
-            const page1Rect = page1.getBoundingClientRect();
-            // Hanya menghapus kelas 'red' jika mouse leave terjadi di area page-1
-            if (page1Rect.top <= 0 && page1Rect.bottom >= 0) {
-                const navbar = document.querySelector('.navbar');
-                navbar.classList.remove('red');
-            }
-        });
+        // Remove unnecessary logic for removing the 'red' class
+        // No need to remove 'red' class on mouse leave
+        // Removed the code inside .navbar-nav mouseleave event listener
 
+        // Adjust dropdown menu margin based on screen size
         function adjustDropdownMargin() {
             const dropdownMenu = document.querySelector('.navbar-nav .dropdown-menu');
             const screenWidth = window.innerWidth;
@@ -772,6 +784,7 @@
         window.addEventListener('resize', adjustDropdownMargin);
         window.addEventListener('load', adjustDropdownMargin);
     </script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
