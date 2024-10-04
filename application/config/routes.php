@@ -12,3 +12,4 @@ $route['comments/(:any)'] = 'fixed/comment/$1';
 $route['contact-us'] = 'contact/index';
 $route['digital-insight'] = 'digital/index';
 $route['global'] = 'globals/index';
+$route['form-discussion/(:any)'] = 'forum/detail/$1';

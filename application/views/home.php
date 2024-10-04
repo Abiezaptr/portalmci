@@ -63,7 +63,7 @@
     <div class="btn-container">
         <a href="https://10.2.114.197/mcirepository" target="_blank" class="btn-quick btn-danger">Libraries</a>
         <button class="btn-quick btn-danger">Articles</button>
-        <button class="btn-quick btn-danger">Forum</button>
+        <a href="<?= site_url('forum') ?>" class="btn-quick btn-danger">Forum</a>
         <button class="btn-quick btn-danger">Events</button>
         <a href="https://forms.gle/g6mapWMKBdzRoHqFA" target="_blank" class="btn-quick btn-danger">Request</a>
     </div>
