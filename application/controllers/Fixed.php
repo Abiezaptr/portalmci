@@ -425,7 +425,6 @@ class Fixed extends CI_Controller
 		$this->db->insert(
 			'replies',
 			[
-				'name' => 'Unknown',
 				'reply_text' => $reply_text,
 				'user_id' => $user_id,
 				'comment_id' => $comment_id

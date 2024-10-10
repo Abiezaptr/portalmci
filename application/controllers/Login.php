@@ -164,7 +164,7 @@ class Login extends CI_Controller
     {
         $this->session->sess_destroy();
         $this->session->set_flashdata('success', 'You have successfully logged out.');
-        redirect('login');
+        redirect('home');
     }
 
     public function login_history()
