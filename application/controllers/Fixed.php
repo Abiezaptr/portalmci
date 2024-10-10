@@ -132,19 +132,21 @@ class Fixed extends CI_Controller
 		$report_id = $data['viewreports']['id'];
 		$data['report_id'] = $report_id;
 
-		// Query to get comments and their replies with parent names
+		// Query to get comments and their replies with parent names and user details
 		$comments = $this->db->select('comments.*, 
-                        replies.id AS reply_id, 
-                        replies.name AS reply_name, 
-                        replies.reply_text, 
-                        replies.likes AS reply_likes, 
-                        replies.unlikes AS reply_unlikes, 
-                        replies.created_at AS reply_created_at, 
-                        replies.parent_id AS reply_parent_id,
-                        parent_replies.name AS parent_name') // Get the parent reply's name
+                replies.id AS reply_id, 
+                replies.reply_text, 
+                replies.likes AS reply_likes, 
+                replies.unlikes AS reply_unlikes, 
+                replies.created_at AS reply_created_at, 
+                replies.parent_id AS reply_parent_id,
+                users.username,
+                reply_users.username AS reply_username') // Get the parent reply's name
 			->from('comments')
 			->join('replies', 'replies.comment_id = comments.id', 'left')
-			->join('replies as parent_replies', 'replies.parent_id = parent_replies.id', 'left') // Join to get the parent reply name
+			->join('replies as parent_replies', 'replies.parent_id = parent_replies.id', 'left')
+			->join('users', 'users.id = comments.user_id', 'left') // Fetch username of the comment author
+			->join('users as reply_users', 'reply_users.id = replies.user_id', 'left') // Fetch username of the reply author
 			->where('comments.id_report', $report_id)
 			->order_by('comments.created_at', 'ASC')
 			->order_by('replies.created_at', 'ASC')
@@ -157,18 +159,19 @@ class Fixed extends CI_Controller
 			if (!isset($data['comments'][$comment['id']])) {
 				$data['comments'][$comment['id']] = $comment;
 				$data['comments'][$comment['id']]['replies'] = [];
-				$data['comments'][$comment['id']]['comment_name'] = $comment['name']; // Add the comment author name
+				$data['comments'][$comment['id']]['comment_name'] = $comment['username']; // Add the comment author's username
 			}
 			if ($comment['reply_id']) {
 				$reply = [
 					'id' => $comment['reply_id'],
-					'name' => $comment['reply_name'],
 					'reply_text' => $comment['reply_text'],
 					'likes' => $comment['reply_likes'],
 					'unlikes' => $comment['reply_unlikes'],
 					'created_at' => $comment['reply_created_at'],
 					'parent_id' => $comment['reply_parent_id'],
-					'parent_name' => $comment['parent_name'] ? $comment['parent_name'] : $comment['name'] // Use comment's name if parent_name is NULL
+					// Set parent_name to the comment's username directly since the field is no longer available
+					'parent_name' => $comment['username'], // Use comment's username directly
+					'reply_username' => $comment['reply_username'], // Add the reply author's username
 				];
 				// Add replies to their respective parent comments
 				$data['comments'][$comment['id']]['replies'][] = $reply;
@@ -186,6 +189,8 @@ class Fixed extends CI_Controller
 		// Load the views with the data
 		$this->load->view('fixed/articles', $data);
 	}
+
+
 
 
 	// public function comment($id)
@@ -328,6 +333,7 @@ class Fixed extends CI_Controller
 		// Ambil data dari form
 		$comment = $this->input->post('comment');
 		$id_report = $this->input->post('id_report');
+		$user_id = $this->input->post('user_id');
 
 		// Masukkan data ke database
 		$this->db->insert(
@@ -335,7 +341,8 @@ class Fixed extends CI_Controller
 			[
 				'name' => 'Unknown',
 				'comment_text' => $comment,
-				'id_report' => $id_report
+				'id_report' => $id_report,
+				'user_id' => $user_id,
 			]
 		);
 
@@ -412,6 +419,7 @@ class Fixed extends CI_Controller
 		$reply_text = $this->input->post('reply_text');
 		$comment_id  = $this->input->post('comment_id');
 		$id_report = $this->input->post('id_report'); // Pastikan id_report dikirim dari form
+		$user_id = $this->input->post('user_id');
 
 		// Masukkan data ke database
 		$this->db->insert(
@@ -419,6 +427,7 @@ class Fixed extends CI_Controller
 			[
 				'name' => 'Unknown',
 				'reply_text' => $reply_text,
+				'user_id' => $user_id,
 				'comment_id' => $comment_id
 			]
 		);
@@ -457,12 +466,13 @@ class Fixed extends CI_Controller
 		$comment_id = $this->input->post('comment_id');
 		$parent_id = $this->input->post('parent_id'); // Mengambil parent_id dari balasan yang sedang dibalas
 		$id_report = $this->input->post('id_report');
+		$user_id = $this->input->post('user_id');
 
 		$data = [
 			'comment_id' => $comment_id,
-			'parent_id' => $parent_id, // Ini akan menyimpan ID dari balasan yang sedang dibalas
-			'name' => 'Unknown',
+			'parent_id' => $parent_id,
 			'reply_text' => $this->input->post('reply_text'),
+			'user_id' => $user_id,
 			'likes' => 0,
 			'unlikes' => 0,
 		];

@@ -590,12 +590,24 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?= site_url('contact-us') ?>">Contact Us</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link search-icon" href="#" id="searchIcon">
-                        <i class="fa fa-search"></i>
-                    </a>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search all GSMA">
-                </li>
+                <?php if ($this->session->userdata('id')): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="<?= base_url('assets/images/user.png') ?>" alt="User Image" class="user-image" style="width: 30px; height: 30px; border-radius: 50%;">
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="#">Profile</a>
+                            <a class="dropdown-item" href="#">Settings</a>
+                            <a class="dropdown-item" href="#">Logout</a>
+                        </div>
+                    </li>
+                <?php else: ?>
+                    <li class="nav-item">
+                        <a class="nav-link search-icon" href="<?= base_url('login'); ?>">
+                            <b><i class="fa-regular fa-user"></i>&nbsp; Sign in</b>
+                        </a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
     </nav>

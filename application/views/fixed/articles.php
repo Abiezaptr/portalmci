@@ -602,6 +602,7 @@
                         <div class="input-group mb-3">
                             <textarea class="form-control" name="comment" id="commentInput" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>
                             <input type="hidden" name="id_report" value="<?= $report_id ?>">
+                            <input type="hidden" name="user_id" value="<?= $this->session->userdata('id'); ?>">
                         </div>
                         <div class="divider"></div>
                         <div class="card-footer">
@@ -658,7 +659,7 @@
                                     <img src="<?= base_url('assets/images/consumer.png') ?>" alt="Author" class="author-image" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;">
                                     <div class="d-flex flex-column">
                                         <div>
-                                            <strong><?= htmlspecialchars($comment['name']) ?></strong>
+                                            <strong><?= htmlspecialchars($comment['username']) ?></strong>
                                             <br>
                                             <span class="comment-time" data-timestamp="<?= $comment['created_at'] ?>" style="font-size: 0.75rem; color: gray;"><small><?= timeAgo($comment['created_at']) ?></small></span>
                                             <br>
@@ -687,11 +688,11 @@
                                                         <img src="<?= base_url('assets/images/consumer.png') ?>" alt="Author" class="author-image" style="border-radius: 50%; width: 40px; height: 40px; margin-right: 10px;">
                                                         <div class="d-flex flex-column">
                                                             <div>
-                                                                <strong><?= htmlspecialchars($reply['name']) ?></strong>
+                                                                <strong><?= htmlspecialchars($reply['reply_username']) ?></strong>
                                                                 <br>
                                                                 <span class="comment-time" data-timestamp="<?= $reply['created_at'] ?>" style="font-size: 0.75rem; color: gray;"><small><?= timeAgo($reply['created_at']) ?></small></span>
                                                                 <br>
-                                                                <span class="comment-text"><span class="text-muted"><small>@<?= htmlspecialchars($reply['parent_name']) ?></small></span>&nbsp; <?= htmlspecialchars($reply['reply_text']) ?></span>
+                                                                <span class="comment-text"><?= htmlspecialchars($reply['reply_text']) ?></span>
                                                             </div>
                                                             <div class="like-unlike mt-3 d-flex align-items-center">
                                                                 <button class="btn btn-link text-muted p-0 me-3" onclick="likeReply(<?= $reply['id'] ?>)">
@@ -739,6 +740,7 @@
                             <form id="commentForm" action="<?= site_url('fixed/add_comment_user') ?>" method="post">
                                 <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
                                 <input type="hidden" name="id_report" value="<?= $comment['id_report'] ?>">
+                                <input type="hidden" name="user_id" value="<?= $this->session->userdata('id'); ?>">
                                 <div class="input-group mb-3">
                                     <textarea class="form-control" name="reply_text" id="commentInput" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>
                                 </div>
@@ -770,6 +772,7 @@
                                     <input type="hidden" name="comment_id" value="<?= htmlspecialchars($comment['id']) ?>">
                                     <input type="hidden" name="parent_id" value="<?= htmlspecialchars($reply['id']) ?>">
                                     <input type="hidden" name="id_report" value="<?= htmlspecialchars($comment['id_report']) ?>">
+                                    <input type="hidden" name="user_id" value="<?= $this->session->userdata('id'); ?>">
 
                                     <div class="input-group mb-3">
                                         <textarea class="form-control" name="reply_text" id="commentInput<?= htmlspecialchars($reply['id']) ?>" placeholder="Tulis Komentar" rows="1" oninput="autoResize(this); updateCharacterCount()" style="resize: none;"></textarea>

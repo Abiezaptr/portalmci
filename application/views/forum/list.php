@@ -1,120 +1,3 @@
-<!-- New section for "Our latest news" -->
-<style>
-    .placeholder {
-        background-color: #e0e0e0;
-        height: 200px;
-        /* Adjust this height according to your image size */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-
-    .forum-table {
-        width: 100%;
-        border-collapse: collapse;
-        border: none;
-        /* Menghapus border di seluruh tabel */
-    }
-
-    .forum-table th,
-    .forum-table td {
-        padding: 15px;
-        text-align: left;
-        border-bottom: none;
-        /* Menghapus garis bawah */
-        vertical-align: middle;
-        /* Menjaga konten tetap di tengah secara vertikal */
-    }
-
-    .forum-table th {
-        font-size: 0.85rem;
-        color: #6c757d;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    /* Striping untuk baris tabel */
-    .forum-table tbody tr:nth-child(odd) {
-        background-color: #f8f9fa;
-        /* Warna latar belakang untuk baris ganjil */
-    }
-
-    .forum-table tbody tr:nth-child(even) {
-        background-color: #ffffff;
-        /* Warna latar belakang untuk baris genap */
-    }
-
-    .forum-table .category-dot {
-        height: 8px;
-        width: 8px;
-        background-color: #007bff;
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 5px;
-    }
-
-    .forum-table .users {
-        display: flex;
-        align-items: center;
-    }
-
-    .forum-table .user-avatar {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background-color: #adb5bd;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: bold;
-        margin-right: 5px;
-        line-height: 1;
-        /* Menyelaraskan teks dalam avatar */
-    }
-
-    .forum-table .tag {
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 3px;
-        font-size: 0.75rem;
-        margin-right: 5px;
-        color: white;
-    }
-
-    .tag-gaming {
-        background-color: #17a2b8;
-    }
-
-    .tag-nature {
-        background-color: #28a745;
-    }
-
-    .tag-entertainment {
-        background-color: #007bff;
-    }
-
-    .text-muted {
-        color: #6c757d !important;
-    }
-
-    .text-small {
-        font-size: 0.8rem;
-    }
-
-    /* Ubah warna topic link menjadi hitam */
-    .forum-table .topic-link {
-        font-weight: 500;
-        color: #343a40;
-        text-decoration: none;
-    }
-
-    .forum-table .topic-link:hover {
-        text-decoration: underline;
-    }
-</style>
-
 <div class="page-content mb-1">
     <br><br><br>
     <nav aria-label="breadcrumb">
@@ -123,103 +6,110 @@
                 <a href="<?= site_url('home') ?>" style="color: black; text-decoration: none;">Home</a>
             </li>
             <li class="breadcrumb-item active" aria-current="page" style="color: rgb(177, 41, 41); display: inline;">
-                List of Topics
+                Topics
             </li>
         </ol>
     </nav>
     <br>
-    <div class="row mb-3">
-        <div class="col-md-6 position-relative">
-            <i class="fas fa-search position-absolute" style="left: 35px; top: 50%; transform: translateY(-50%); color: #999;"></i>
-            <input type="text" class="form-control pl-5 py-2" name="topicSearch" id="topicSearch" placeholder="Search by topics">
-        </div>
 
-        <div class="col-auto">
-            <div class="d-inline-block">
-                <select class="form-select px-4 py-2" name="categorySelect" id="categorySelect">
-                    <option value="all">All Categories</option>
-                    <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo htmlspecialchars($category['id']); ?>"><?php echo htmlspecialchars($category['name']); ?></option>
-                    <?php endforeach; ?>
-                </select>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="thread-list" id="threadList">
+                <?php foreach ($threads as $thread): ?>
+                    <div class="card thread-card" style="margin-bottom: 20px; padding: 20px; position: relative; border-radius: 0;">
+                        <div class="border-gradient" style="
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        bottom: 0;
+                        width: 8px;
+                        background: linear-gradient(180deg, #ff6a00, #ee0979, #fc6767, #ec008c); /* Gradasi warna */
+                        border-radius: 0;
+                    "></div>
+
+                        <div class="thread-info" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <a href="<?php echo base_url('form-discussion/' . $thread['id']); ?>" class="thread-title" style="font-weight: bold; color: #800000;"><?php echo $thread['title']; ?></a>
+                            </div>
+                        </div>
+
+                        <div class="thread-meta" style="display: flex; align-items: center; margin-top: 2px;">
+                            <div class="user-avatars">
+                                <img src="<?php echo base_url('assets/images/user.png'); ?>" alt="Avatar A" class="user-avatar" style="background-color: #6c757d;">
+                                <img src="<?php echo base_url('assets/images/avatar2.jpg'); ?>" alt="Avatar B" class="user-avatar" style="background-color: #6c757d;">
+                                <img src="<?php echo base_url('assets/images/avatar3.jpg'); ?>" alt="Avatar C" class="user-avatar" style="background-color: #6c757d;">
+                            </div>
+
+                            <span class="posted-time small text-muted" style="margin-left: 10px;" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
+                                3 kontribusi&nbsp; ·&nbsp;
+                                <span style="font-size: 12px;" class="posted-time" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
+                                    <span style="font-weight: 500;" class="waktu-lalu"></span>
+                                </span>
+                            </span>
+                        </div>
+
+                        <p class="thread-description" style="font-size: 14px; color: black; margin-left: 2px; margin-top: 12px;">
+                            <?= htmlspecialchars($thread['content']); ?>
+                        </p>
+
+                        <!-- Bagian kategori -->
+                        <div class="thread-category" style="font-size: 12px; color: black; margin-left: 2px; margin-top: 0px;">
+                            <strong><?php echo $thread['category_name']; ?></strong>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </div>
 
-        <!-- Spacing to push the button to the right -->
-        <div class="col"></div>
+        <div class="col-md-3">
+            <!-- Modern journey section with a bold title -->
+            <h5 style="font-weight: bold; font-size: 18px; margin-bottom: 15px;" class="mb-4">Jelajahi ini juga</h5>
 
-        <!-- Create Topic Button in the right corner -->
-        <div class="col-auto text-end">
-            <a href="#" class="btn btn-sm btn-light px-4 py-2 rounded-pill shadow-sm">Create a new Thread</a>
-        </div>
-    </div>
+            <!-- Tag-style links -->
+            <div class="category-tags" style="display: flex; flex-wrap: wrap; gap: 15px;">
+                <?php foreach ($categories as $category): ?>
+                    <a href="<?php echo base_url('forum/category/' . $category['id']); ?>" style="
+                padding: 8px 14px;      /* Padding for a compact tag feel */
+                font-size: 14px;        /* Reduced font size for minimalistic design */
+                font-weight: 500;       /* Font weight to keep it modern and readable */
+                color: #333;            /* Neutral text color */
+                background-color: #f8f9fa;  /* Light background for a tag look */
+                border-radius: 30px;    /* Round the edges for a tag style */
+                text-decoration: none;  /* Remove underline for clean look */
+                transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+                flex-basis: 100%;       /* Each tag takes full width of the row */
+            "
+                        onmouseover="this.style.backgroundColor='#eee'; this.style.transform='scale(1.05)'"
+                        onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.transform='scale(1)'">
+                        <?php echo $category['name']; ?>
+                    </a>
+                <?php endforeach; ?>
+            </div>
 
-    <div>
-        <div class="thread-list" id="threadList">
-            <?php foreach ($threads as $thread): ?>
-                <div class="card thread-card" style="margin-bottom: 20px; padding: 20px; border-left: 4px solid #800000;">
-                    <div class="thread-info" style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <a href="<?php echo base_url('form-discussion/' . $thread['id']); ?>" class="thread-title" style="font-weight: bold; color: #800000;"><?php echo $thread['title']; ?></a>
-                            <div class="thread-tags mt-2">
-                                <?php
-                                $tags = explode(',', $thread['tags']);
-                                foreach ($tags as $tag) {
-                                    echo '<span class="tag">' . htmlspecialchars($tag) . '</span> ';
-                                }
-                                ?>
-                            </div>
-                        </div>
+            <!-- Button to see all topics with an icon on the right -->
+            <div class="text-center mt-4">
+                <a href="<?php echo base_url('all-topics'); ?>" class="btn btn-block" style="
+        padding: 10px 30px;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 50px;  /* Rounded button */
+        text-decoration: none;
+        color: white;         /* Ensure the text is visible */
+        background: linear-gradient(45deg, #b34700, #a1005d); /* Darker gradient from dark orange to dark red */
+        border: none;         /* Remove border */
+    ">
+                    Lihat Semua Topik
+                    <i class="fas fa-arrow-right" style="margin-left: 10px;"></i> <!-- Icon on the right -->
+                </a>
+            </div>
 
-                        <div class="thread-stats" style="display: flex; align-items: center; gap: 20px;">
-                            <div class="replies-count" style="text-align: center;">
-                                <i class="fas fa-reply"></i>
-                                <div>
-                                    <?php
-                                    $repliesCount = $thread['replies_count'];
-                                    if ($repliesCount < 1000) {
-                                        echo $repliesCount . ' Replies';
-                                    } elseif ($repliesCount < 1000000) {
-                                        echo number_format($repliesCount / 1000, 1) . 'K Replies';
-                                    } else {
-                                        echo number_format($repliesCount / 1000000, 1) . 'M Replies';
-                                    }
-                                    ?>
-                                </div>
-                            </div>
 
-                            &nbsp;
-                            <div class="views-count" style="text-align: center;">
-                                <i class="fas fa-eye"></i>
-                                <div>
-                                    <?php
-                                    $viewsCount = $thread['views_count'];
-                                    if ($viewsCount < 1000) {
-                                        echo $viewsCount . ' Views';
-                                    } elseif ($viewsCount < 1000000) {
-                                        echo number_format($viewsCount / 1000, 1) . 'K Views';
-                                    } else {
-                                        echo number_format($viewsCount / 1000000, 1) . 'M Views';
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="thread-meta" style="display: flex; align-items: center; margin-top: 10px;">
-                        <div class="user-details" style="margin-left: 10px;">
-                            <span style="font-size: 12px;" class="posted-time" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
-                                Posted <span style="font-weight: 600;" id="time-ago"></span> by <?php echo htmlspecialchars($thread['name']); ?>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
         </div>
 
+
+
     </div>
+
 
 
 </div>
@@ -271,18 +161,6 @@
         margin-top: 10px;
     }
 
-    .user-avatar {
-        background-color: #800000;
-        /* Mengganti warna avatar menjadi maroon */
-        color: white;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-    }
 
     .user-details {
         margin-left: 10px;
@@ -384,20 +262,41 @@
     }
 
     .user-avatar {
-        width: 35px;
-        height: 35px;
+        width: 24px;
+        /* Atur ukuran yang sedikit lebih besar */
+        height: 24px;
+        /* Atur ukuran yang sedikit lebih besar */
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
         color: white;
         font-weight: bold;
-        margin-right: 6px;
+        margin: 0;
+        /* Hapus margin untuk membuatnya mepet */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        /* Tambahkan efek timbul */
+        transition: box-shadow 0.3s, transform 0.3s;
+        /* Tambahkan transisi untuk efek hover */
     }
 
+    .user-avatar:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        /* Efek timbul lebih dalam saat hover */
+        transform: translateY(-2px);
+        /* Meningkatkan efek timbul dengan sedikit mengangkat */
+    }
+
+    /* Jika Anda ingin mengatur spacing antara avatars */
+    .user-avatars>.user-avatar:not(:last-child) {
+        margin-right: -4px;
+        /* Menambahkan margin negatif untuk lebih mendekatkan */
+    }
+
+
     .extra-users {
-        width: 35px;
-        height: 35px;
+        width: 20px;
+        height: 20px;
         background-color: #adb5bd;
         border-radius: 50%;
         display: flex;
@@ -448,50 +347,42 @@
 </script>
 
 <script>
-    // JavaScript to update time dynamically
-    // JavaScript to update time dynamically
+    // JavaScript untuk memperbarui waktu dinamis dalam bahasa Indonesia
     function updateTimeAgo() {
         const postedTimes = document.querySelectorAll('.posted-time');
 
         postedTimes.forEach(function(postedTime) {
             const transactionTime = postedTime.getAttribute('data-transaction-time');
-            const transactionDate = new Date(transactionTime); // Convert the time from the backend to JS date
-            const currentDate = new Date(); // Current time
-            const interval = Math.floor((currentDate - transactionDate) / 1000); // Get the difference in seconds
+            const transactionDate = new Date(transactionTime); // Mengubah waktu dari backend ke tanggal JS
+            const currentDate = new Date(); // Waktu sekarang
+            const interval = Math.floor((currentDate - transactionDate) / 1000); // Mendapatkan selisih dalam detik
 
             let timeAgo = '';
 
-            if (interval >= 31536000) { // 1 year
-                timeAgo = Math.floor(interval / 31536000) + ' year' + (Math.floor(interval / 31536000) > 1 ? 's' : '') + ' ago';
-            } else if (interval >= 2592000) { // 1 month
-                timeAgo = Math.floor(interval / 2592000) + ' month' + (Math.floor(interval / 2592000) > 1 ? 's' : '') + ' ago';
-            } else if (interval >= 86400) { // 1 day
-                timeAgo = Math.floor(interval / 86400) + ' day' + (Math.floor(interval / 86400) > 1 ? 's' : '') + ' ago';
-            } else if (interval >= 3600) { // 1 hour
-                timeAgo = Math.floor(interval / 3600) + ' hour' + (Math.floor(interval / 3600) > 1 ? 's' : '') + ' ago';
-            } else if (interval >= 60) { // 1 minute
-                timeAgo = Math.floor(interval / 60) + ' min' + (Math.floor(interval / 60) > 1 ? 's' : '') + ' ago';
+            if (interval >= 31536000) { // 1 tahun
+                timeAgo = Math.floor(interval / 31536000) + ' tahun lalu';
+            } else if (interval >= 2592000) { // 1 bulan
+                timeAgo = Math.floor(interval / 2592000) + ' bulan lalu';
+            } else if (interval >= 86400) { // 1 hari
+                timeAgo = Math.floor(interval / 86400) + ' hari lalu';
+            } else if (interval >= 3600) { // 1 jam
+                timeAgo = Math.floor(interval / 3600) + ' jam lalu';
+            } else if (interval >= 60) { // 1 menit
+                timeAgo = Math.floor(interval / 60) + ' menit lalu';
             } else {
-                timeAgo = 'Just now';
+                timeAgo = 'Baru saja';
             }
 
-            // Update the displayed time
-            postedTime.querySelector('#time-ago').textContent = timeAgo;
+            // Memperbarui tampilan waktu
+            postedTime.querySelector('.waktu-lalu').textContent = timeAgo;
         });
     }
 
-    // Initial call to set the time ago when the page loads
+    // Pemanggilan awal untuk mengatur waktu saat halaman dimuat
     updateTimeAgo();
 
-    // Update the time every minute
-    setInterval(updateTimeAgo, 60000); // Refresh every 60 seconds
-
-
-    // Initial call to set the time ago when the page loads
-    updateTimeAgo();
-
-    // Update the time every minute
-    setInterval(updateTimeAgo, 60000); // Refresh every 60 seconds
+    // Memperbarui waktu setiap menit
+    setInterval(updateTimeAgo, 60000); // Perbarui setiap 60 detik
 </script>
 
 <script>

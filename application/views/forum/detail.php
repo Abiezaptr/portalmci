@@ -1,340 +1,301 @@
-<div class="page-content mb-1">
-    <br><br><br>
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb" style="list-style: none; padding: 0; margin: 0;">
-            <li class="breadcrumb-item" style="display: inline; color: black;">
-                <a href="<?= site_url('home') ?>" style="color: black; text-decoration: none;">Home</a>
-            </li>
-            <li class="breadcrumb-item" style="display: inline; color: black;">
-                <a href="<?= site_url('forum') ?>" style="color: black; text-decoration: none;">Forum List</a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page" style="color: rgb(177, 41, 41); display: inline;">
-                Form Discussion
-            </li>
-        </ol>
-    </nav>
-    <br>
+<br><br><br><br>
+<div class="container">
+    <!-- Left side content with gray background and centered text -->
+    <div class="left">
+        <div class="vertical-bar"></div>
+        <div class="content">
+            <h6 class="mb-5">
+                <a href="<?= site_url('forum') ?>" style="font-size: 14px; color: gray;">All /</a>
+                <span style="color: black; font-weight: bold; font-size: 14px;"><?php echo htmlspecialchars($thread['category_name']); ?></span>
+            </h6>
+            <h4><?php echo htmlspecialchars($thread['title']); ?></h4>
+            <p class="mt-5" style="font-size: 14px;"><?php echo htmlspecialchars($thread['content']); ?></p>
 
-    <div class="container">
-        <!-- Topic Section -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <div class="topic" style="font-size: 1.5em; font-weight: bold;">
-                <?php echo htmlspecialchars($thread['title']); ?>
-            </div>
-            <a href="#" class="btn add-comment-button btn-light px-4 py-2 rounded-pill shadow-sm">Add Comment</a>
+            <!-- New Comment Button -->
+            <?php if ($this->session->userdata('id')): ?>
+                <button class="new-comment-btn mt-5" id="toggleCommentInput">Add Response</button>
+            <?php else: ?>
+                <br><br>
+                <a href="<?= site_url('login') ?>" class="new-comment-btn mt-5">Add Response</a>
+            <?php endif; ?>
         </div>
+    </div>
 
-
-        <!-- Info Pemilik Thread -->
-        <div class="user-info" style="display: flex; align-items: center; margin-bottom: 10px;">
-            <div class="user-avatar" style="background-color: #007bff; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 10px;">
-                <?php echo strtoupper(substr($thread['name'], 0, 1)); // Ganti dengan nama pemilik thread 
-                ?>
-            </div>
-            <div class="user-details">
-                <strong><?php echo htmlspecialchars($thread['name']); // Ganti dengan nama pemilik thread 
-                        ?></strong>
-                <small style="display: block; color: #6c757d;" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
-                    <span id="time-ago"></span>
-                </small>
-            </div>
-        </div>
-        <br>
-        <!-- Tag untuk Thread -->
-        <?php if (!empty($thread['tags'])): ?>
-            <div class="tags">
-                <?php
-                // Assuming $thread['tags'] contains something like "game,action,arcade"
-                $tags = explode(',', $thread['tags']); // Split the string by commas
-
-                // Remove empty and invalid tags
-                $tags = array_filter(array_map('trim', $tags)); // Trim each tag and remove any empty ones
-
-                // Only display tags if there are valid tags
-                if (!empty($tags)) {
-                    foreach ($tags as $tag) {
-                        echo '<span class="tag">' . htmlspecialchars($tag) . '</span>'; // Output tag with proper escaping
-                    }
-                }
-                ?>
-            </div>
-        <?php endif; ?>
-
-
-
-        <div class="card" style="background-color: #f8f9fa; border: 1px solid #d6d8db;">
-            <div class="card-body text-secondary">
-                <?php echo $thread['content']; ?>
-            </div>
-        </div>
-
-
-        <div class="add-comment-input" style="display: none; margin-top: 15px;">
-            <form id="commentForm" action="<?= site_url('forum/add_comment') ?>" method="post">
-                <textarea class="form-control" rows="3" name="comment" placeholder="Write your comment..." style="resize: none;"></textarea>
-                <input type="hidden" name="thread_id" value="<?php echo ($thread['id']); ?>">
-                <button class="btn btn-danger" type="submit" style="margin-top: 5px;">Send</button>
-            </form>
-        </div>
-
-        <br>
-
-        <?php foreach ($comments as $comment): ?>
-            <!-- Card untuk Thread Utama -->
-            <div class="card">
-                <div class="user-info">
-                    <div class="user-avatar"><?php echo strtoupper(substr($comment['name'], 0, 1)); ?></div>
-                    <div class="user-details">
-                        <h6> <?php echo $comment['name']; ?></h6>
-                        <small style="display: block; color: #6c757d;" data-transaction-time="<?= htmlspecialchars($comment['created_at']); ?>">
-                            <span id="time-ago"></span>
-                        </small>
+    <!-- Right side content -->
+    <div class="right">
+        <br><br><br><br>
+        <?php if (!empty($comments)): ?> <!-- Cek apakah ada komentar -->
+            <?php foreach ($comments as $comment): ?>
+                <div class="comment ml-5 mt-5">
+                    <div class="user-info">
+                        <img src="<?= base_url('assets/images/user.png') ?>" alt="User Image">
+                        <div>
+                            <span style="font-size: 14px;"><?php echo $comment['username']; ?></span><br>
+                            <span class="user-title" style="font-size: 12px;"><?php echo $comment['job_title']; ?></span>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Post Content untuk Thread -->
-                <div class="post-content">
-                    <?php echo $comment['comment']; ?>
-                </div>
-
-                <!-- Actions Section untuk Thread -->
-                <div class="actions" style="margin-top: 10px; display: flex; gap: 15px;">
-                    <div>
-                        <i class="fas fa-arrow-up" style="font-size: 17px; color: #28a745;" onclick="likeComment(<?= $comment['id'] ?>)"></i>&nbsp;
-                        <span id="like-count-<?= $comment['id'] ?>"><?php echo $comment['likes']; ?></span>
+                    <p style="font-size: 14px;">
+                        <?php echo $comment['comment']; ?>
+                    </p>
+                    <div class="like">
+                        <i style="color: black;" class="fa-regular fa-thumbs-up mr-2" onclick="likeComment(<?= $comment['id'] ?>)"></i>
+                        <span style="color: black;" id="like-count-<?= $comment['id'] ?>"><?php echo $comment['likes']; ?> Likes</span>
                     </div>
 
-                    <div>
-                        <i class="fas fa-arrow-down" style="font-size: 17px; color: #dc3545;" onclick="unlikeComment(<?= $comment['id'] ?>)"></i>&nbsp;
-                        <span id="unlike-count-<?= $comment['id'] ?>"><?php echo $comment['unlikes']; ?></span>
-                    </div>
-
-                    <div class="reply-button" style="cursor: pointer; color: #007bff;"><i class="fas fa-reply" style="font-size: 17px;"></i>&nbsp; Reply</div>
-                </div>
-
-                <!-- Comment Input Section untuk Thread (Initially Hidden) -->
-                <div class="comment-input" style="display: none; margin-top: 15px;">
-                    <form id="repliesForm" action="<?= site_url('forum/add_comment_user') ?>" method="post">
-                        <textarea class="form-control" rows="3" name="reply_text" placeholder="Write your comment..." style="resize: none;"></textarea>
-                        <input type="hidden" name="thread_id" value="<?php echo ($thread['id']); ?>">
-                        <input type="hidden" name="comment_id" value="<?php echo ($comment['id']); ?>">
-                        <button class="btn btn-primary btn-sm" style="margin-top: 5px;">Submit</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Looping untuk Balasan Komentar -->
-            <?php if (!empty($comment['replies'])): ?>
-                <?php foreach ($comment['replies'] as $reply): ?>
-                    <!-- Card untuk Balasan Komentar -->
-                    <div class="card reply-card" style="margin-left: 20px; border-left: 3px solid #007bff; padding-left: 15px; margin-bottom: 15px;">
-                        <div class="user-info">
-                            <div class="user-avatar" style="background-color: #007bff; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                                <?php echo strtoupper(substr($reply['name'], 0, 1)); ?>
-                            </div>
-                            <div class="user-details">
-                                <h6 style="margin-bottom: 0;"><?php echo $reply['name']; ?></h6>
-                                <small style="display: block; color: #6c757d;" data-transaction-time="<?= htmlspecialchars($reply['created_at']); ?>">
-                                    <span id="time-ago"></span>
-                                </small>
-                            </div>
-                        </div>
-
-                        <!-- Menampilkan informasi "balasan ke" dengan gaya modern -->
-                        <?php if (!empty($reply['parent_name'])): ?>
-                            <div class="reply-to-info" style="margin-top: 5px; font-style: italic;">
-                                <small style="color: #007bff;"><i class="fas fa-reply"></i> Replying to <strong><?= htmlspecialchars($reply['parent_name']) ?></strong></small>
-                            </div>
-                        <?php endif; ?>
-
-                        <!-- Post Content untuk Balasan -->
-                        <div class="post-content" style="margin-top: 10px;">
-                            <p style="margin-bottom: 0;"><?php echo $reply['reply_text']; ?></p>
-                        </div>
-
-                        <!-- Actions Section untuk Balasan -->
-                        <div class="actions" style="margin-top: 10px; display: flex; gap: 15px;">
-                            <div>
-                                <i class="fas fa-arrow-up" style="font-size: 17px; color: #28a745;" onclick="likeReply(<?= $reply['id'] ?>)"></i>&nbsp;
-                                <span id="likes-count-<?= $reply['id'] ?>"><?php echo $reply['likes']; ?></span>
-                            </div>
-
-                            <div>
-                                <i class="fas fa-arrow-down" style="font-size: 17px; color: #dc3545;" onclick="unlikeReply(<?= $reply['id'] ?>)"></i>&nbsp;
-                                <span id="unlikes-count-<?= $reply['id'] ?>"><?php echo $reply['unlikes']; ?></span>
-                            </div>
-                            <div class="reply-button" style="cursor: pointer; color: #007bff;"><i class="fas fa-reply" style="font-size: 17px;"></i>&nbsp; Reply</div>
-                        </div>
-
-                        <!-- Comment Input Section untuk Balasan (Initially Hidden) -->
-                        <div class="comment-input" style="display: none; margin-top: 15px;">
-                            <form id="repliesForm" action="<?= site_url('forum/add_reply_user') ?>" method="post">
-                                <textarea class="form-control" rows="3" name="reply_text" placeholder="Write your comment..." style="resize: none;"></textarea>
-                                <input type="hidden" name="thread_id" value="<?php echo ($thread['id']); ?>">
-                                <input type="hidden" name="comment_id" value="<?php echo ($comment['id']); ?>">
-                                <input type="hidden" name="parent_id" value="<?= htmlspecialchars($reply['id']) ?>">
-                                <button class="btn btn-primary btn-sm" type="submit" style="margin-top: 5px;">Submit</button>
+                    <div class="comment">
+                        <div class="add-comment-input" style="display: none; margin-top: 25px;">
+                            <form id="replyCommentInputForm-<?= $thread['id'] ?>" action="<?= site_url('forum/add_comment') ?>" method="post">
+                                <div class="textarea-wrapper" style="position: relative;">
+                                    <textarea class="form-control" rows="3" name="comment" placeholder="Write your comment..." style="resize: none; padding-right: 40px;"></textarea>
+                                    <input type="hidden" name="thread_id" value="<?php echo ($thread['id']); ?>">
+                                    <button type="submit" class="send-icon" aria-label="Send Comment">
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?> <!-- Kondisi jika tidak ada komentar -->
+            <br><br><br><br><br>
+            <div class="text-center mt-5">
+                <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No Comments" style="width: 100px; height: auto;">
+            </div>
+            <p class="text-center"><small>There are no discussions here yet. Share your thoughts to start a conversation!</small></p>
+        <?php endif; ?>
 
-        <?php endforeach; ?>
-
+        <!-- More comments -->
+        <br>
+        <div class="add-comment-input" id="commentInput" style="display: none; margin-top: 25px;">
+            <form id="commentForm" action="<?= site_url('forum/add_comment') ?>" method="post">
+                <div class="textarea-wrapper" style="position: relative;">
+                    <textarea class="form-control" rows="3" name="comment" placeholder="Write your comment..." style="resize: none; padding-right: 40px;"></textarea>
+                    <input type="hidden" name="thread_id" value="<?php echo ($thread['id']); ?>">
+                    <input type="hidden" name="user_id" value="<?= $this->session->userdata('id'); ?>">
+                    <button type="submit" class="send-icon" aria-label="Send Comment">
+                        <i class="fa-solid fa-paper-plane"></i> <!-- Font Awesome paper plane icon -->
+                    </button>
+                </div>
+            </form>
+        </div>
+        <br><br><br>
     </div>
 </div>
 
 <style>
-    .actions div:last-child {
-        margin-left: auto;
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f3f6f9;
+        margin: 0;
+        /* Ensure no margin on body */
+        padding: 0;
+        /* Ensure no padding on body */
+        height: 100vh;
+        /* Use full viewport height */
+        overflow: hidden;
+        /* Hide overflow */
     }
 
     .container {
-        width: 100%;
-        margin-left: 0;
-        margin-right: auto;
-        padding-left: 10px;
+        display: flex;
+        max-width: 100%;
+        margin: 0;
+        /* Remove margin */
+        padding: 0;
+        /* Remove padding */
+        height: 100%;
+        /* Ensure it takes full height */
+        justify-content: flex-start;
+        /* Align items to the left */
+        position: absolute;
+        /* Use absolute positioning */
+        top: 0;
+        /* Align to the top of the viewport */
+        left: 0;
+        /* Align to the left of the viewport */
+        align-items: stretch;
+        /* Stretch items to the full height */
     }
 
-    /* Topic Section */
-    .topic {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 10px;
+    .textarea-wrapper {
+        position: relative;
     }
 
-    .tags {
-        margin-bottom: 30px;
+    .send-icon {
+        position: absolute;
+        right: 10px;
+        /* Adjust based on padding */
+        top: 50%;
+        transform: translateY(-50%);
+        /* Center vertically */
+        border: none;
+        /* No border */
+        background: transparent;
+        /* Transparent background */
+        cursor: pointer;
+        /* Pointer cursor on hover */
+        color: #007bff;
+        /* Icon color */
+        font-size: 20px;
+        /* Icon size */
+        z-index: 1;
+        /* Ensure it's above other elements */
     }
 
-    .tag {
-        display: inline-block;
-        background-color: #e0e0e0;
-        color: #333;
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        margin-right: 5px;
+    .form-control {
+        padding-right: 40px;
+        /* Adjust to give space for the icon */
     }
 
-    /* Card Section */
-    .card {
-        background-color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
+    .send-icon:hover {
+        color: #0056b3;
+        /* Darker shade on hover */
+    }
+
+    .left {
+        flex: 1;
+        /* Flex-grow */
+        background-color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        /* Center content vertically */
+        padding: 0;
+        /* Remove padding */
+        max-width: 35%;
+        /* Control width */
+        height: 100%;
+        /* Ensure full height */
+    }
+
+    .new-comment-btn {
+        background-color: #fff6eb;
+        /* Light beige color matching the background in the image */
+        color: #4a4a4a;
+        /* Darker text color */
+        border: 1px solid #e2c396;
+        /* Light border to match the subtle outline */
+        border-radius: 25px;
+        /* Rounded corners */
+        padding: 10px 20px;
+        /* Same padding */
+        font-size: 14px;
+        /* Font size */
+        cursor: pointer;
+        /* Pointer cursor on hover */
+        transition: background-color 0.3s ease, color 0.3s ease;
+        /* Smooth transition for hover */
+        outline: none;
+        /* Remove default focus outline */
+    }
+
+    .new-comment-btn:hover {
+        background-color: #fbe4b7;
+        /* Slightly darker beige on hover */
+        color: #333333;
+        /* Darker text on hover */
+    }
+
+
+
+
+    .vertical-bar {
+        width: 30px;
+        background: linear-gradient(to bottom, #A6A6A6, #F2F2F2);
+        /* Gradient from maroon to a lighter shade */
+        height: 100%;
+        /* Ensure full height */
+        position: absolute;
+        left: 0;
+        /* Align to the left */
+        top: 0;
+        /* Align to the top */
+    }
+
+    .content {
+        margin-left: 20px;
+        /* Space from the vertical bar */
+        text-align: center;
+        /* Center text */
         padding: 20px;
-        margin-left: 0;
+        /* Adjust padding as needed */
+    }
+
+    .right {
+        flex: 2;
+        /* Flex-grow */
+        padding: 0 30px;
+        /* Adjust padding */
+        background-color: #fff;
+        /* Background color */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        /* Box shadow */
+        overflow-y: auto;
+        /* Enable scrolling if necessary */
+        max-height: 100vh;
+        /* Full viewport height */
+        max-width: 65%;
+        /* Control width */
+    }
+
+    .comment {
         margin-bottom: 20px;
+        /* Space between comments */
     }
 
-    /* Card Reply Section */
-    .reply-card {
-        background-color: #f8f9fa;
-        border-left: 4px solid #007bff;
-        margin-left: 50px;
-        /* Indented for replies */
-        padding: 15px;
-    }
-
-    /* User Info Section */
     .user-info {
         display: flex;
+        /* Flexbox for user info */
         align-items: center;
-        margin-bottom: 20px;
+        /* Center user info vertically */
+        margin-bottom: 10px;
+        /* Space below user info */
     }
 
-    .user-avatar {
-        width: 50px;
-        height: 50px;
-        background-color: #007bff;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    .user-info img {
         border-radius: 50%;
-        font-size: 18px;
+        /* Circular image */
+        width: 40px;
+        /* Image width */
+        height: 40px;
+        /* Image height */
+        margin-right: 10px;
+        /* Space between image and text */
+    }
+
+    .user-info span {
         font-weight: bold;
+        /* Bold text */
+        font-size: 16px;
+        /* Font size */
     }
 
-    .user-details {
-        margin-left: 15px;
-    }
-
-    .user-details h6 {
-        margin: 0;
-        font-weight: 600;
-    }
-
-    .user-details small {
+    .user-title {
         color: #777;
-    }
-
-    .post-date {
-        margin-left: auto;
-        color: #777;
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-    }
-
-    /* Post Content */
-    .post-content {
-        color: #555;
-        line-height: 1.6;
-        font-size: 15px;
-        margin-bottom: 20px;
-    }
-
-    /* Icons Section */
-    .actions {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        color: #888;
+        /* Grey color */
         font-size: 14px;
+        /* Font size */
     }
 
-    .actions div {
-        margin-right: 20px;
+    .like {
+        font-size: 14px;
+        /* Font size */
+        color: #0073b1;
+        /* Like color */
         display: flex;
+        /* Flexbox for like */
         align-items: center;
+        /* Center like vertically */
+        margin-top: 10px;
+        /* Space above like */
     }
 
-    .actions div i {
+
+    .like img {
         margin-right: 5px;
     }
-
-    .actions div:hover {
-        color: #007bff;
-        cursor: pointer;
-    }
-
-    .comment-input textarea {
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        padding: 10px;
-        font-size: 14px;
-        width: 100%;
-        transition: border-color 0.2s;
-    }
-
-    .comment-input textarea:focus {
-        border-color: #80bdff;
-        outline: none;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        border: none;
-        transition: background-color 0.2s;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-    }
 </style>
+
 
 <script>
     // JavaScript untuk memperbarui waktu secara dinamis
@@ -375,26 +336,24 @@
     setInterval(updateTimeAgo, 60000); // Segarkan setiap 60 detik
 </script>
 
-
 <script>
-    document.querySelectorAll('.reply-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const commentInput = this.closest('.card').querySelector('.comment-input');
-            commentInput.style.display = commentInput.style.display === 'none' ? 'block' : 'none';
-        });
-    });
+    // Fungsionalitas untuk tombol Toggle
+    document.getElementById('toggleCommentInput').addEventListener('click', function() {
+        const commentInput = document.getElementById('commentInput');
 
-    // Add event listener for textarea to handle Enter key for new lines
-    document.querySelectorAll('.comment-input textarea').forEach(textarea => {
-        textarea.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault(); // Prevent default behavior of Enter key for submission
-                this.value += '\n'; // Add a new line
-            }
-        });
+        // Toggle tampilan input komentar
+        if (commentInput.style.display === 'none' || commentInput.style.display === '') {
+            commentInput.style.display = 'block'; // Tampilkan input
+
+            // Smoothly scroll to the comment input form
+            commentInput.scrollIntoView({
+                behavior: 'smooth'
+            });
+        } else {
+            commentInput.style.display = 'none'; // Sembunyikan input
+        }
     });
 </script>
-
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -417,43 +376,7 @@
     });
 </script>
 
-<!-- JavaScript -->
-<script>
-    // Event listener untuk tombol Add Comment
-    document.querySelector('.add-comment-button').addEventListener('click', function(e) {
-        e.preventDefault(); // Mencegah aksi default link
-        const commentInput = document.querySelector('.add-comment-input');
 
-        // Toggle tampilkan/sembunyikan form textarea
-        if (commentInput.style.display === 'none') {
-            commentInput.style.display = 'block';
-
-            // Scroll dengan offset
-            const yOffset = -100; // Adjust the offset value as needed
-            const y = commentInput.getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-            window.scrollTo({
-                top: y,
-                behavior: 'smooth'
-            });
-
-            // Fokuskan pada textarea setelah scroll
-            setTimeout(() => {
-                commentInput.querySelector('textarea').focus();
-            }, 300);
-        } else {
-            commentInput.style.display = 'none';
-        }
-    });
-
-    // Add event listener untuk textarea agar Enter menambah baris baru
-    document.querySelector('.add-comment-input textarea').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent default behavior of Enter key for form submission
-            this.value += '\n'; // Add new line to the textarea
-        }
-    });
-</script>
 
 <script>
     function likeComment(id) {
@@ -465,9 +388,11 @@
             },
             success: function(response) {
                 var data = JSON.parse(response);
-                $('#like-count-' + id).text(data.likes);
 
-                // Show success message using SweetAlert
+                // Update the like count in the span element
+                $('#like-count-' + id).text(data.likes + ' Likes');
+
+                // Display success message using SweetAlert
                 Swal.fire({
                     title: 'Success',
                     text: 'You liked this comment.',
@@ -482,36 +407,9 @@
                         popup: 'swal2-popup'
                     }
                 });
-            }
-        });
-    }
-
-    function unlikeComment(id) {
-        $.ajax({
-            url: '<?= site_url('forum/unlikeComment') ?>',
-            type: 'POST',
-            data: {
-                id: id
             },
-            success: function(response) {
-                var data = JSON.parse(response);
-                $('#unlike-count-' + id).text(data.unlikes);
-
-                // Show success message using SweetAlert
-                Swal.fire({
-                    title: 'Success',
-                    text: 'You unliked this comment.',
-                    toast: true,
-                    position: 'top-end',
-                    timer: 2000,
-                    showConfirmButton: false,
-                    background: '#f8f9fa', // Light background color
-                    customClass: {
-                        container: 'swal2-container',
-                        title: 'swal2-title',
-                        popup: 'swal2-popup'
-                    }
-                });
+            error: function(xhr, status, error) {
+                console.error('Error liking the comment: ', error);
             }
         });
     }

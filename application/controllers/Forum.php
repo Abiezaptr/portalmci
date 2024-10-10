@@ -8,8 +8,11 @@ class Forum extends CI_Controller
     {
         $data['title'] = 'Forum';
 
-        // Ambil semua thread dari database
-        $query = $this->db->get('forum_threads');
+        // Ambil semua thread dengan join ke tabel category
+        $this->db->select('forum_threads.*, forum_category.name AS category_name');
+        $this->db->from('forum_threads');
+        $this->db->join('forum_category', 'forum_threads.category_id = forum_category.id'); // Join berdasarkan category_id
+        $query = $this->db->get();
         $data['threads'] = $query->result_array();
 
         // Ambil semua kategori dari tabel forum_category
@@ -32,8 +35,12 @@ class Forum extends CI_Controller
         $this->db->update('forum_threads');
 
         // Ambil thread berdasarkan ID
-        $this->db->where('id', $id);
-        $thread = $this->db->get('forum_threads')->row_array();
+        $this->db->where('forum_threads.id', $id);
+        $this->db->select('forum_threads.*, forum_category.name AS category_name');
+        $this->db->from('forum_threads');
+        $this->db->join('forum_category', 'forum_threads.category_id = forum_category.id', 'left'); // Menggunakan LEFT JOIN jika Anda ingin tetap menampilkan thread meski tidak ada kategori
+        $thread = $this->db->get()->row_array();
+
 
         // Query untuk mendapatkan komentar dan balasan mereka dengan nama parent
         $comments = $this->db->select('comments.*, 
@@ -44,9 +51,12 @@ class Forum extends CI_Controller
                         replies.unlikes AS reply_unlikes, 
                         replies.created_at AS reply_created_at, 
                         replies.parent_id AS reply_parent_id,
+                        users.username,
+                        users.job_title,
                         parent_replies.name AS parent_name') // Ambil nama balasan parent
             ->from('forum_comments AS comments')
             ->join('forum_replies AS replies', 'replies.comment_id = comments.id', 'left')
+            ->join('users', 'users.id = comments.user_id', 'left')
             ->join('forum_replies AS parent_replies', 'replies.parent_id = parent_replies.id', 'left') // Join untuk mendapatkan nama parent reply
             ->where('comments.thread_id', $id) // Gunakan alias yang benar
             ->order_by('comments.created_at', 'ASC')
@@ -60,7 +70,6 @@ class Forum extends CI_Controller
             if (!isset($data['comments'][$comment['id']])) {
                 $data['comments'][$comment['id']] = $comment;
                 $data['comments'][$comment['id']]['replies'] = [];
-                $data['comments'][$comment['id']]['comment_name'] = $comment['name']; // Tambahkan nama pengarang komentar
             }
             if ($comment['reply_id']) {
                 $reply = [
@@ -97,14 +106,15 @@ class Forum extends CI_Controller
         // Ambil data dari form
         $comment = $this->input->post('comment');
         $thread_id = $this->input->post('thread_id');
+        $user_id = $this->input->post('user_id');
 
         // Masukkan data ke database
         $this->db->insert(
             'forum_comments',
             [
-                'name' => 'Unknown', // Ubah sesuai dengan user jika ada session
                 'comment' => $comment,
-                'thread_id' => $thread_id
+                'thread_id' => $thread_id,
+                'user_id' => $user_id,
             ]
         );
 
@@ -247,5 +257,45 @@ class Forum extends CI_Controller
 
         // Kembalikan hasil dalam format JSON
         echo json_encode($threads);
+    }
+
+    public function category($category_id)
+    {
+        // Ambil semua kategori untuk ditampilkan
+        $query_all = $this->db->get('forum_category');
+        $data['forum_category'] = $query_all->result_array(); // Ambil semua kategori untuk menampilkan menu
+
+        // Filter kategori yang dipilih berdasarkan ID
+        $query = $this->db->get_where('forum_category', ['id' => $category_id]);
+
+        // Cek apakah kategori ada
+        if ($query->num_rows() > 0) {
+            $selected_category = $query->row_array(); // Ambil kategori yang dipilih sebagai array
+            $data['selected_category'] = $selected_category['name']; // Ambil nama kategori yang dipilih
+            $data['title'] = $selected_category['name']; // Set judul dengan nama kategori yang dipilih
+
+            // Ambil thread berdasarkan kategori yang dipilih
+            $this->db->select('forum_threads.*, forum_category.name as category_name');
+            $this->db->from('forum_threads');
+            $this->db->join('forum_category', 'forum_threads.category_id = forum_category.id');
+            $this->db->where('forum_category.id', $category_id);
+            $query_threads = $this->db->get();
+            $data['threads'] = $query_threads->result_array(); // Ambil semua thread terkait kategori
+        } else {
+            // Jika kategori tidak ditemukan, redirect atau tangani error
+            $data['selected_category'] = null;
+            $data['title'] = 'Kategori tidak ditemukan'; // Set judul jika kategori tidak ada
+            $data['threads'] = []; // Kosongkan thread jika kategori tidak ada
+        }
+
+        // Filter kategori untuk menghindari kategori yang sedang dipilih
+        $data['other_categories'] = array_filter($data['forum_category'], function ($category) use ($category_id) {
+            return $category['id'] != $category_id; // Ambil kategori lain yang ID-nya tidak sama dengan kategori saat ini
+        });
+
+        // Load view dengan kategori yang difilter dan nama kategori yang dipilih
+        $this->load->view('template/content/header', $data);
+        $this->load->view('forum/forum_view', $data);
+        $this->load->view('template/content/footer');
     }
 }

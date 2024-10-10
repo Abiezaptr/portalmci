@@ -139,96 +139,42 @@
             }
         }
 
-        /* CSS untuk dropdown umum */
-        .navbar-nav .dropdown-menu {
-            display: none;
+        .dropdown-menu {
+            background-color: white;
+            /* Change to your desired background color */
+            border: 1px solid #dee2e6;
+            /* Subtle border for the dropdown */
+            border-radius: 0.25rem;
+            /* Rounded corners */
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            /* Shadow effect for depth */
+            margin-left: -15px;
+            /* Adjust this value to move left */
             position: absolute;
-            top: 100%;
-            left: 50%;
-            /* Pusatkan secara umum */
-            transform: translateX(-40%);
-            /* Pusatkan secara umum */
-            width: 100vw;
-            max-width: 1200px;
-            background-color: #c42323;
-            color: white;
-            padding: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Use absolute positioning */
+            left: 0;
+            /* Align to the left */
+            right: auto;
+            /* Ensure right is set to auto to avoid conflicts */
         }
 
-        /* CSS spesifik untuk dropdown 'Mobile' */
-        #mobileMenu+.dropdown-menu {
-            left: 50%;
-            /* Sesuaikan ini jika perlu */
-            transform: translateX(-47%);
-            /* Pastikan ini memusatkan dropdown */
+        .dropdown-item {
+            color: #212529;
+            /* Change text color */
+            padding: 10px 20px;
+            /* Padding for dropdown items */
         }
 
-        /* CSS spesifik untuk dropdown 'Fixed' */
-        #fixedMenu+.dropdown-menu {
-            left: 50%;
-            /* Sesuaikan ini jika perlu */
-            transform: translateX(-56%);
-            /* Pastikan ini memusatkan dropdown */
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            /* Light gray background on hover */
+            color: #0056b3;
+            /* Change text color on hover */
         }
 
-        .navbar-nav .nav-item.dropdown:hover .dropdown-menu,
-        .navbar-nav .nav-item.dropdown.show .dropdown-menu {
-            display: block;
-        }
-
-        .dropdown-menu .submenu {
-            display: flex;
-            justify-content: flex-start;
-            /* Align items to the start */
-            padding: 0;
-            /* Remove padding from submenu */
-        }
-
-        .dropdown-menu .submenu div {
-            flex: 0 1 auto;
-            /* Allow items to shrink and grow */
-            padding: 0 20px;
-            /* Reduce padding */
-            margin: 0;
-            /* Remove margin */
-        }
-
-        .dropdown-menu .submenu div h5 {
-            margin: 0;
-            /* Remove margin */
-            color: white;
-            /* Adjust text color */
-            text-align: left;
-            /* Left align text */
-            margin-bottom: 10px;
-        }
-
-        .dropdown-menu .submenu div h5 small {
-            font-size: 1rem;
-            /* Adjust font size */
-        }
-
-        .dropdown-menu .submenu div h4 {
-            margin-bottom: 10px;
-        }
-
-        .dropdown-menu .submenu div ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .dropdown-menu .submenu div ul li {
-            margin-bottom: 5px;
-        }
-
-        .dropdown-menu .submenu div ul li a {
-            color: white;
-            text-decoration: none;
-        }
-
-        .dropdown-menu .submenu div ul li a:hover {
-            text-decoration: underline;
+        .user-image {
+            margin-right: 8px;
+            /* Space between image and text */
         }
 
         /* New styles for the button */
@@ -464,12 +410,25 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?= site_url('contact-us') ?>">Contact Us</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link search-icon" href="#" id="searchIcon">
-                        <i class="fa fa-search"></i>
-                    </a>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search all GSMA">
-                </li>
+                <?php if ($this->session->userdata('id')): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="<?= base_url('assets/images/user.png') ?>" alt="User Image" class="user-image" style="width: 30px; height: 30px; border-radius: 50%;">
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="#">Profile</a>
+                            <a class="dropdown-item" href="#">Settings</a>
+                            <a class="dropdown-item" href="#">Logout</a>
+                        </div>
+                    </li>
+                <?php else: ?>
+                    <li class="nav-item">
+                        <a class="nav-link search-icon" href="<?= base_url('login'); ?>">
+                            <b><i class="fa-regular fa-user"></i>&nbsp; Sign in</b>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
             </ul>
         </div>
     </nav>
