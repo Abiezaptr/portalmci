@@ -13,3 +13,5 @@ $route['contact-us'] = 'contact/index';
 $route['digital-insight'] = 'digital/index';
 $route['global'] = 'globals/index';
 $route['form-discussion/(:any)'] = 'forum/detail/$1';
+
+$route['callback'] = 'login/handleCallback';

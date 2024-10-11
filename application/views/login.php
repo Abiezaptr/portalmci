@@ -310,7 +310,7 @@
                 <br>
                 <div class="or"><b>OR</b></div>
                 <br>
-                <a href="https://10.49.143.153:5000/authmci" class="google-login">
+                <a href="https://192.168.150.67:5000/login?app_type=portalnews" class="google-login">
                     <img src="<?= base_url('assets') ?>/libraries/images/microsoft.png" width="20" alt="Google Icon"> Sign in with Microsoft
                 </a>
             </form>

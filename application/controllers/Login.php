@@ -3,6 +3,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Login extends CI_Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->library('session');
+    }
+
     public function index()
     {
         $this->_rules();
@@ -51,6 +57,150 @@ class Login extends CI_Controller
         }
     }
 
+    // public function handleCallback()
+    // {
+    //     // Set timezone
+    //     date_default_timezone_set('Asia/Jakarta');
+
+    //     // Ambil data dari request
+    //     $displayName = $this->input->get('displayName');
+    //     $microsoftID = $this->input->get('id');
+    //     $jobTitle = $this->input->get('jobTitle');
+    //     $mail = $this->input->get('mail');
+    //     $password = md5('123');
+
+    //     // Cek apakah pengguna sudah terdaftar berdasarkan microsoft_id
+    //     $user = $this->db->get_where('users', ['microsoft_id' => $microsoftID])->row();
+
+    //     if ($user) {
+    //         // Jika pengguna sudah terdaftar, perbarui data jika perlu
+    //         $dataToUpdate = [
+    //             'updated_at' => date('Y-m-d H:i:s'),
+    //         ];
+    //         $this->db->where('id', $user->id)->update('users', $dataToUpdate);
+    //         $userId = $user->id; // Tetapkan $userId dengan $user->id jika perlu digunakan
+    //         $role = $user->role; // Ambil role dari data pengguna yang sudah ada
+    //         $userEmail = $user->email; // Ambil email dari data pengguna yang sudah ada
+    //     } else {
+    //         // Jika pengguna belum terdaftar, buat pengguna baru
+    //         $newUser = [
+    //             'username' => $displayName,
+    //             'email' => $mail,
+    //             'password' => $password, // Simpan password yang di-hash
+    //             'microsoft_id' => $microsoftID,
+    //             'job_title' => $jobTitle,
+    //             'avatar' => $avatarUrl, // Simpan avatar URL
+    //             'role' => 2, // Default role jika baru mendaftar (dapat disesuaikan)
+    //             'created_at' => date('Y-m-d H:i:s'),
+    //             'updated_at' => date('Y-m-d H:i:s'),
+    //         ];
+    //         $this->db->insert('users', $newUser);
+    //         $userId = $this->db->insert_id(); // Ambil ID pengguna yang baru saja dibuat
+    //         $role = 2; // Default role jika baru mendaftar
+    //         $userEmail = $mail; // Gunakan email dari data request untuk pengguna baru
+    //     }
+
+    //     // Set session data untuk user yang login
+    //     $this->session->set_userdata([
+    //         'id' => $userId,
+    //         'username' => $displayName,
+    //         'email' => $mail,
+    //         'role' => $role, // Gunakan role dari pengguna yang ada atau baru
+    //         'logged_in' => TRUE
+    //     ]);
+
+    //     // Debug session setelah di-set
+    //     log_message('debug', 'Session on Home: ' . print_r($this->session->userdata(), TRUE));
+
+
+
+    //     // Load user agent library
+    //     $this->load->library('user_agent');
+    //     $browser = $this->agent->browser() . ' ' . $this->agent->version();
+
+    //     // Catat login ke dalam tabel login_logs
+    //     $loginLog = [
+    //         'user_id' => $userId,
+    //         'login_time' => date('Y-m-d H:i:s'),
+    //         'ip_address' => $this->input->ip_address(),
+    //         'email' => $userEmail,
+    //         'browser' => $browser
+    //     ];
+    //     $this->db->insert('login_logs', $loginLog);
+
+    //     // Redirect ke halaman beranda setelah berhasil masuk
+    //     redirect('home');
+    // }
+
+    // public function handleCallback()
+    // {
+    //     // Set timezone
+    //     date_default_timezone_set('Asia/Jakarta');
+
+    //     // Ambil data dari request
+    //     $displayName = $this->input->get('displayName');
+    //     $microsoftID = $this->input->get('id');
+    //     $jobTitle = $this->input->get('jobTitle');
+    //     $mail = $this->input->get('mail');
+    //     $password = md5('123');  // Default password
+
+    //     // Cek apakah pengguna sudah terdaftar berdasarkan microsoft_id
+    //     $user = $this->db->get_where('users', ['microsoft_id' => $microsoftID])->row();
+
+    //     if ($user) {
+    //         // Jika pengguna sudah terdaftar, perbarui data jika perlu
+    //         $dataToUpdate = [
+    //             'updated_at' => date('Y-m-d H:i:s'),
+    //         ];
+    //         $this->db->where('id', $user->id)->update('users', $dataToUpdate);
+    //         $userId = $user->id;
+    //         $role = $user->role;
+    //         $userEmail = $user->email;
+    //     } else {
+    //         // Jika pengguna belum terdaftar, buat pengguna baru
+    //         $newUser = [
+    //             'username' => $displayName,
+    //             'email' => $mail,
+    //             'password' => $password,  // Simpan password yang di-hash
+    //             'microsoft_id' => $microsoftID,
+    //             'job_title' => $jobTitle,
+    //             'role' => 2,  // Default role jika baru mendaftar
+    //             'created_at' => date('Y-m-d H:i:s'),
+    //             'updated_at' => date('Y-m-d H:i:s'),
+    //         ];
+    //         $this->db->insert('users', $newUser);
+    //         $userId = $this->db->insert_id();  // Ambil ID pengguna yang baru saja dibuat
+    //         $role = 2;  // Default role jika baru mendaftar
+    //         $userEmail = $mail;
+    //     }
+
+    //     // Set session data untuk user yang login
+    //     $this->session->set_userdata([
+    //         'id' => $userId,
+    //         'username' => $displayName,
+    //         'email' => $mail,
+    //         'role' => $role,
+    //         'logged_in' => TRUE
+    //     ]);
+
+    //     // Debug session setelah di-set
+    //     log_message('debug', 'Session data: ' . print_r($this->session->userdata(), TRUE));
+
+    //     // Verifikasi apakah session tersimpan dengan benar
+    //     if ($this->session->userdata('logged_in')) {
+    //         // Jika session tersimpan dengan benar, tampilkan data session
+    //         echo "Session berhasil di-set:<br>";
+    //         echo "<pre>" . print_r($this->session->userdata(), TRUE) . "</pre>";
+
+    //         // Redirect ke halaman home dengan parameter di URL
+    //         redirect('home?id=' . $userId . '&username=' . urlencode($displayName)); // Ganti 'home' sesuai controller Anda
+    //     } else {
+    //         // Jika session gagal tersimpan, tampilkan pesan kesalahan
+    //         echo "Gagal menyimpan session.";
+    //         log_message('error', 'Session failed to set for user: ' . $userId);
+    //     }
+    // }
+
     public function handleCallback()
     {
         // Set timezone
@@ -61,9 +211,9 @@ class Login extends CI_Controller
         $microsoftID = $this->input->get('id');
         $jobTitle = $this->input->get('jobTitle');
         $mail = $this->input->get('mail');
-        $password = md5('123');
+        $password = md5('123'); // Default password
 
-        // Cek apakah pengguna sudah terdaftar berdasarkan microsoft_id
+        // Cek apakah pengguna sudah terdaftar
         $user = $this->db->get_where('users', ['microsoft_id' => $microsoftID])->row();
 
         if ($user) {
@@ -72,9 +222,9 @@ class Login extends CI_Controller
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
             $this->db->where('id', $user->id)->update('users', $dataToUpdate);
-            $userId = $user->id; // Tetapkan $userId dengan $user->id jika perlu digunakan
-            $role = $user->role; // Ambil role dari data pengguna yang sudah ada
-            $userEmail = $user->email; // Ambil email dari data pengguna yang sudah ada
+            $userId = $user->id;
+            $role = $user->role;
+            $userEmail = $user->email;
         } else {
             // Jika pengguna belum terdaftar, buat pengguna baru
             $newUser = [
@@ -83,43 +233,30 @@ class Login extends CI_Controller
                 'password' => $password, // Simpan password yang di-hash
                 'microsoft_id' => $microsoftID,
                 'job_title' => $jobTitle,
-                'avatar' => $avatarUrl, // Simpan avatar URL
-                'role' => 2, // Default role jika baru mendaftar (dapat disesuaikan)
+                'role' => 2, // Default role
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
             $this->db->insert('users', $newUser);
-            $userId = $this->db->insert_id(); // Ambil ID pengguna yang baru saja dibuat
-            $role = 2; // Default role jika baru mendaftar
-            $userEmail = $mail; // Gunakan email dari data request untuk pengguna baru
+            $userId = $this->db->insert_id();
+            $role = 2; // Default role
+            $userEmail = $mail;
         }
 
-        // Set session data untuk user yang login
+        // Set session data
         $this->session->set_userdata([
             'id' => $userId,
             'username' => $displayName,
             'email' => $mail,
-            'role' => $role, // Gunakan role dari pengguna yang ada atau baru
+            'role' => $role,
             'logged_in' => TRUE
         ]);
 
-        // Load user agent library
-        $this->load->library('user_agent');
-        $browser = $this->agent->browser() . ' ' . $this->agent->version();
-
-        // Catat login ke dalam tabel login_logs
-        $loginLog = [
-            'user_id' => $userId,
-            'login_time' => date('Y-m-d H:i:s'),
-            'ip_address' => $this->input->ip_address(),
-            'email' => $userEmail,
-            'browser' => $browser
-        ];
-        $this->db->insert('login_logs', $loginLog);
-
-        // Redirect ke halaman beranda setelah berhasil masuk
         redirect('home');
     }
+
+
+
 
     private function log_login($user_id, $email, $status)
     {
