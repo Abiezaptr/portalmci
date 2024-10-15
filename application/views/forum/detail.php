@@ -12,12 +12,23 @@
             <p class="mt-5" style="font-size: 14px;"><?php echo htmlspecialchars($thread['content']); ?></p>
 
             <!-- New Comment Button -->
-            <?php if ($this->session->userdata('id')): ?>
-                <button class="new-comment-btn mt-5" id="toggleCommentInput">Add Response</button>
-            <?php else: ?>
+            <?php
+            // Check if the user is logged in
+            if ($this->session->userdata('id')):
+                // Check if the user is authorized to comment
+                if ($is_authorized): ?>
+                    <button class="new-comment-btn mt-5" id="toggleCommentInput">Add Response</button>
+                <?php else: ?>
+                    <p class="mt-5">
+                        <a class="new-comment-btn mt-5">You are not authorized to comment on this thread.</a>
+                    </p>
+                <?php endif;
+            else: ?>
                 <br><br>
                 <a href="<?= site_url('login') ?>" class="new-comment-btn mt-5">Add Response</a>
             <?php endif; ?>
+
+
         </div>
     </div>
 

@@ -15,3 +15,7 @@ $route['global'] = 'globals/index';
 $route['form-discussion/(:any)'] = 'forum/detail/$1';
 
 $route['callback'] = 'login/handleCallback';
+
+// rute for admin content
+$route['dashboard'] = 'admin/dashboard/index';
+$route['role-admin'] = 'admin/role/index';

@@ -4,6 +4,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Forum extends CI_Controller
 {
 
+    // public function index()
+    // {
+    //     $data['title'] = 'Forum';
+
+    //     // Ambil semua thread dengan join ke tabel category
+    //     $this->db->select('forum_threads.*, forum_category.name AS category_name');
+    //     $this->db->from('forum_threads');
+    //     $this->db->join('forum_category', 'forum_threads.category_id = forum_category.id'); // Join berdasarkan category_id
+    //     $query = $this->db->get();
+    //     $data['threads'] = $query->result_array();
+
+    //     // Ambil semua kategori dari tabel forum_category
+    //     $queryCategories = $this->db->get('forum_category');
+    //     $data['categories'] = $queryCategories->result_array();
+
+    //     // Load the views with the data
+    //     $this->load->view('template/content/header', $data);
+    //     $this->load->view('forum/list', $data);
+    //     $this->load->view('template/content/footer');
+    // }
+
     public function index()
     {
         $data['title'] = 'Forum';
@@ -11,9 +32,33 @@ class Forum extends CI_Controller
         // Ambil semua thread dengan join ke tabel category
         $this->db->select('forum_threads.*, forum_category.name AS category_name');
         $this->db->from('forum_threads');
-        $this->db->join('forum_category', 'forum_threads.category_id = forum_category.id'); // Join berdasarkan category_id
+        $this->db->join('forum_category', 'forum_threads.category_id = forum_category.id');
         $query = $this->db->get();
         $data['threads'] = $query->result_array();
+
+        // Loop through threads to fetch users based on user_ids
+        foreach ($data['threads'] as &$thread) {
+            // Split user_ids string into array
+            $user_ids = explode(',', $thread['user_id']);
+
+            // Filter out invalid user_ids (0 or empty)
+            $valid_user_ids = array_filter($user_ids, function ($id) {
+                return !empty($id) && $id !== '0'; // Saring user_id yang tidak kosong dan bukan 0
+            });
+
+            // Get users data by user_id array only if there are valid user_ids
+            if (!empty($valid_user_ids)) {
+                $this->db->select('username');
+                $this->db->where_in('id', $valid_user_ids);
+                $queryUsers = $this->db->get('users');
+                $thread['users'] = $queryUsers->result_array();
+            } else {
+                $thread['users'] = []; // Set to empty array if no valid user_ids
+            }
+
+            // Hitung jumlah kontribusi yang valid
+            $thread['contribution_count'] = count($valid_user_ids); // Menghitung jumlah user_id yang valid
+        }
 
         // Ambil semua kategori dari tabel forum_category
         $queryCategories = $this->db->get('forum_category');
@@ -25,24 +70,114 @@ class Forum extends CI_Controller
         $this->load->view('template/content/footer');
     }
 
+
+
+    // public function detail($id)
+    // {
+    //     $data['title'] = 'Forum Discussion';
+
+    //     // Tambahkan view count
+    //     $this->db->set('views_count', 'views_count+1', FALSE);
+    //     $this->db->where('id', $id);
+    //     $this->db->update('forum_threads');
+
+    //     // Ambil thread berdasarkan ID
+    //     $this->db->where('forum_threads.id', $id);
+    //     $this->db->select('forum_threads.*, forum_category.name AS category_name');
+    //     $this->db->from('forum_threads');
+    //     $this->db->join('forum_category', 'forum_threads.category_id = forum_category.id', 'left'); // Menggunakan LEFT JOIN jika Anda ingin tetap menampilkan thread meski tidak ada kategori
+    //     $thread = $this->db->get()->row_array();
+
+
+    //     // Query untuk mendapatkan komentar dan balasan mereka dengan nama parent
+    //     $comments = $this->db->select('comments.*, 
+    //                     replies.id AS reply_id, 
+    //                     replies.name AS reply_name, 
+    //                     replies.reply_text, 
+    //                     replies.likes AS reply_likes, 
+    //                     replies.unlikes AS reply_unlikes, 
+    //                     replies.created_at AS reply_created_at, 
+    //                     replies.parent_id AS reply_parent_id,
+    //                     users.username,
+    //                     users.job_title,
+    //                     parent_replies.name AS parent_name') // Ambil nama balasan parent
+    //         ->from('forum_comments AS comments')
+    //         ->join('forum_replies AS replies', 'replies.comment_id = comments.id', 'left')
+    //         ->join('users', 'users.id = comments.user_id', 'left')
+    //         ->join('forum_replies AS parent_replies', 'replies.parent_id = parent_replies.id', 'left') // Join untuk mendapatkan nama parent reply
+    //         ->where('comments.thread_id', $id) // Gunakan alias yang benar
+    //         ->order_by('comments.created_at', 'ASC')
+    //         ->order_by('replies.created_at', 'ASC')
+    //         ->get()
+    //         ->result_array();
+
+    //     // Atur komentar dan balasan
+    //     $data['comments'] = [];
+    //     foreach ($comments as $comment) {
+    //         if (!isset($data['comments'][$comment['id']])) {
+    //             $data['comments'][$comment['id']] = $comment;
+    //             $data['comments'][$comment['id']]['replies'] = [];
+    //         }
+    //         if ($comment['reply_id']) {
+    //             $reply = [
+    //                 'id' => $comment['reply_id'],
+    //                 'name' => $comment['reply_name'],
+    //                 'reply_text' => $comment['reply_text'],
+    //                 'likes' => $comment['reply_likes'],
+    //                 'unlikes' => $comment['reply_unlikes'],
+    //                 'created_at' => $comment['reply_created_at'],
+    //                 'parent_id' => $comment['reply_parent_id'],
+    //                 'parent_name' => $comment['parent_name'] ? $comment['parent_name'] : $comment['name'] // Gunakan nama komentar jika parent_name NULL
+    //             ];
+    //             // Tambahkan balasan ke komentar induk mereka
+    //             $data['comments'][$comment['id']]['replies'][] = $reply;
+    //         }
+    //     }
+
+    //     // Query untuk menghitung jumlah komentar terkait thread ini
+    //     $data['comment_count'] = $this->db->where('thread_id', $id) // Ganti id_report dengan thread_id
+    //         ->from('forum_comments')
+    //         ->count_all_results();
+
+    //     $data['thread'] = $thread;
+
+    //     // Load the views with the data
+    //     $this->load->view('template/content/header', $data);
+    //     $this->load->view('forum/detail', $data);
+    //     $this->load->view('template/content/footer');
+    // }
+
     public function detail($id)
     {
         $data['title'] = 'Forum Discussion';
 
-        // Tambahkan view count
+        // Increment views count for the thread
         $this->db->set('views_count', 'views_count+1', FALSE);
         $this->db->where('id', $id);
         $this->db->update('forum_threads');
 
-        // Ambil thread berdasarkan ID
-        $this->db->where('forum_threads.id', $id);
+        // Get the current user's ID
+        $current_user_id = $this->session->userdata('id');
+
+        // Fetch the thread details
         $this->db->select('forum_threads.*, forum_category.name AS category_name');
         $this->db->from('forum_threads');
-        $this->db->join('forum_category', 'forum_threads.category_id = forum_category.id', 'left'); // Menggunakan LEFT JOIN jika Anda ingin tetap menampilkan thread meski tidak ada kategori
+        $this->db->where('forum_threads.id', $id);
+        $this->db->join('forum_category', 'forum_threads.category_id = forum_category.id', 'left');
         $thread = $this->db->get()->row_array();
 
+        // Check if the current user is authorized to comment
+        if ($current_user_id) {
+            // Use LIKE to check if the user_id exists in the comma-separated list in `forum_threads.user_id`
+            $this->db->like('user_id', $current_user_id);
+            $this->db->from('forum_threads');
+            $this->db->where('id', $id);
+            $is_authorized = $this->db->count_all_results() > 0;
+        } else {
+            $is_authorized = false;
+        }
 
-        // Query untuk mendapatkan komentar dan balasan mereka dengan nama parent
+        // Query to fetch comments and replies
         $comments = $this->db->select('comments.*, 
                         replies.id AS reply_id, 
                         replies.name AS reply_name, 
@@ -53,18 +188,22 @@ class Forum extends CI_Controller
                         replies.parent_id AS reply_parent_id,
                         users.username,
                         users.job_title,
-                        parent_replies.name AS parent_name') // Ambil nama balasan parent
+                        parent_replies.name AS parent_name')
             ->from('forum_comments AS comments')
             ->join('forum_replies AS replies', 'replies.comment_id = comments.id', 'left')
             ->join('users', 'users.id = comments.user_id', 'left')
-            ->join('forum_replies AS parent_replies', 'replies.parent_id = parent_replies.id', 'left') // Join untuk mendapatkan nama parent reply
-            ->where('comments.thread_id', $id) // Gunakan alias yang benar
+            ->join(
+                'forum_replies AS parent_replies',
+                'replies.parent_id = parent_replies.id',
+                'left'
+            )
+            ->where('comments.thread_id', $id)
             ->order_by('comments.created_at', 'ASC')
             ->order_by('replies.created_at', 'ASC')
             ->get()
             ->result_array();
 
-        // Atur komentar dan balasan
+        // Organize comments and replies
         $data['comments'] = [];
         foreach ($comments as $comment) {
             if (!isset($data['comments'][$comment['id']])) {
@@ -80,21 +219,22 @@ class Forum extends CI_Controller
                     'unlikes' => $comment['reply_unlikes'],
                     'created_at' => $comment['reply_created_at'],
                     'parent_id' => $comment['reply_parent_id'],
-                    'parent_name' => $comment['parent_name'] ? $comment['parent_name'] : $comment['name'] // Gunakan nama komentar jika parent_name NULL
+                    'parent_name' => $comment['parent_name'] ? $comment['parent_name'] : $comment['name']
                 ];
-                // Tambahkan balasan ke komentar induk mereka
                 $data['comments'][$comment['id']]['replies'][] = $reply;
             }
         }
 
-        // Query untuk menghitung jumlah komentar terkait thread ini
-        $data['comment_count'] = $this->db->where('thread_id', $id) // Ganti id_report dengan thread_id
+        // Count the number of comments on the thread
+        $data['comment_count'] = $this->db->where('thread_id', $id)
             ->from('forum_comments')
             ->count_all_results();
 
+        // Pass data to the view
         $data['thread'] = $thread;
+        $data['is_authorized'] = $is_authorized; // Pass authorization status to the view
 
-        // Load the views with the data
+        // Load the views
         $this->load->view('template/content/header', $data);
         $this->load->view('forum/detail', $data);
         $this->load->view('template/content/footer');

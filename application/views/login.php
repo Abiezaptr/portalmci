@@ -114,20 +114,19 @@
             width: 71%;
             margin: 10px 0;
             padding: 10px;
-            background: #000000;
-            /* Changed to black color */
+            background: linear-gradient(to right, #ff0000, #c70000);
+            /* Gradient merah Telkomsel */
             border: 1px solid #ccc;
             border-radius: 10px;
-            /* Removed rounded corners */
             font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
-            /* Changed text color to white */
             margin: 0 auto;
         }
+
 
         .login-section .google-login img {
             margin-right: 10px;
@@ -185,15 +184,15 @@
 
         .login-logo {
             width: 80%;
-            /* Sesuaikan lebar dengan input dan teks */
             margin: 0 auto 20px;
-            /* Centering secara horizontal dan tambahkan margin bawah */
+            /* Mengurangi margin atas */
             display: flex;
             justify-content: left;
             /* Rata kiri */
             align-items: center;
             /* Tengah secara vertikal */
         }
+
 
         .login-logo img {
             width: 90px;
@@ -288,12 +287,11 @@
             <form action="<?= base_url('login') ?>" method="POST">
                 <br><br>
                 <div class="login-logo">
-                    <img src="<?= base_url('assets') ?>/libraries/images/telko.png" width="30" alt="logo-img">
+                    <img src="<?= base_url('assets') ?>/images/telko.png" width="30" alt="logo-img">
                 </div>
                 <p class="left-align" style="color: #000000;">Selamat datang di</p>
                 <p class="left-align" style="color: #E11C1C; font-weight: bold; font-size: 24px;"><b>MCI Repository Portal</b></p>
 
-                <p class="left-align" style="color: #888;"><b>Masuk aplikasi untuk mengakses akun kamu</b></p>
                 <p class="left-align">Login to access your account</p>
                 <br>
                 <label for="email" class="left-align"><b>Email</b>
@@ -310,13 +308,13 @@
                 <br>
                 <div class="or"><b>OR</b></div>
                 <br>
-                <a href="https://192.168.150.67:5000/login?app_type=portalnews" class="google-login">
-                    <img src="<?= base_url('assets') ?>/libraries/images/microsoft.png" width="20" alt="Google Icon"> Sign in with Microsoft
+                <a href="https://192.168.47.67:5000/login?app_type=portalnews" class="google-login">
+                    <img src="<?= base_url('assets') ?>/images/microsoft.png" width="20" alt="Google Icon"> Sign in with Microsoft
                 </a>
             </form>
         </div>
         <div class="image-section">
-            <img src="<?= base_url('assets') ?>/libraries/images/banner.png" alt="Login Image">
+            <img src="<?= base_url('assets') ?>/images/banner-login.png" alt="Login Image">
         </div>
     </div>
 </body>
