@@ -46,6 +46,55 @@
    <!-- Page level custom scripts -->
    <script src="<?= base_url('assets/cms') ?>/js/demo/datatables-demo.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+   <script>
+       // Cek jika ada flashdata dengan key 'success'
+       <?php if ($this->session->flashdata('success')): ?>
+           Swal.fire({
+               icon: 'success',
+               title: 'Success',
+               text: '<?= $this->session->flashdata('success'); ?>',
+               showConfirmButton: false,
+               timer: 2000
+           });
+       <?php endif; ?>
+
+       // Cek jika ada flashdata dengan key 'error'
+       <?php if ($this->session->flashdata('error')): ?>
+           Swal.fire({
+               icon: 'error',
+               title: 'Error',
+               text: '<?= $this->session->flashdata('error'); ?>',
+               showConfirmButton: false,
+               timer: 2000
+           });
+       <?php endif; ?>
+   </script>
+
+
+
+   <script>
+       $(document).ready(function() {
+           $('.select2').select2({
+               placeholder: "Select options", // Tambahkan placeholder jika perlu
+               allowClear: true // Agar bisa di-clear pilihan
+           });
+       });
+   </script>
+
+   <script>
+       $(document).ready(function() {
+           $('#users').select2({
+               placeholder: 'Select Users', // Placeholder untuk select
+               allowClear: true, // Izinkan penghapusan pilihan
+               width: '100%', // Lebar select
+               minimumResultsForSearch: 0 // Tampilkan kotak pencarian
+           });
+       });
+   </script>
+
+
 
    </body>
 

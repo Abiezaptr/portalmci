@@ -19,14 +19,14 @@
                 <?php foreach ($threads as $thread): ?>
                     <div class="card thread-card" style="margin-bottom: 20px; padding: 20px; position: relative; border-radius: 0;">
                         <div class="border-gradient" style="
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        bottom: 0;
-                        width: 8px;
-                        background: linear-gradient(180deg, #ff6a00, #ee0979, #fc6767, #ec008c); /* Gradasi warna */
-                        border-radius: 0;
-                    "></div>
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 8px;
+                background: linear-gradient(180deg, #ff6a00, #ee0979, #fc6767, #ec008c); /* Gradasi warna */
+                border-radius: 0;
+            "></div>
 
                         <div class="thread-info" style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
@@ -36,13 +36,34 @@
 
                         <div class="thread-meta" style="display: flex; align-items: center; margin-top: 2px;">
                             <div class="user-avatars">
-                                <img src="<?php echo base_url('assets/images/user.png'); ?>" alt="Avatar A" class="user-avatar" style="background-color: #6c757d;">
-                                <img src="<?php echo base_url('assets/images/avatar2.jpg'); ?>" alt="Avatar B" class="user-avatar" style="background-color: #6c757d;">
-                                <img src="<?php echo base_url('assets/images/avatar3.jpg'); ?>" alt="Avatar C" class="user-avatar" style="background-color: #6c757d;">
+                                <?php if (!empty($thread['users'])): ?>
+                                    <?php
+                                    // Get the users array and limit to the last 3 users
+                                    $latest_users = array_slice($thread['users'], -3); // Get the last 3 users
+
+                                    foreach ($latest_users as $user): ?>
+                                        <div class="user-avatar" style="background-color: #6c757d;">
+                                            <?php echo strtoupper(substr($user['username'], 0, 1)); // Inisial dari username 
+                                            ?>
+                                        </div>
+                                    <?php endforeach; ?>
+
+                                    <?php if (count($thread['users']) > 3): ?>
+                                        <div class="user-avatar" style="background-color: #6c757d;">
+                                            <?php echo '3+'; // Indikator jika ada lebih dari 3 users 
+                                            ?>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <div class="user-avatar" style="background-color: #6c757d;">
+                                        <?php echo 'N/A'; // Display N/A if no users 
+                                        ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
 
                             <span class="posted-time small text-muted" style="margin-left: 10px;" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
-                                3 kontribusi&nbsp; ·&nbsp;
+                                <?= htmlspecialchars($thread['contribution_count']); ?> kontribusi&nbsp; ·&nbsp;
                                 <span style="font-size: 12px;" class="posted-time" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
                                     <span style="font-weight: 500;" class="waktu-lalu"></span>
                                 </span>
@@ -50,7 +71,7 @@
                         </div>
 
                         <p class="thread-description" style="font-size: 14px; color: black; margin-left: 2px; margin-top: 12px;">
-                            Addressing team conflict can be delicate. Uncover strategies for dealing with undermining team members and restoring balance.
+                            <?= htmlspecialchars($thread['content']); ?>
                         </p>
 
                         <!-- Bagian kategori -->
@@ -60,11 +81,8 @@
                     </div>
                 <?php endforeach; ?>
             </div>
+
         </div>
-
-
-
-
 
     </div>
 

@@ -23,6 +23,9 @@
     <link href="<?= base_url('assets/cms') ?>/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="<?= base_url('assets/cms') ?>/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 
 </head>
 
@@ -81,6 +84,14 @@
                     <span>Dashboard</span></a>
             </li>
 
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Manage Content
+            </div>
+
             <?php
             $permissions = $this->session->userdata('permissions'); // Assume this data is stored in session
             $role = $this->session->userdata('role'); // Retrieve the user role
@@ -97,9 +108,9 @@
                     </a>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="buttons.html">Reports</a>
-                            <a class="collapse-item" href="cards.html">Articles</a>
-                            <a class="collapse-item" href="cards.html">Videos</a>
+                            <a class="collapse-item" href="<?= site_url('admin/mobile') ?>">Reports</a>
+                            <a class="collapse-item" href="">Articles</a>
+                            <a class="collapse-item" href="">Videos</a>
                         </div>
                     </div>
                 </li>
@@ -113,9 +124,9 @@
                     </a>
                     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="buttons.html">Reports</a>
-                            <a class="collapse-item" href="cards.html">Articles</a>
-                            <a class="collapse-item" href="cards.html">Videos</a>
+                            <a class="collapse-item" href="">Reports</a>
+                            <a class="collapse-item" href="">Articles</a>
+                            <a class="collapse-item" href="">Videos</a>
                         </div>
                     </div>
                 </li>
@@ -129,9 +140,9 @@
                     </a>
                     <div id="collapsePagesDigital" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="buttons.html">Reports</a>
-                            <a class="collapse-item" href="cards.html">Articles</a>
-                            <a class="collapse-item" href="cards.html">Videos</a>
+                            <a class="collapse-item" href="">Reports</a>
+                            <a class="collapse-item" href="">Articles</a>
+                            <a class="collapse-item" href="">Videos</a>
                         </div>
                     </div>
                 </li>
@@ -145,12 +156,40 @@
                     </a>
                     <div id="collapsePagesGlobal" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="buttons.html">Reports</a>
-                            <a class="collapse-item" href="cards.html">Articles</a>
-                            <a class="collapse-item" href="cards.html">Videos</a>
+                            <a class="collapse-item" href="">Reports</a>
+                            <a class="collapse-item" href="">Articles</a>
+                            <a class="collapse-item" href="">Videos</a>
                         </div>
                     </div>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePagesForum"
+                        aria-expanded="true" aria-controls="collapsePagesForum">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Manage Forum</span>
+                    </a>
+                    <div id="collapsePagesForum" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="<?= site_url('admin/forum') ?>">Threads</a>
+                            <a class="collapse-item" href="">Category</a>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="">
+                        <i class="fas fa-fw fa-calendar-alt"></i>
+                        <span>Event Calendar</span></a>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    User & Permissions
+                </div>
 
                 <li class="nav-item">
                     <a class="nav-link" href="<?= site_url('role-admin') ?>">
@@ -159,8 +198,8 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="tables.html">
-                        <i class="fas fa-fw fa-users"></i>
+                    <a class="nav-link" href="">
+                        <i class="fas fa-fw fa-user-cog"></i>
                         <span>Manage Users</span></a>
                 </li>
 
@@ -175,9 +214,9 @@
                         </a>
                         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" href="buttons.html">Reports</a>
-                                <a class="collapse-item" href="cards.html">Articles</a>
-                                <a class="collapse-item" href="cards.html">Videos</a>
+                                <a class="collapse-item" href="<?= site_url('admin/mobile') ?>">Reports</a>
+                                <a class="collapse-item" href="">Articles</a>
+                                <a class="collapse-item" href="">Videos</a>
                             </div>
                         </div>
                     </li>
@@ -193,9 +232,9 @@
                         </a>
                         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" href="buttons.html">Reports</a>
-                                <a class="collapse-item" href="cards.html">Articles</a>
-                                <a class="collapse-item" href="cards.html">Videos</a>
+                                <a class="collapse-item" href="">Reports</a>
+                                <a class="collapse-item" href="">Articles</a>
+                                <a class="collapse-item" href="">Videos</a>
                             </div>
                         </div>
                     </li>
@@ -211,9 +250,9 @@
                         </a>
                         <div id="collapsePagesDigital" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" href="buttons.html">Reports</a>
-                                <a class="collapse-item" href="cards.html">Articles</a>
-                                <a class="collapse-item" href="cards.html">Videos</a>
+                                <a class="collapse-item" href="">Reports</a>
+                                <a class="collapse-item" href="">Articles</a>
+                                <a class="collapse-item" href="">Videos</a>
                             </div>
                         </div>
                     </li>
@@ -229,19 +268,35 @@
                         </a>
                         <div id="collapsePagesGlobal" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" href="buttons.html">Reports</a>
-                                <a class="collapse-item" href="cards.html">Articles</a>
-                                <a class="collapse-item" href="cards.html">Videos</a>
+                                <a class="collapse-item" href="">Reports</a>
+                                <a class="collapse-item" href="">Articles</a>
+                                <a class="collapse-item" href="">Videos</a>
                             </div>
                         </div>
                     </li>
                 <?php endif; ?>
 
-                <?php if (isset($permissions['role_admin']) && $permissions['role_admin'] == 1): ?>
+                <?php if (isset($permissions['forum']) && $permissions['forum'] == 1): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= site_url('role-admin') ?>">
-                            <i class="fas fa-fw fa-users-cog"></i>
-                            <span>Role Permissions</span></a>
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePagesForum"
+                            aria-expanded="true" aria-controls="collapsePagesForum">
+                            <i class="fas fa-fw fa-users"></i>
+                            <span>Manage Forum</span>
+                        </a>
+                        <div id="collapsePagesForum" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <a class="collapse-item" href="<?= site_url('admin/forum') ?>">Threads</a>
+                                <a class="collapse-item" href="">Category</a>
+                            </div>
+                        </div>
+                    </li>
+                <?php endif; ?>
+
+                <?php if (isset($permissions['event']) && $permissions['event'] == 1): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-fw fa-calendar-alt"></i>
+                            <span>Event Calendar</span></a>
                     </li>
                 <?php endif; ?>
             <?php endif; ?>

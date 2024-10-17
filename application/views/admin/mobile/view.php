@@ -3,62 +3,63 @@
 
          <!-- DataTales Example -->
          <div class="card shadow mb-4">
-             <div class="card-header py-3">
-                 <h6 class="m-0 font-weight-bold" style="color: maroon;">Role Permissions</h6>
+             <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                 <!-- Title on the left -->
+                 <h6 class="m-0 font-weight-bold" style="color: maroon;">Mobile Report</h6>
+
+                 <!-- Add button on the right -->
+                 <a href="<?= site_url('admin/mobile/add') ?>" class="btn btn-danger btn-sm btn-icon-split">
+                     <span class="icon text-white-50">
+                         <i class="fas fa-plus"></i>
+                     </span>
+                     <span class="text">New Report</span>
+                 </a>
              </div>
+
              <div class="card-body">
                  <div class="table-responsive">
                      <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                          <thead>
                              <tr>
                                  <th>#</th>
-                                 <th>Users</th>
-                                 <th>Role</th>
-                                 <th>Access</th>
+                                 <th>Report Title</th>
+                                 <th>Category</th>
+                                 <th>Type</th>
+                                 <th>File</th>
+                                 <th></th>
                              </tr>
                          </thead>
                          <tbody>
-                             <?php if (!empty($users)) : ?>
+                             <?php if (!empty($reports)) : ?>
                                  <?php $no = 1; ?>
-                                 <?php foreach ($users as $user) : ?>
+                                 <?php foreach ($reports as $report) : ?>
                                      <tr>
                                          <td><?= $no++; ?></td>
+                                         <td><?= $report['title']; ?></td>
                                          <td>
-                                             <span style="font-weight: 700;"><?= $user['username']; ?></span><br>
-                                             <span style="font-weight: 300; color: maroon;"><?= $user['email']; ?></span>
+                                             <span class="badge badge-warning"><?= $report['category']; ?></span>
                                          </td>
                                          <td>
-                                             <?php if ($user['role'] == 3): ?>
-                                                 <span class="badge bg-warning text-white">Admin Mobile</span>
-                                             <?php elseif ($user['role'] == 4): ?>
-                                                 <span class="badge bg-success text-white">Admin Fixed</span>
-                                             <?php elseif ($user['role'] == 5): ?>
-                                                 <span class="badge bg-success">Admin Digital</span>
+                                             <?php if ($report['type'] == 'pdf'): ?>
+                                                 <i class="fas fa-file-pdf" style="color: red;"></i> PDF
+                                             <?php elseif ($report['type'] == 'docx'): ?>
+                                                 <i class="fas fa-file-word" style="color: blue;"></i> DOCX
+                                             <?php elseif ($report['type'] == 'xlsx'): ?>
+                                                 <i class="fas fa-file-excel" style="color: green;"></i> XLSX
                                              <?php else: ?>
-                                                 <span class="badge bg-light">Role Unknown</span>
+                                                 <i class="fas fa-file" style="color: gray;"></i> <?= strtoupper($report['type']); ?>
                                              <?php endif; ?>
                                          </td>
                                          <td>
-                                             <div class="checkbox-group">
-                                                 <label>
-                                                     <input type="checkbox" class="access-checkbox" data-user-id="<?= $user['id']; ?>" data-permission="mobile" <?= isset($user['permissions']['mobile']) && $user['permissions']['mobile'] ? 'checked' : ''; ?>> Mobile
-                                                 </label>
-                                                 <label>
-                                                     <input type="checkbox" class="access-checkbox" data-user-id="<?= $user['id']; ?>" data-permission="fixed" <?= isset($user['permissions']['fixed']) && $user['permissions']['fixed'] ? 'checked' : ''; ?>> Fixed
-                                                 </label>
-                                                 <label>
-                                                     <input type="checkbox" class="access-checkbox" data-user-id="<?= $user['id']; ?>" data-permission="digital" <?= isset($user['permissions']['digital']) && $user['permissions']['digital'] ? 'checked' : ''; ?>> Digital
-                                                 </label>
-                                                 <label>
-                                                     <input type="checkbox" class="access-checkbox" data-user-id="<?= $user['id']; ?>" data-permission="global" <?= isset($user['permissions']['global']) && $user['permissions']['global'] ? 'checked' : ''; ?>> Global
-                                                 </label>
-                                                 <label>
-                                                     <input type="checkbox" class="access-checkbox" data-user-id="<?= $user['id']; ?>" data-permission="forum" <?= isset($user['permissions']['forum']) && $user['permissions']['forum'] ? 'checked' : ''; ?>> Forum
-                                                 </label>
-                                                 <label>
-                                                     <input type="checkbox" class="access-checkbox" data-user-id="<?= $user['id']; ?>" data-permission="event" <?= isset($user['permissions']['event']) && $user['permissions']['event'] ? 'checked' : ''; ?>> Event
-                                                 </label>
-                                             </div>
+                                             <?php if (!empty($report['file'])): ?>
+                                                 <a style="color: maroon;" href="<?= base_url('uploads/report/' . $report['file']); ?>" target="_blank">Open file</a>
+                                             <?php else: ?>
+                                                 No file available
+                                             <?php endif; ?>
+                                         </td>
+                                         <td>
+                                             <a href="<?= site_url('admin/mobile/edit/' . $report['id']); ?>" class="btn btn-sm"><i class="fa fa-pencil-alt" style="color: maroon;"></i></a>&nbsp;
+                                             <a href="<?= site_url('admin/mobile/delete/' . $report['id']); ?>" class="btn btn-sm"><i class="fa fa-trash-alt" style="color: maroon;"></i></a>
                                          </td>
                                      </tr>
                                  <?php endforeach; ?>
