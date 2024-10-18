@@ -198,4 +198,78 @@ class Forum extends CI_Controller
         // Redirect kembali ke halaman forum
         redirect('admin/forum');
     }
+
+    public function forum_category()
+    {
+        $data['title'] = 'Threads Category ';
+
+        // Ambil semua thread dengan join ke tabel category
+        $this->db->select('*');
+        $this->db->from('forum_category');
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+        $data['categories'] = $query->result_array();
+
+        // Load the views with the data
+        $this->load->view('template/cms/header', $data);
+        $this->load->view('admin/forum/category_list', $data);
+        $this->load->view('template/cms/footer');
+    }
+
+    public function insert_category()
+    {
+        // Ambil data dari form
+        $name = $this->input->post('name');
+
+        // Siapkan data untuk di-insert
+        $data = [
+            'name' => $name,
+        ];
+
+        // Insert data ke database
+        $this->db->insert('forum_category', $data);
+
+        // Set notifikasi berhasil dan redirect ke halaman kategori
+        $this->session->set_flashdata('success', 'Kategori berhasil ditambahkan.');
+        redirect('threads-category');
+    }
+
+    public function update_category($id)
+    {
+        // Ambil data dari form
+        $name = $this->input->post('name');
+
+        // Siapkan data untuk di-update
+        $data = [
+            'name' => $name,
+        ];
+
+        // Update data di database
+        $this->db->where('id', $id);
+        $this->db->update('forum_category', $data);
+
+        // Set notifikasi berhasil dan redirect ke halaman kategori
+        $this->session->set_flashdata('success', 'Kategori berhasil diupdate.');
+        redirect('threads-category');
+    }
+
+    public function delete_category($id)
+    {
+        // Periksa apakah ID kategori ada di database
+        $category = $this->db->get_where('forum_category', ['id' => $id])->row_array();
+
+        if ($category) {
+            // Jika kategori ada, hapus dari database
+            $this->db->where('id', $id);
+            $this->db->delete('forum_category');
+
+            // Set notifikasi berhasil dan redirect ke halaman kategori
+            $this->session->set_flashdata('success', 'Kategori berhasil dihapus.');
+        } else {
+            // Jika kategori tidak ditemukan, tampilkan pesan error
+            $this->session->set_flashdata('error', 'Kategori tidak ditemukan.');
+        }
+
+        redirect('threads-category');
+    }
 }

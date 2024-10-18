@@ -16,78 +16,82 @@
     <div class="row">
         <div class="col-md-8">
             <div class="thread-list" id="threadList">
-                <?php foreach ($threads as $thread): ?>
-                    <div class="card thread-card" style="margin-bottom: 20px; padding: 20px; position: relative; border-radius: 0;">
-                        <div class="border-gradient" style="
-                position: absolute;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                width: 8px;
-                background: linear-gradient(180deg, #ff6a00, #ee0979, #fc6767, #ec008c); /* Gradasi warna */
-                border-radius: 0;
-            "></div>
+                <?php if (!empty($threads)): ?>
+                    <?php foreach ($threads as $thread): ?>
+                        <div class="card thread-card" style="margin-bottom: 20px; padding: 20px; position: relative; border-radius: 0;">
+                            <div class="border-gradient" style="
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        bottom: 0;
+                        width: 8px;
+                        background: linear-gradient(180deg, #ff6a00, #ee0979, #fc6767, #ec008c); /* Gradasi warna */
+                        border-radius: 0;
+                    "></div>
 
-                        <div class="thread-info" style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <a href="<?php echo base_url('form-discussion/' . $thread['id']); ?>" class="thread-title" style="font-weight: bold; color: #800000;"><?php echo $thread['title']; ?></a>
+                            <div class="thread-info" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <a href="<?php echo base_url('form-discussion/' . $thread['id']); ?>" class="thread-title" style="font-weight: bold; color: #800000;"><?php echo $thread['title']; ?></a>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="thread-meta" style="display: flex; align-items: center; margin-top: 2px;">
-                            <div class="user-avatars">
-                                <?php if (!empty($thread['users'])): ?>
-                                    <?php
-                                    // Get the users array and limit to the last 3 users
-                                    $latest_users = array_slice($thread['users'], -3); // Get the last 3 users
+                            <div class="thread-meta" style="display: flex; align-items: center; margin-top: 2px;">
+                                <div class="user-avatars">
+                                    <?php if (!empty($thread['users'])): ?>
+                                        <?php
+                                        // Get the users array and limit to the last 3 users
+                                        $latest_users = array_slice($thread['users'], -3); // Get the last 3 users
 
-                                    foreach ($latest_users as $user): ?>
+                                        foreach ($latest_users as $user): ?>
+                                            <div class="user-avatar" style="background-color: #6c757d;">
+                                                <?php echo strtoupper(substr($user['username'], 0, 1)); // Inisial dari username 
+                                                ?>
+                                            </div>
+                                        <?php endforeach; ?>
+
+                                        <?php if (count($thread['users']) > 3): ?>
+                                            <div class="user-avatar" style="background-color: #6c757d;">
+                                                <?php echo '3+'; // Indikator jika ada lebih dari 3 users 
+                                                ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    <?php else: ?>
                                         <div class="user-avatar" style="background-color: #6c757d;">
-                                            <?php echo strtoupper(substr($user['username'], 0, 1)); // Inisial dari username 
-                                            ?>
-                                        </div>
-                                    <?php endforeach; ?>
-
-                                    <?php if (count($thread['users']) > 3): ?>
-                                        <div class="user-avatar" style="background-color: #6c757d;">
-                                            <?php echo '3+'; // Indikator jika ada lebih dari 3 users 
+                                            <?php echo 'N/A'; // Display N/A if no users 
                                             ?>
                                         </div>
                                     <?php endif; ?>
-                                <?php else: ?>
-                                    <div class="user-avatar" style="background-color: #6c757d;">
-                                        <?php echo 'N/A'; // Display N/A if no users 
-                                        ?>
-                                    </div>
-                                <?php endif; ?>
+                                </div>
+
+                                <span class="posted-time small text-muted" style="margin-left: 10px;" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
+                                    <?= htmlspecialchars($thread['contribution_count']); ?> kontribusi&nbsp; ·&nbsp;
+                                    <span style="font-size: 12px;" class="posted-time" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
+                                        <span style="font-weight: 500;" class="waktu-lalu"></span>
+                                    </span>
+                                </span>
                             </div>
 
-                            <span class="posted-time small text-muted" style="margin-left: 10px;" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
-                                <?= htmlspecialchars($thread['contribution_count']); ?> kontribusi&nbsp; ·&nbsp;
-                                <span style="font-size: 12px;" class="posted-time" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
-                                    <span style="font-weight: 500;" class="waktu-lalu"></span>
-                                </span>
-                            </span>
-                        </div>
+                            <p class="thread-description" style="font-size: 14px; color: black; margin-left: 2px; margin-top: 12px;">
+                                <?= htmlspecialchars($thread['content']); ?>
+                            </p>
 
-                        <p class="thread-description" style="font-size: 14px; color: black; margin-left: 2px; margin-top: 12px;">
-                            <?= htmlspecialchars($thread['content']); ?>
-                        </p>
-
-                        <!-- Bagian kategori -->
-                        <div class="thread-category" style="font-size: 12px; color: black; margin-left: 2px; margin-top: 0px;">
-                            <strong><?php echo $thread['category_name']; ?></strong>
+                            <!-- Bagian kategori -->
+                            <div class="thread-category" style="font-size: 12px; color: black; margin-left: 2px; margin-top: 0px;">
+                                <strong><?php echo $thread['category_name']; ?></strong>
+                            </div>
                         </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <!-- Tampilan jika tidak ada data -->
+                    <div class="no-data" style="text-align: center; margin-top: 50px;">
+                        <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No data" style="width: 150px; height: auto;">
+                        <p style="font-size: 16px; color: #6c757d; margin-top: 20px;">Tidak ada thread yang tersedia saat ini. Silakan periksa kembali nanti.</p>
                     </div>
-                <?php endforeach; ?>
+                <?php endif; ?>
             </div>
-
         </div>
 
     </div>
-
-
-
 </div>
 
 <style>

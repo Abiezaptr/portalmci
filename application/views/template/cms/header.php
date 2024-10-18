@@ -172,7 +172,7 @@
                     <div id="collapsePagesForum" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item" href="<?= site_url('admin/forum') ?>">Threads</a>
-                            <a class="collapse-item" href="">Category</a>
+                            <a class="collapse-item" href="<?= site_url('threads-category') ?>">Category</a>
                         </div>
                     </div>
                 </li>
@@ -286,7 +286,7 @@
                         <div id="collapsePagesForum" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <a class="collapse-item" href="<?= site_url('admin/forum') ?>">Threads</a>
-                                <a class="collapse-item" href="">Category</a>
+                                <a class="collapse-item" href="<?= site_url('threads-category') ?>">Category</a>
                             </div>
                         </div>
                     </li>

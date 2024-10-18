@@ -113,7 +113,6 @@ class Forum extends CI_Controller
         $this->load->view('template/content/footer');
     }
 
-
     public function detail($id)
     {
         $data['title'] = 'Forum Discussion';

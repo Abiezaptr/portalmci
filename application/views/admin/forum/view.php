@@ -102,7 +102,9 @@
                                          </td>
                                          <td>
                                              <a href="<?= site_url('admin/forum/edit/' . $thread['id']); ?>" class="btn btn-sm"><i class="fa fa-pencil-alt" style="color: maroon;"></i></a>&nbsp;
-                                             <a href="<?= site_url('admin/forum/delete/' . $thread['id']); ?>" class="btn btn-sm"><i class="fa fa-trash-alt" style="color: maroon;"></i></a>
+                                             <?php if ($this->session->userdata('role') == 1) : ?>
+                                                 <a href="<?= site_url('admin/forum/delete/' . $thread['id']); ?>" class="btn btn-sm"><i class="fa fa-trash-alt" style="color: maroon;"></i></a>
+                                             <?php endif; ?>
                                          </td>
                                      </tr>
                                  <?php endforeach; ?>

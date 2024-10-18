@@ -19,3 +19,7 @@ $route['callback'] = 'login/handleCallback';
 // rute for admin content
 $route['dashboard'] = 'admin/dashboard/index';
 $route['role-admin'] = 'admin/role/index';
+$route['threads-category'] = 'admin/forum/forum_category';
+$route['insert-categories'] = 'admin/forum/insert_category';
+$route['update-categories/(:num)'] = 'admin/forum/update_category/$1';
+$route['delete-categories/(:num)'] = 'admin/forum/delete_category/$1';
