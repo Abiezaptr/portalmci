@@ -5,10 +5,10 @@
          <div class="card shadow mb-4">
              <div class="card-header py-3 d-flex justify-content-between align-items-center">
                  <!-- Title on the left -->
-                 <h6 class="m-0 font-weight-bold" style="color: maroon;">Mobile Report</h6>
+                 <h6 class="m-0 font-weight-bold" style="color: maroon;">Fixed Report</h6>
 
                  <!-- Add button on the right -->
-                 <a href="<?= site_url('admin/mobile/add') ?>" class="btn btn-danger btn-sm btn-icon-split">
+                 <a href="<?= site_url('add/fixed-report') ?>" class="btn btn-danger btn-sm btn-icon-split">
                      <span class="icon text-white-50">
                          <i class="fas fa-plus"></i>
                      </span>
@@ -67,20 +67,21 @@
                                              <?php endif; ?>
                                          </td>
                                          <td>
-                                             <a href="<?= site_url('admin/mobile/edit/' . $report['id']); ?>" class="btn btn-sm"><i class="fa fa-pencil-alt" style="color: maroon;"></i></a>&nbsp;
+                                             <a href="<?= site_url('update/fixed-report/' . $report['id']); ?>" class="btn btn-sm"><i class="fa fa-pencil-alt" style="color: maroon;"></i></a>&nbsp;
                                              <?php if ($this->session->userdata('role') == 1) : ?>
-                                                 <a href="<?= site_url('admin/mobile/delete/' . $report['id']); ?>" class="btn btn-sm"><i class="fa fa-trash-alt" style="color: maroon;"></i></a>
+                                                 <a href="<?= site_url('delete/fixed-report/' . $report['id']); ?>" class="btn btn-sm"><i class="fa fa-trash-alt" style="color: maroon;"></i></a>
                                              <?php endif; ?>
                                          </td>
                                      </tr>
                                  <?php endforeach; ?>
                              <?php else : ?>
                                  <tr>
-                                     <td colspan="6" class="text-center">No users found.</td>
+                                     <td colspan="7" class="text-center">No reports found.</td>
                                  </tr>
                              <?php endif; ?>
                          </tbody>
                      </table>
+
                  </div>
              </div>
          </div>

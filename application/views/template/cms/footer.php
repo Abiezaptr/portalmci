@@ -48,6 +48,28 @@
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+
+   <script>
+       $(document).ready(function() {
+           $('#summernote').summernote({
+               height: 300 // Set editor height
+           });
+       });
+   </script>
+
+   <script>
+       $(document).ready(function() {
+           <?php foreach ($reports as $report) : ?>
+               $('#summernote1<?= $report['id']; ?>').summernote({
+                   height: 300 // Set editor height
+               });
+           <?php endforeach; ?>
+       });
+   </script>
+
+
    <script>
        // Cek jika ada flashdata dengan key 'success'
        <?php if ($this->session->flashdata('success')): ?>
@@ -72,8 +94,6 @@
        <?php endif; ?>
    </script>
 
-
-
    <script>
        $(document).ready(function() {
            $('.select2').select2({
@@ -93,8 +113,6 @@
            });
        });
    </script>
-
-
 
    </body>
 

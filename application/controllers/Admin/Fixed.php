@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Mobile extends CI_Controller
+class Fixed extends CI_Controller
 {
     public function __construct()
     {
@@ -12,26 +12,26 @@ class Mobile extends CI_Controller
 
     public function index()
     {
-        $data['title'] = 'Mobile Content';
+        $data['title'] = 'Fixed Report';
 
         // Fetch data from the 'report' table where category is 'mobile'
-        $this->db->where('category', 'mobile'); // Specify the category condition
+        $this->db->where('category', 'fixed'); // Specify the category condition
         $this->db->where('type', 'pdf');
         $data['reports'] = $this->db->get('reports')->result_array(); // Fetch results as an array
 
         // Load the views
         $this->load->view('template/cms/header', $data);
-        $this->load->view('admin/mobile/view', $data); // Pass data to the view
+        $this->load->view('admin/fixed/view', $data); // Pass data to the view
         $this->load->view('template/cms/footer');
     }
 
     public function add()
     {
-        $data['title'] = 'New Report | Mobile Content';
+        $data['title'] = 'New Report';
 
         // Load the views
         $this->load->view('template/cms/header', $data);
-        $this->load->view('admin/mobile/add', $data); // Pass data to the view
+        $this->load->view('admin/fixed/add', $data); // Pass data to the view
         $this->load->view('template/cms/footer');
     }
 
@@ -40,7 +40,6 @@ class Mobile extends CI_Controller
         // Get form data
         $title = $this->input->post('title');
         $category = $this->input->post('category');
-        $type = $this->input->post('type');
 
         // Handle file uploads
         $image = $_FILES['image']['name'];
@@ -90,7 +89,7 @@ class Mobile extends CI_Controller
         $data = array(
             'title' => $title,
             'category' => $category,
-            'type' => $type,
+            'type' => 'pdf',
             'image' => $image,
             'file' => $file,
             'created_at' => date('Y-m-d H:i:s'), // Optional: add created timestamp
@@ -99,8 +98,9 @@ class Mobile extends CI_Controller
         // Insert into the database
         $this->db->insert('reports', $data);
 
+        $this->session->set_flashdata('success', 'Report insert successfully.');
         // Redirect or load a view with a success message
-        redirect('admin/mobile'); // Redirect to the mobile page or another page
+        redirect('fixed-report'); // Redirect to the mobile page or another page
     }
 
     public function edit($id)
@@ -118,7 +118,7 @@ class Mobile extends CI_Controller
 
         // Load the views
         $this->load->view('template/cms/header', $data);
-        $this->load->view('admin/mobile/edit', $data); // Pass data to the view
+        $this->load->view('admin/fixed/edit', $data); // Pass data to the view
         $this->load->view('template/cms/footer');
     }
 
@@ -128,13 +128,11 @@ class Mobile extends CI_Controller
         // Get form data
         $title = $this->input->post('title');
         $category = $this->input->post('category');
-        $type = $this->input->post('type');
 
         // Prepare data for updating
         $data = array(
             'title' => $title,
             'category' => $category,
-            'type' => $type,
         );
 
         // Get old report details
@@ -194,8 +192,8 @@ class Mobile extends CI_Controller
         $this->db->update('reports', $data, ['id' => $id]);
 
         // Redirect with success message
-        $this->session->set_flashdata('message', 'Report updated successfully.');
-        redirect('admin/mobile'); // Redirect to the mobile page or another page
+        $this->session->set_flashdata('success', 'Report updated successfully.');
+        redirect('fixed-report'); // Redirect to the mobile page or another page
     }
 
 
@@ -221,27 +219,27 @@ class Mobile extends CI_Controller
             $this->db->delete('reports', ['id' => $id]);
 
             // Redirect or load a view with a success message
-            $this->session->set_flashdata('message', 'Report deleted successfully.');
-            redirect('admin/mobile'); // Redirect to the mobile page or another page
+            $this->session->set_flashdata('success', 'Report deleted successfully.');
+            redirect('fixed-report'); // Redirect to the mobile page or another page
         } else {
             // If the report doesn't exist
             $this->session->set_flashdata('error', 'Report not found.');
-            redirect('admin/mobile');
+            redirect('fixed-report');
         }
     }
 
     public function article()
     {
-        $data['title'] = 'Mobile Articles';
+        $data['title'] = 'Fixed Articles';
 
         // Fetch data from the 'reports' table where category is 'mobile' and type is 'article'
-        $this->db->where('category', 'mobile'); // Specify the category condition
+        $this->db->where('category', 'fixed'); // Specify the category condition
         $this->db->where('type', 'article'); // Specify the type condition
         $data['reports'] = $this->db->get('reports')->result_array(); // Fetch results as an array
 
         // Load the views
         $this->load->view('template/cms/header', $data);
-        $this->load->view('admin/mobile/view_article', $data); // Pass data to the view
+        $this->load->view('admin/fixed/view_article', $data); // Pass data to the view
         $this->load->view('template/cms/footer');
     }
 
@@ -279,7 +277,7 @@ class Mobile extends CI_Controller
         // Upload file (report)
         if ($file) {
             // Configure upload for report
-            $config['upload_path'] = './uploads/articles/mobile/'; // Path for reports
+            $config['upload_path'] = './uploads/articles/fixed/'; // Path for reports
             $config['allowed_types'] = 'pdf'; // Allowed report types
 
             // Initialize the upload library with the config
@@ -301,7 +299,7 @@ class Mobile extends CI_Controller
             'title' => $title,
             'desc' => $desc,
             'content' => $content,
-            'category' => 'mobile',
+            'category' => 'fixed',
             'type' => 'article',
             'image' => $image,
             'file' => $file,
@@ -313,7 +311,7 @@ class Mobile extends CI_Controller
 
         $this->session->set_flashdata('success', 'Articles insert successfully.');
         // Redirect or load a view with a success message
-        redirect('mobile-article'); // Redirect to the mobile page or another page
+        redirect('fixed-article'); // Redirect to the mobile page or another page
     }
 
     public function update_articles($id)
@@ -361,7 +359,7 @@ class Mobile extends CI_Controller
         // Handle file upload
         if ($_FILES['file']['name']) {
             // Configure upload for report
-            $config['upload_path'] = './uploads/articles/mobile/';
+            $config['upload_path'] = './uploads/articles/fixed/';
             $config['allowed_types'] = 'pdf';
             $this->upload->initialize($config);
 
@@ -371,7 +369,7 @@ class Mobile extends CI_Controller
                 return;
             } else {
                 // Delete old file if exists
-                $old_file_path = './uploads/articles/mobile/' . $old_report['file'];
+                $old_file_path = './uploads/articles/fixed/' . $old_report['file'];
                 if (file_exists($old_file_path)) {
                     unlink($old_file_path); // Delete old file
                 }
@@ -388,7 +386,7 @@ class Mobile extends CI_Controller
 
         // Redirect with success message
         $this->session->set_flashdata('success', 'Articles updated successfully.');
-        redirect('mobile-article'); // Redirect to the mobile page or another page
+        redirect('fixed-article'); // Redirect to the mobile page or another page
     }
 
     public function delete_article($id)
@@ -399,7 +397,7 @@ class Mobile extends CI_Controller
         if ($report) {
             // Define the paths to the files
             $image_path = './uploads/image/' . $report['image'];
-            $file_path = './uploads/articles/mobile/' . $report['file'];
+            $file_path = './uploads/articles/fixed/' . $report['file'];
 
             // Delete the files if they exist
             if (file_exists($image_path)) {
@@ -414,11 +412,11 @@ class Mobile extends CI_Controller
 
             // Redirect or load a view with a success message
             $this->session->set_flashdata('success', 'Articles deleted successfully.');
-            redirect('mobile-article'); // Redirect to the mobile page or another page
+            redirect('fixed-article'); // Redirect to the mobile page or another page
         } else {
             // If the report doesn't exist
             $this->session->set_flashdata('error', 'Articles not found.');
-            redirect('mobile-article');
+            redirect('fixed-article');
         }
     }
 
@@ -427,12 +425,12 @@ class Mobile extends CI_Controller
         $data['title'] = 'Videos List';
 
         // Fetch data from the 'report' table where category is 'mobile'
-        $this->db->where('category', 'mobile'); // Specify the category condition
+        $this->db->where('category', 'fixed'); // Specify the category condition
         $data['videos'] = $this->db->get('videos')->result_array(); // Fetch results as an array
 
         // Load the views
         $this->load->view('template/cms/header', $data);
-        $this->load->view('admin/mobile/view_videos', $data); // Pass data to the view
+        $this->load->view('admin/fixed/view_videos', $data); // Pass data to the view
         $this->load->view('template/cms/footer');
     }
 
@@ -446,7 +444,7 @@ class Mobile extends CI_Controller
         // Siapkan data untuk di-insert
         $data = [
             'title' => $title,
-            'category' => 'mobile',
+            'category' => 'fixed',
             'description' => $description,
             'link' => $link,
             'created_at' => date('Y-m-d H:i:s'), // Optional: add created timestamp
@@ -457,7 +455,7 @@ class Mobile extends CI_Controller
 
         // Set notifikasi berhasil dan redirect ke halaman kategori
         $this->session->set_flashdata('success', 'Video berhasil ditambahkan.');
-        redirect('mobile-videos');
+        redirect('fixed-videos');
     }
 
     public function update_videos($id)
@@ -480,7 +478,7 @@ class Mobile extends CI_Controller
 
         // Set notifikasi berhasil dan redirect ke halaman kategori
         $this->session->set_flashdata('success', 'Video berhasil diupdate.');
-        redirect('mobile-videos');
+        redirect('fixed-videos');
     }
 
     public function delete_videos($id)
@@ -500,6 +498,6 @@ class Mobile extends CI_Controller
             $this->session->set_flashdata('error', 'Kategori tidak ditemukan.');
         }
 
-        redirect('mobile-videos');
+        redirect('fixed-videos');
     }
 }

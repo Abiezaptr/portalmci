@@ -5,10 +5,10 @@
          <div class="card shadow mb-4">
              <div class="card-header py-3 d-flex justify-content-between align-items-center">
                  <!-- Title on the left -->
-                 <h6 class="m-0 font-weight-bold" style="color: maroon;">Mobile Report</h6>
+                 <h6 class="m-0 font-weight-bold" style="color: maroon;">Digital Insight Report</h6>
 
                  <!-- Add button on the right -->
-                 <a href="<?= site_url('admin/mobile/add') ?>" class="btn btn-danger btn-sm btn-icon-split">
+                 <a href="<?= site_url('add/digital-report') ?>" class="btn btn-danger btn-sm btn-icon-split">
                      <span class="icon text-white-50">
                          <i class="fas fa-plus"></i>
                      </span>
@@ -67,20 +67,21 @@
                                              <?php endif; ?>
                                          </td>
                                          <td>
-                                             <a href="<?= site_url('admin/mobile/edit/' . $report['id']); ?>" class="btn btn-sm"><i class="fa fa-pencil-alt" style="color: maroon;"></i></a>&nbsp;
+                                             <a href="<?= site_url('update/digital-report/' . $report['id']); ?>" class="btn btn-sm"><i class="fa fa-pencil-alt" style="color: maroon;"></i></a>&nbsp;
                                              <?php if ($this->session->userdata('role') == 1) : ?>
-                                                 <a href="<?= site_url('admin/mobile/delete/' . $report['id']); ?>" class="btn btn-sm"><i class="fa fa-trash-alt" style="color: maroon;"></i></a>
+                                                 <a href="<?= site_url('delete/digital-report/' . $report['id']); ?>" class="btn btn-sm"><i class="fa fa-trash-alt" style="color: maroon;"></i></a>
                                              <?php endif; ?>
                                          </td>
                                      </tr>
                                  <?php endforeach; ?>
                              <?php else : ?>
                                  <tr>
-                                     <td colspan="6" class="text-center">No users found.</td>
+                                     <td colspan="7" class="text-center">No reports found.</td>
                                  </tr>
                              <?php endif; ?>
                          </tbody>
                      </table>
+
                  </div>
              </div>
          </div>
@@ -92,81 +93,3 @@
      <!-- End of Main Content -->
 
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-
-     <!-- <script>
-         $(document).ready(function() {
-             // Listen for checkbox changes
-             $('.access-checkbox').change(function() {
-                 var userId = $(this).data('user-id'); // Ambil user ID dari data-user-id
-                 var permissionType = $(this).data('permission'); // Ambil tipe permission dari data-permission
-                 var isChecked = $(this).is(':checked') ? 1 : 0; // Cek apakah checkbox dicentang
-
-                 // Prepare data for the Ajax request
-                 var postData = {
-                     user_id: userId,
-                     permission: permissionType, // Menggunakan data-permission untuk permission type
-                     value: isChecked // 1 jika dicentang, 0 jika tidak
-                 };
-
-                 // Send the Ajax request to update permissions
-                 $.ajax({
-                     url: '<?= base_url("admin/role/update_permissions"); ?>', // URL controller
-                     type: 'POST',
-                     data: postData,
-                     success: function(response) {
-                         console.log("Permissions updated successfully", response); // Log respons dari server
-                         if (response.status === 'error') {
-                             alert(response.message); // Tampilkan pesan error jika ada
-                         }
-                     },
-                     error: function(xhr, status, error) {
-                         console.error("Failed to update permissions: " + error);
-                     }
-                 });
-             });
-         });
-     </script> -->
-
-     <script>
-         $(document).ready(function() {
-             // Listen for checkbox changes
-             $('.access-checkbox').change(function() {
-                 var userId = $(this).data('user-id'); // Get user ID from data-user-id
-                 var permissionType = $(this).data('permission'); // Get permission type from data-permission
-                 var isChecked = $(this).is(':checked') ? 1 : 0; // Check if checkbox is checked
-
-                 // Prepare data for the Ajax request
-                 var postData = {
-                     user_id: userId,
-                     permission: permissionType, // Using data-permission for permission type
-                     value: isChecked // 1 if checked, 0 if not
-                 };
-
-                 // Send the Ajax request to update permissions
-                 $.ajax({
-                     url: '<?= base_url("admin/role/update_permissions"); ?>', // URL controller
-                     type: 'POST',
-                     data: postData,
-                     dataType: 'json', // Ensure we expect JSON response
-                     success: function(response) {
-                         console.log("Server response:", response); // Log server response for debugging
-
-                         // Show success message using SweetAlert only if the update is successful
-                         if (response && response.status === 'success') {
-                             Swal.fire({
-                                 icon: 'success',
-                                 title: 'Success!',
-                                 text: 'Permissions updated successfully.',
-                                 confirmButtonText: 'OK'
-                             });
-                         }
-                     },
-                     error: function(xhr, status, error) {
-                         console.error("Failed to update permissions: " + error);
-                         // Do nothing for errors
-                     }
-                 });
-             });
-         });
-     </script>

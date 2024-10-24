@@ -79,7 +79,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="<?= site_url('admin/dashboard') ?>">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -109,8 +109,8 @@
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item" href="<?= site_url('admin/mobile') ?>">Reports</a>
-                            <a class="collapse-item" href="">Articles</a>
-                            <a class="collapse-item" href="">Videos</a>
+                            <a class="collapse-item" href="<?= site_url('mobile-article') ?>">Articles</a>
+                            <a class="collapse-item" href="<?= site_url('mobile-videos') ?>">Videos</a>
                         </div>
                     </div>
                 </li>
@@ -124,9 +124,9 @@
                     </a>
                     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="">Reports</a>
-                            <a class="collapse-item" href="">Articles</a>
-                            <a class="collapse-item" href="">Videos</a>
+                            <a class="collapse-item" href="<?= site_url('fixed-report') ?>">Reports</a>
+                            <a class="collapse-item" href="<?= site_url('fixed-article') ?>">Articles</a>
+                            <a class="collapse-item" href="<?= site_url('fixed-videos') ?>">Videos</a>
                         </div>
                     </div>
                 </li>
@@ -140,9 +140,9 @@
                     </a>
                     <div id="collapsePagesDigital" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="">Reports</a>
-                            <a class="collapse-item" href="">Articles</a>
-                            <a class="collapse-item" href="">Videos</a>
+                            <a class="collapse-item" href="<?= site_url('digital-report') ?>">Reports</a>
+                            <a class="collapse-item" href="<?= site_url('digital-article') ?>">Articles</a>
+                            <a class="collapse-item" href="<?= site_url('digital-videos') ?>">Videos</a>
                         </div>
                     </div>
                 </li>
@@ -215,8 +215,8 @@
                         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <a class="collapse-item" href="<?= site_url('admin/mobile') ?>">Reports</a>
-                                <a class="collapse-item" href="">Articles</a>
-                                <a class="collapse-item" href="">Videos</a>
+                                <a class="collapse-item" href="<?= site_url('mobile-article') ?>">Articles</a>
+                                <a class="collapse-item" href="<?= site_url('mobile-videos') ?>">Videos</a>
                             </div>
                         </div>
                     </li>
@@ -232,9 +232,9 @@
                         </a>
                         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" href="">Reports</a>
-                                <a class="collapse-item" href="">Articles</a>
-                                <a class="collapse-item" href="">Videos</a>
+                                <a class="collapse-item" href="<?= site_url('fixed-report') ?>">Reports</a>
+                                <a class="collapse-item" href="<?= site_url('fixed-article') ?>">Articles</a>
+                                <a class="collapse-item" href="<?= site_url('fixed-videos') ?>">Videos</a>
                             </div>
                         </div>
                     </li>
@@ -250,9 +250,9 @@
                         </a>
                         <div id="collapsePagesDigital" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" href="">Reports</a>
-                                <a class="collapse-item" href="">Articles</a>
-                                <a class="collapse-item" href="">Videos</a>
+                                <a class="collapse-item" href="<?= site_url('digital-report') ?>">Reports</a>
+                                <a class="collapse-item" href="<?= site_url('digital-article') ?>">Articles</a>
+                                <a class="collapse-item" href="<?= site_url('digital-videos') ?>">Videos</a>
                             </div>
                         </div>
                     </li>
