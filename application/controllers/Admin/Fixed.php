@@ -10,7 +10,7 @@ class Fixed extends CI_Controller
         $this->load->library('upload'); // Load the upload library
 
         // Cek apakah session user_id ada, jika tidak redirect ke halaman login
-        if (!$this->session->userdata('user_id')) {
+        if (!$this->session->userdata('id')) {
             redirect('login'); // Ganti 'login' sesuai dengan route halaman login Anda
         }
     }

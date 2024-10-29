@@ -8,7 +8,7 @@ class User extends CI_Controller
     {
         parent::__construct();
         // Cek apakah session user_id ada, jika tidak redirect ke halaman login
-        if (!$this->session->userdata('user_id')) {
+        if (!$this->session->userdata('id')) {
             redirect('login'); // Ganti 'login' sesuai dengan route halaman login Anda
         }
     }
