@@ -29,13 +29,13 @@
                                          </td>
                                          <td>
                                              <?php if ($user['role'] == 3): ?>
-                                                 <span class="badge bg-warning text-white">Admin Mobile</span>
+                                                 <span class="badge bg-success text-white">Admin Mobile</span>
                                              <?php elseif ($user['role'] == 4): ?>
-                                                 <span class="badge bg-success text-white">Admin Fixed</span>
+                                                 <span class="badge bg-danger text-white">Admin Fixed</span>
                                              <?php elseif ($user['role'] == 5): ?>
-                                                 <span class="badge bg-success">Admin Digital</span>
-                                             <?php else: ?>
-                                                 <span class="badge bg-light">Role Unknown</span>
+                                                 <span class="badge bg-warning text-white">Admin Digital</span>
+                                             <?php elseif ($user['role'] == 6): ?>
+                                                 <span class="badge bg-secondary text-white">Admin Global</span>
                                              <?php endif; ?>
                                          </td>
                                          <td>

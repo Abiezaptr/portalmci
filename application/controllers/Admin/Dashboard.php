@@ -4,6 +4,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Dashboard extends CI_Controller
 {
 
+    public function __construct()
+    {
+        parent::__construct();
+        // Cek apakah session user_id ada, jika tidak redirect ke halaman login
+        if (!$this->session->userdata('user_id')) {
+            redirect('login'); // Ganti 'login' sesuai dengan route halaman login Anda
+        }
+    }
+
     public function index()
     {
         $data['title'] = 'Dashboard';

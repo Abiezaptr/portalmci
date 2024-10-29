@@ -69,3 +69,27 @@ $route['digital-videos'] = 'admin/digital/videos';
 $route['insert/digital-videos'] = 'admin/digital/insert_videos';
 $route['update/digital-videos/(:num)'] = 'admin/digital/update_videos/$1';
 $route['delete/digital-videos/(:num)'] = 'admin/digital/delete_videos/$1';
+
+// rute global
+$route['global-report'] = 'admin/globals/index';
+$route['add/global-report'] = 'admin/globals/add';
+$route['insert/global-report'] = 'admin/globals/submit';
+$route['update/global-report/(:num)'] = 'admin/globals/edit/$1';
+$route['edit/global-report/(:num)'] = 'admin/globals/update/$1';
+$route['delete/global-report/(:num)'] = 'admin/globals/delete/$1';
+
+$route['global-article'] = 'admin/globals/article';
+$route['insert/global-article'] = 'admin/globals/submit_article';
+$route['update/global-article/(:num)'] = 'admin/globals/update_articles/$1';
+$route['delete/global-article/(:num)'] = 'admin/globals/delete_article/$1';
+
+$route['global-videos'] = 'admin/globals/videos';
+$route['insert/global-videos'] = 'admin/globals/insert_videos';
+$route['update/global-videos/(:num)'] = 'admin/globals/update_videos/$1';
+$route['delete/global-videos/(:num)'] = 'admin/globals/delete_videos/$1';
+
+// rute manage user
+$route['manage-user'] = 'admin/user/index';
+$route['add-user'] = 'admin/user/insert';
+$route['update-user/(:num)'] = 'admin/user/update/$1';
+$route['delete-user/(:num)'] = 'admin/user/delete/$1';

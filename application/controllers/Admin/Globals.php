@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Digital extends CI_Controller
+class Globals extends CI_Controller
 {
     public function __construct()
     {
@@ -20,13 +20,13 @@ class Digital extends CI_Controller
         $data['title'] = 'Digital Report';
 
         // Fetch data from the 'report' table where category is 'mobile'
-        $this->db->where('category', 'digital insight'); // Specify the category condition
+        $this->db->where('category', 'global'); // Specify the category condition
         $this->db->where('type', 'pdf');
         $data['reports'] = $this->db->get('reports')->result_array(); // Fetch results as an array
 
         // Load the views
         $this->load->view('template/cms/header', $data);
-        $this->load->view('admin/digital/view', $data); // Pass data to the view
+        $this->load->view('admin/global/view', $data); // Pass data to the view
         $this->load->view('template/cms/footer');
     }
 
@@ -36,7 +36,7 @@ class Digital extends CI_Controller
 
         // Load the views
         $this->load->view('template/cms/header', $data);
-        $this->load->view('admin/digital/add', $data); // Pass data to the view
+        $this->load->view('admin/global/add', $data); // Pass data to the view
         $this->load->view('template/cms/footer');
     }
 
@@ -105,7 +105,7 @@ class Digital extends CI_Controller
 
         $this->session->set_flashdata('success', 'Report insert successfully.');
         // Redirect or load a view with a success message
-        redirect('digital-report'); // Redirect to the mobile page or another page
+        redirect('global-report'); // Redirect to the mobile page or another page
     }
 
     public function edit($id)
@@ -123,7 +123,7 @@ class Digital extends CI_Controller
 
         // Load the views
         $this->load->view('template/cms/header', $data);
-        $this->load->view('admin/digital/edit', $data); // Pass data to the view
+        $this->load->view('admin/global/edit', $data); // Pass data to the view
         $this->load->view('template/cms/footer');
     }
 
@@ -198,7 +198,7 @@ class Digital extends CI_Controller
 
         // Redirect with success message
         $this->session->set_flashdata('success', 'Report updated successfully.');
-        redirect('digital-report'); // Redirect to the mobile page or another page
+        redirect('global-report'); // Redirect to the mobile page or another page
     }
 
 
@@ -225,25 +225,25 @@ class Digital extends CI_Controller
 
             // Redirect or load a view with a success message
             $this->session->set_flashdata('success', 'Report deleted successfully.');
-            redirect('digital-report'); // Redirect to the mobile page or another page
+            redirect('global-report'); // Redirect to the mobile page or another page
         } else {
             // If the report doesn't exist
             $this->session->set_flashdata('error', 'Report not found.');
-            redirect('digital-report');
+            redirect('global-report');
         }
     }
 
     public function article()
     {
-        $data['title'] = 'Digital Insight Articles';
+        $data['title'] = 'Global Articles';
 
-        $this->db->where('category', 'digital insight'); // Specify the category condition
+        $this->db->where('category', 'global'); // Specify the category condition
         $this->db->where('type', 'article'); // Specify the type condition
         $data['reports'] = $this->db->get('reports')->result_array(); // Fetch results as an array
 
         // Load the views
         $this->load->view('template/cms/header', $data);
-        $this->load->view('admin/digital/view_article', $data); // Pass data to the view
+        $this->load->view('admin/global/view_article', $data); // Pass data to the view
         $this->load->view('template/cms/footer');
     }
 
@@ -281,7 +281,7 @@ class Digital extends CI_Controller
         // Upload file (report)
         if ($file) {
             // Configure upload for report
-            $config['upload_path'] = './uploads/articles/digital_insight/'; // Path for reports
+            $config['upload_path'] = './uploads/articles/global/'; // Path for reports
             $config['allowed_types'] = 'pdf'; // Allowed report types
 
             // Initialize the upload library with the config
@@ -303,7 +303,7 @@ class Digital extends CI_Controller
             'title' => $title,
             'desc' => $desc,
             'content' => $content,
-            'category' => 'digital insight',
+            'category' => 'global',
             'type' => 'article',
             'image' => $image,
             'file' => $file,
@@ -315,7 +315,7 @@ class Digital extends CI_Controller
 
         $this->session->set_flashdata('success', 'Articles insert successfully.');
         // Redirect or load a view with a success message
-        redirect('digital-article'); // Redirect to the mobile page or another page
+        redirect('global-article'); // Redirect to the mobile page or another page
     }
 
     public function update_articles($id)
@@ -363,7 +363,7 @@ class Digital extends CI_Controller
         // Handle file upload
         if ($_FILES['file']['name']) {
             // Configure upload for report
-            $config['upload_path'] = './uploads/articles/digital_insight/';
+            $config['upload_path'] = './uploads/articles/global/';
             $config['allowed_types'] = 'pdf';
             $this->upload->initialize($config);
 
@@ -390,7 +390,7 @@ class Digital extends CI_Controller
 
         // Redirect with success message
         $this->session->set_flashdata('success', 'Articles updated successfully.');
-        redirect('digital-article'); // Redirect to the mobile page or another page
+        redirect('global-article'); // Redirect to the mobile page or another page
     }
 
     public function delete_article($id)
@@ -401,7 +401,7 @@ class Digital extends CI_Controller
         if ($report) {
             // Define the paths to the files
             $image_path = './uploads/image/' . $report['image'];
-            $file_path = './uploads/articles/digital_insight/' . $report['file'];
+            $file_path = './uploads/articles/global/' . $report['file'];
 
             // Delete the files if they exist
             if (file_exists($image_path)) {
@@ -416,11 +416,11 @@ class Digital extends CI_Controller
 
             // Redirect or load a view with a success message
             $this->session->set_flashdata('success', 'Articles deleted successfully.');
-            redirect('digital-article'); // Redirect to the mobile page or another page
+            redirect('global-article'); // Redirect to the mobile page or another page
         } else {
             // If the report doesn't exist
             $this->session->set_flashdata('error', 'Articles not found.');
-            redirect('digital-article');
+            redirect('global-article');
         }
     }
 
@@ -429,12 +429,12 @@ class Digital extends CI_Controller
         $data['title'] = 'Videos List';
 
         // Fetch data from the 'report' table where category is 'mobile'
-        $this->db->where('category', 'digital insight'); // Specify the category condition
+        $this->db->where('category', 'global'); // Specify the category condition
         $data['videos'] = $this->db->get('videos')->result_array(); // Fetch results as an array
 
         // Load the views
         $this->load->view('template/cms/header', $data);
-        $this->load->view('admin/digital/view_videos', $data); // Pass data to the view
+        $this->load->view('admin/global/view_videos', $data); // Pass data to the view
         $this->load->view('template/cms/footer');
     }
 
@@ -448,7 +448,7 @@ class Digital extends CI_Controller
         // Siapkan data untuk di-insert
         $data = [
             'title' => $title,
-            'category' => 'digital insight',
+            'category' => 'global',
             'description' => $description,
             'link' => $link,
             'created_at' => date('Y-m-d H:i:s'), // Optional: add created timestamp
@@ -459,7 +459,7 @@ class Digital extends CI_Controller
 
         // Set notifikasi berhasil dan redirect ke halaman kategori
         $this->session->set_flashdata('success', 'Video berhasil ditambahkan.');
-        redirect('digital-videos');
+        redirect('global-videos');
     }
 
     public function update_videos($id)
@@ -482,7 +482,7 @@ class Digital extends CI_Controller
 
         // Set notifikasi berhasil dan redirect ke halaman kategori
         $this->session->set_flashdata('success', 'Video berhasil diupdate.');
-        redirect('digital-videos');
+        redirect('global-videos');
     }
 
     public function delete_videos($id)
@@ -502,6 +502,6 @@ class Digital extends CI_Controller
             $this->session->set_flashdata('error', 'Kategori tidak ditemukan.');
         }
 
-        redirect('digital-videos');
+        redirect('global-videos');
     }
 }

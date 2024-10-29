@@ -8,6 +8,11 @@ class Mobile extends CI_Controller
         parent::__construct();
         $this->load->database(); // Load the database
         $this->load->library('upload'); // Load the upload library
+
+        // Cek apakah session user_id ada, jika tidak redirect ke halaman login
+        if (!$this->session->userdata('user_id')) {
+            redirect('login'); // Ganti 'login' sesuai dengan route halaman login Anda
+        }
     }
 
     public function index()

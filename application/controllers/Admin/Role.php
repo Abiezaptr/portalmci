@@ -3,12 +3,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Role extends CI_Controller
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+        // Cek apakah session user_id ada, jika tidak redirect ke halaman login
+        if (!$this->session->userdata('user_id')) {
+            redirect('login'); // Ganti 'login' sesuai dengan route halaman login Anda
+        }
+    }
+
     public function index()
     {
         $data['title'] = 'Role Administration';
 
         // Fetch users with role_id 3, 4, or 5
-        $this->db->where_in('role', [3, 4, 5]);
+        $this->db->where_in('role', [3, 4, 5, 6]);
         $data['users'] = $this->db->get('users')->result_array();
 
         // Fetch permissions for each user
@@ -77,5 +87,4 @@ class Role extends CI_Controller
             }
         }
     }
-
 }

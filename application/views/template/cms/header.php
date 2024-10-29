@@ -156,9 +156,9 @@
                     </a>
                     <div id="collapsePagesGlobal" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="">Reports</a>
-                            <a class="collapse-item" href="">Articles</a>
-                            <a class="collapse-item" href="">Videos</a>
+                            <a class="collapse-item" href="<?= site_url('global-report') ?>">Reports</a>
+                            <a class="collapse-item" href="<?= site_url('global-article') ?>">Articles</a>
+                            <a class="collapse-item" href="<?= site_url('global-videos') ?>">Videos</a>
                         </div>
                     </div>
                 </li>
@@ -198,7 +198,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="">
+                    <a class="nav-link" href="<?= site_url('manage-user') ?>">
                         <i class="fas fa-fw fa-user-cog"></i>
                         <span>Manage Users</span></a>
                 </li>
@@ -268,9 +268,9 @@
                         </a>
                         <div id="collapsePagesGlobal" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" href="">Reports</a>
-                                <a class="collapse-item" href="">Articles</a>
-                                <a class="collapse-item" href="">Videos</a>
+                                <a class="collapse-item" href="<?= site_url('global-report') ?>">Reports</a>
+                                <a class="collapse-item" href="<?= site_url('global-article') ?>">Articles</a>
+                                <a class="collapse-item" href="<?= site_url('global-videos') ?>">Videos</a>
                             </div>
                         </div>
                     </li>
