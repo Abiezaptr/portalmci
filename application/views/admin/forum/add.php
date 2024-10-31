@@ -40,7 +40,8 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="prolog" style="font-size: 13px; font-weight: 600;">Prolog</label>
-                            <textarea class="form-control" id="prolog" name="content" placeholder="Enter prolog" rows="4" required></textarea>
+                            <!-- <textarea class="form-control" id="prolog" name="content" placeholder="Enter prolog" rows="4" required></textarea> -->
+                            <textarea name="content" id="summernote" placeholder="Enter prolog"></textarea>
                         </div>
                     </div>
                 </div>

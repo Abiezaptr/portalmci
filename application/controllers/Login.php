@@ -58,7 +58,7 @@ class Login extends CI_Controller
                 $user_id = $this->get_user_id_by_email($id);
 
                 // // Catat log ke database (Fail)
-                // $this->log_login($user_id, $email, 'Fail');
+                $this->log_login($user_id, $email, 'Fail');
 
                 // Redirect back to login with error
                 $this->session->set_flashdata('error', 'Invalid Email or Password');
@@ -139,6 +139,7 @@ class Login extends CI_Controller
             'logged_in' => TRUE
         ]);
 
+        $this->log_login($userId, $mail, 'Success');
         redirect('home');
     }
 

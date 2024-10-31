@@ -38,7 +38,8 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="prolog" style="font-size: 13px; font-weight: 600;">Prolog</label>
-                            <textarea class="form-control" id="prolog" name="content" rows="4" required><?= $threads['content']; ?></textarea>
+                            <!-- <textarea class="form-control" id="prolog" name="content" rows="4" required><?= $threads['content']; ?></textarea> -->
+                            <textarea name="content" id="summernote"><?= $threads['content']; ?></textarea>
                         </div>
                     </div>
                 </div>

@@ -59,6 +59,7 @@
        });
    </script>
 
+
    <script>
        $(document).ready(function() {
            <?php foreach ($reports as $report) : ?>
@@ -97,15 +98,6 @@
    <script>
        $(document).ready(function() {
            $('.select2').select2({
-               placeholder: "Select options", // Tambahkan placeholder jika perlu
-               allowClear: true // Agar bisa di-clear pilihan
-           });
-       });
-   </script>
-
-   <script>
-       $(document).ready(function() {
-           $('.selected2').select2({
                placeholder: "Select options", // Tambahkan placeholder jika perlu
                allowClear: true // Agar bisa di-clear pilihan
            });
