@@ -55,16 +55,37 @@ class Login extends CI_Controller
                 $this->session->set_flashdata('email', $email);
 
                 // Ambil ID pengguna berdasarkan email untuk catatan log
-                $user_id = $this->get_user_id_by_email($email);
+                $user_id = $this->get_user_id_by_email($id);
 
-                // Catat log ke database (Fail)
-                $this->log_login($user_id, $email, 'Fail');
+                // // Catat log ke database (Fail)
+                // $this->log_login($user_id, $email, 'Fail');
 
                 // Redirect back to login with error
                 $this->session->set_flashdata('error', 'Invalid Email or Password');
                 redirect('login');
             }
         }
+    }
+
+
+    private function log_login($user_id, $email, $status)
+    {
+        // Ambil IP address dan browser
+        $ip_address = $this->input->ip_address();
+        $browser = $this->input->user_agent();
+
+        // Set the default timezone to Asia/Jakarta
+        date_default_timezone_set('Asia/Jakarta');
+
+        // Masukkan data ke dalam database
+        $this->db->insert('login_logs', [
+            'user_id' => $user_id,
+            'email' => $email,
+            'login_time' => date('Y-m-d H:i:s'),
+            'ip_address' => $ip_address,
+            'browser' => $browser,
+            'status' => $status
+        ]);
     }
 
     public function handleCallback()
@@ -119,27 +140,6 @@ class Login extends CI_Controller
         ]);
 
         redirect('home');
-    }
-
-
-    private function log_login($user_id, $email, $status)
-    {
-        // Ambil IP address dan browser
-        $ip_address = $this->input->ip_address();
-        $browser = $this->input->user_agent();
-
-        // Set the default timezone to Asia/Jakarta
-        date_default_timezone_set('Asia/Jakarta');
-
-        // Masukkan data ke dalam database
-        $this->db->insert('login_logs', [
-            'user_id' => $user_id,
-            'email' => $email,
-            'login_time' => date('Y-m-d H:i:s'),
-            'ip_address' => $ip_address,
-            'browser' => $browser,
-            'status' => $status
-        ]);
     }
 
     private function get_user_id_by_email($email)

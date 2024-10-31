@@ -304,13 +304,13 @@
                 </label>
                 <input type="password" name="password" placeholder="Masukkan password / Enter your password" required>
                 <br>
-                <button type="submit">Login</button>
-                <br>
-                <div class="or"><b>OR</b></div>
-                <br>
                 <a href="https://192.168.182.67:5000/login?app_type=portalnews" class="google-login">
                     <img src="<?= base_url('assets') ?>/images/microsoft.png" width="20" alt="Google Icon"> Sign in with Microsoft
                 </a>
+                <br>
+                <div class="or"><b>OR</b></div>
+                <br>
+                <button type="submit">Login</button>
             </form>
         </div>
         <div class="image-section">
