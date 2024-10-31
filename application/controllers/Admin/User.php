@@ -19,7 +19,7 @@ class User extends CI_Controller
 
         $roles = [3, 4, 5, 6];
         $this->db->where_in('role', $roles);
-        $data['users'] = $this->db->get('users')->result_array(); // Ambil hasil sebagai array
+        $data['users'] = $this->db->get('users')->result_array();
 
         // Load tampilan
         $this->load->view('template/cms/header', $data);

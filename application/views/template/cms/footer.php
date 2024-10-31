@@ -105,6 +105,15 @@
 
    <script>
        $(document).ready(function() {
+           $('.selected2').select2({
+               placeholder: "Select options", // Tambahkan placeholder jika perlu
+               allowClear: true // Agar bisa di-clear pilihan
+           });
+       });
+   </script>
+
+   <script>
+       $(document).ready(function() {
            $('#users').select2({
                placeholder: 'Select Users', // Placeholder untuk select
                allowClear: true, // Izinkan penghapusan pilihan
