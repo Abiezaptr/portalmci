@@ -177,11 +177,11 @@
                     </div>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="">
                         <i class="fas fa-fw fa-calendar-alt"></i>
                         <span>Event Calendar</span></a>
-                </li>
+                </li> -->
 
                 <!-- Divider -->
                 <hr class="sidebar-divider">
