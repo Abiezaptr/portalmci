@@ -192,16 +192,18 @@
                 </div>
 
                 <li class="nav-item">
+                    <a class="nav-link" href="<?= site_url('manage-user') ?>">
+                        <i class="fas fa-fw fa-user-cog"></i>
+                        <span>Manage Users</span></a>
+                </li>
+
+                <li class="nav-item">
                     <a class="nav-link" href="<?= site_url('role-admin') ?>">
                         <i class="fas fa-fw fa-users-cog"></i>
                         <span>Role Permissions</span></a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('manage-user') ?>">
-                        <i class="fas fa-fw fa-user-cog"></i>
-                        <span>Manage Users</span></a>
-                </li>
+
 
             <?php else: ?>
                 <!-- Mobile Content -->

@@ -205,33 +205,22 @@
 </div>
 
 <div class="page-content">
-    <h4>Events Calendar</h4>
+    <h4>Upcoming Events</h4>
     <br>
     <div class="upcoming-events">
-        <div class="event event-left">
-            <img src="assets/images/lasvegas.webp" alt="MWC Las Vegas">
-            <div class="event-info">
-                <h5><small>Upcoming</small></h5>
-                <h3>MWC Las Vegas</h3>
-                <p>October 8 - 10, 2024</p>
-                <p>Las Vegas Convention Center</p>
-                <button class="btn btn-danger mt-4">Register your interest</button>
+        <?php foreach ($upcoming_events as $index => $event): ?>
+            <div class="event <?php echo $index % 2 == 0 ? 'event-left' : 'event-right'; ?>">
+                <img src="<?= base_url('uploads/event/' . $event->image); ?>" alt="<?php echo $event->title; ?>" style="filter: blur(2px);">
+                <div class="event-info">
+                    <h5><small>Upcoming</small></h5>
+                    <h4><?php echo $event->title; ?></h4>
+                    <p><?php echo date('F j, Y', strtotime($event->date)); ?></p>
+                    <p><?php echo $event->location; ?></p>
+                </div>
             </div>
-        </div>
-        <div class="event event-right">
-            <img src="assets/images/kwali.webp" alt="MWC Kigali">
-            <div class="event-info">
-                <h5><small>Upcoming</small></h5>
-                <h3>MWC Kigali</h3>
-                <p>26 - 29 October, 2024</p>
-                <p>Kigali Convention Centre</p>
-                <button class="btn btn-danger mt-4">Register your interest</button>
-            </div>
-        </div>
-        <div class="event event-right">
-            <img src="assets/images/kwali.webp" alt="MWC Kigali">
-        </div>
+        <?php endforeach; ?>
     </div>
+
 </div>
 
 <br><br><br>

@@ -4,6 +4,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Home extends CI_Controller
 {
 
+	public function __construct()
+	{
+		parent::__construct();
+		date_default_timezone_set('Asia/Jakarta');
+	}
+
 	public function index()
 	{
 		// Fetch the latest videos from the 'videos' table
@@ -37,6 +43,11 @@ class Home extends CI_Controller
 			->limit(1)
 			->get()
 			->row_array(); // Fetch one row as an array
+
+		// Ambil acara yang akan datang
+		$this->db->where('date >=', date('Y-m-d'));
+		$this->db->order_by('date', 'ASC');
+		$data['upcoming_events'] = $this->db->get('events')->result();
 
 		// Load the view with the video data
 		$this->load->view('template/landing/header', $data);
