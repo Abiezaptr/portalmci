@@ -7,6 +7,8 @@ class Dashboard extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        date_default_timezone_set('Asia/Jakarta');
+
         // Cek apakah session user_id ada, jika tidak redirect ke halaman login
         if (!$this->session->userdata('id')) {
             redirect('login'); // Ganti 'login' sesuai dengan route halaman login Anda
@@ -76,6 +78,11 @@ class Dashboard extends CI_Controller
             $data['activity_by_month'][$i] = $this->db->where('MONTH(login_time)', $i)
                 ->count_all_results('login_logs'); // Replace 'activity_date' with your actual timestamp column
         }
+
+        // Ambil acara yang akan datang
+        $this->db->where('date >=', date('Y-m-d'));
+        $this->db->order_by('date', 'ASC');
+        $data['upcoming_events'] = $this->db->get('events')->result();
 
         // Load the view
         $this->load->view('template/cms/header', $data);

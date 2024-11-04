@@ -155,31 +155,21 @@
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold" style="color: maroon;">Upcoming Event</h6>
                 </div>
-                <!-- Card Body -->
                 <div class="card-body">
-                    <!-- Event 1 -->
-                    <div class="mb-3">
-                        <h6 style="font-weight: bold; color: maroon;">MWC Las Vegas</h6>
-                        <p>Date: October 8 - 10, 2024</p>
-                        <p>Location: Las Vegas Convention Center</p>
-                    </div>
-                    <hr>
-                    <!-- Event 2 -->
-                    <div class="mb-3">
-                        <h6 style="font-weight: bold; color: maroon;">Tech Expo 2024</h6>
-                        <p>Date: October 15 - 17, 2024</p>
-                        <p>Location: Silicon Valley Expo Center</p>
-                    </div>
-                    <hr>
-                    <!-- Event 3 -->
-                    <div>
-                        <h6 style="font-weight: bold; color: maroon;">Developer Summit</h6>
-                        <p>Date: October 25 - 27, 2024</p>
-                        <p>Location: San Francisco Conference Hall</p>
-                    </div>
+                    <?php foreach ($upcoming_events as $event): ?>
+                        <div class="mb-3">
+                            <h6 style="font-weight: bold; color: maroon;">
+                                <i class="fa fa-calendar-alt"></i>&nbsp; <?php echo $event->title; ?>
+                            </h6>
+                            <p style="margin-bottom: 5px;">Date: <?php echo date('F j, Y', strtotime($event->date)); ?></p>
+                            <p style="margin-top: -5px;">Location: <?php echo $event->location; ?></p>
+                        </div>
+                        <hr>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>
+
 
     </div>
 
@@ -188,16 +178,6 @@
 
 </div>
 <!-- End of Main Content -->
-
-<!-- Footer -->
-<footer class="sticky-footer bg-white">
-    <div class="container my-auto">
-        <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2021</span>
-        </div>
-    </div>
-</footer>
-<!-- End of Footer -->
 
 </div>
 <!-- End of Content Wrapper -->
