@@ -17,7 +17,7 @@
         </div>
 
         <div class="card-body">
-            <form action="<?= site_url('admin/forum/submit'); ?>" method="POST">
+            <form action="<?= site_url('admin/forum/submit'); ?>" method="POST" enctype="multipart/form-data">
 
                 <input type="hidden" name="posted_by" value="<?php echo $this->session->userdata('id'); ?>">
 
@@ -39,9 +39,18 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
+                            <label for="title" style="font-size: 13px; font-weight: 600;">Image <small class="text-danger">* Optional</small></label>
+                            <input type="file" class="form-control" id="title" name="image" placeholder="Enter title" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
                             <label for="prolog" style="font-size: 13px; font-weight: 600;">Prolog</label>
                             <!-- <textarea class="form-control" id="prolog" name="content" placeholder="Enter prolog" rows="4" required></textarea> -->
-                            <textarea name="content" id="summernote" placeholder="Enter prolog"></textarea>
+                            <textarea name="content" class="form-control" placeholder="Enter prolog"></textarea>
                         </div>
                     </div>
                 </div>

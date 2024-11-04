@@ -17,7 +17,7 @@
         </div>
 
         <div class="card-body">
-            <form action="<?= base_url('admin/forum/update/' . $threads['id']); ?>" method="POST">
+            <form action="<?= base_url('admin/forum/update/' . $threads['id']); ?>" method="POST" enctype="multipart/form-data">
 
                 <!-- Title Row (Full Width) -->
                 <div class="row">
@@ -30,6 +30,20 @@
                                 </div>
                                 <input type="text" class="form-control" id="title" name="title" value="<?= $threads['title']; ?>" required>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="image" style="font-size: 13px; font-weight: 600;">Update Image (Leave empty if not changing)</label>
+                            <div class="custom-file">
+                                <input type="file" class="form-control" id="image" name="image">
+                            </div>
+                            <?php if (!empty($threads['image'])): ?>
+                                <p style="font-size: 12px; margin-left: 10px; margin-top: 10px;">Current Image: <a href="<?= base_url('uploads/forum_threads/' . $threads['image']); ?>" target="_blank">View Image</a></p>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

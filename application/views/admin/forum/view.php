@@ -23,6 +23,7 @@
                              <tr>
                                  <th>#</th>
                                  <th>Threads</th>
+                                 <th>Image</th>
                                  <th>Prolog</th>
                                  <th>Category</th>
                                  <th>Replies</th>
@@ -38,6 +39,14 @@
                                      <tr>
                                          <td><?= $no++; ?></td>
                                          <td style="color: maroon;"><?= $thread['title']; ?></td>
+                                         <td>
+                                             <!-- Displaying image from uploads/image folder -->
+                                             <?php if (!empty($thread['image'])): ?>
+                                                 <img src="<?= base_url('uploads/forum_threads/' . $thread['image']); ?>" alt="Report Image" width="100">
+                                             <?php else: ?>
+                                                 No image available
+                                             <?php endif; ?>
+                                         </td>
                                          <td><?= $thread['content']; ?></td>
                                          <td><?= $thread['category_name']; ?></td>
                                          <td><?= isset($thread['replies_count']) ? $thread['replies_count'] : 0; ?></td>

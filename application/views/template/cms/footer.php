@@ -51,13 +51,35 @@
    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
 
-   <script>
+   <!-- <script>
        $(document).ready(function() {
            $('#summernote').summernote({
                height: 300 // Set editor height
            });
        });
+   </script> -->
+
+   <script>
+       $(document).ready(function() {
+           $('#summernote').summernote({
+               height: 300, // Set editor height
+               toolbar: [
+                   // Customize toolbar without the video button
+                   ['style', ['bold', 'italic', 'underline']],
+                   ['fontsize', ['fontsize']],
+                   ['color', ['color']],
+                   ['para', ['ul', 'ol']]
+               ],
+               callbacks: {
+                   onImageUpload: function(files) {
+                       uploadImage(files[0]);
+                   }
+               }
+           });
+       })
    </script>
+
+
 
 
    <script>
