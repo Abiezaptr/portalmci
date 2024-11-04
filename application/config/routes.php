@@ -93,3 +93,10 @@ $route['manage-user'] = 'admin/user/index';
 $route['add-user'] = 'admin/user/insert';
 $route['update-user/(:num)'] = 'admin/user/update/$1';
 $route['delete-user/(:num)'] = 'admin/user/delete/$1';
+
+
+// rute event calendar
+$route['event'] = 'admin/event/index';
+$route['add-event'] = 'admin/event/insert';
+$route['update-event/(:num)'] = 'admin/event/update/$1';
+$route['delete-event/(:num)'] = 'admin/event/delete/$1';

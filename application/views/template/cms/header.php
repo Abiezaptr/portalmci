@@ -177,11 +177,11 @@
                     </div>
                 </li>
 
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="">
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= site_url('event') ?>">
                         <i class="fas fa-fw fa-calendar-alt"></i>
                         <span>Event Calendar</span></a>
-                </li> -->
+                </li>
 
                 <!-- Divider -->
                 <hr class="sidebar-divider">
@@ -294,7 +294,7 @@
 
                 <?php if (isset($permissions['event']) && $permissions['event'] == 1): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="">
+                        <a class="nav-link" href="<?= site_url('event') ?>">
                             <i class="fas fa-fw fa-calendar-alt"></i>
                             <span>Event Calendar</span></a>
                     </li>
