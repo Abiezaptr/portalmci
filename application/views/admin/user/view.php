@@ -8,7 +8,14 @@
                  <h6 class="m-0 font-weight-bold" style="color: maroon;">Manage User</h6>
 
                  <!-- Add button on the right -->
-                 <a href="#" class="btn btn-danger btn-sm btn-icon-split" data-toggle="modal" data-target="#newUserModal">
+                 <!-- <a href="#" class="btn btn-danger btn-sm btn-icon-split" data-toggle="modal" data-target="#newUserModal">
+                     <span class="icon text-white-50">
+                         <i class="fas fa-plus"></i>
+                     </span>
+                     <span class="text">New Users</span>
+                 </a> -->
+
+                 <a href="<?= site_url('admin/user/add') ?>" class="btn btn-danger btn-sm btn-icon-split">
                      <span class="icon text-white-50">
                          <i class="fas fa-plus"></i>
                      </span>
@@ -92,11 +99,18 @@
                      <div class="modal-body">
                          <div class="form-group">
                              <label for="username">Username</label>
-                             <input type="text" class="form-control" id="username" name="username" required>
+                             <select class="form-control username" id="username" name="username" style="width: 100%;">
+                                 <option value="">Pilih Username</option>
+                                 <?php foreach ($all_users as $u): ?>
+                                     <option value="<?= $u['username']; ?>"><?= $u['username']; ?></option>
+                                 <?php endforeach; ?>
+                             </select>
+
+
                          </div>
                          <div class="form-group">
                              <label for="email">Email</label>
-                             <input type="email" class="form-control" id="email" name="email" required>
+                             <input type="email" class="form-control" id="email" name="email" placeholder="Email akan terisi otomatis" readonly required>
                          </div>
                          <div class="form-group">
                              <label for="role">Role</label>

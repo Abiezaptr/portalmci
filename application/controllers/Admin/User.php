@@ -17,15 +17,46 @@ class User extends CI_Controller
     {
         $data['title'] = 'Manage User';
 
+        // Query dengan filter role
         $roles = [3, 4, 5, 6];
         $this->db->where_in('role', $roles);
         $data['users'] = $this->db->get('users')->result_array();
+
+        // Query untuk semua username dan email tanpa filter role
+        $data['all_users'] = $this->db->select('username, email')->get('users')->result_array();
 
         // Load tampilan
         $this->load->view('template/cms/header', $data);
         $this->load->view('admin/user/view', $data);
         $this->load->view('template/cms/footer');
     }
+
+    public function add()
+    {
+        $data['title'] = 'Insert User';
+
+        // Query untuk semua username dan email tanpa filter role
+        $data['all_users'] = $this->db->select('username, email')->get('users')->result_array();
+
+        // Load tampilan
+        $this->load->view('template/cms/header', $data);
+        $this->load->view('admin/user/add', $data);
+        $this->load->view('template/cms/footer');
+    }
+
+    public function get_email_by_username()
+    {
+        $username = $this->input->post('username');
+        $user = $this->db->get_where('users', ['username' => $username])->row_array();
+
+        if ($user) {
+            echo json_encode(['email' => $user['email']]);
+        } else {
+            echo json_encode(['email' => '']);
+        }
+    }
+
+
 
     public function insert()
     {

@@ -106,6 +106,40 @@
 
    <script>
        $(document).ready(function() {
+           // Inisialisasi Select2 pada elemen dengan class username
+           $('.username').select2({
+               placeholder: "Pilih Users", // Placeholder
+               allowClear: true // Opsi untuk menghapus pilihan
+           });
+
+           // Event ketika username berubah
+           $('#username').change(function() {
+               var username = $(this).val();
+
+               if (username) {
+                   $.ajax({
+                       url: '<?= site_url("admin/user/get_email_by_username") ?>',
+                       type: 'POST',
+                       data: {
+                           username: username
+                       },
+                       dataType: 'json',
+                       success: function(response) {
+                           $('#email').val(response.email); // Isi email berdasarkan username
+                       },
+                       error: function() {
+                           $('#email').val(''); // Kosongkan jika ada error
+                       }
+                   });
+               } else {
+                   $('#email').val(''); // Kosongkan jika tidak ada username
+               }
+           });
+       });
+   </script>
+
+   <script>
+       $(document).ready(function() {
            $('#users').select2({
                placeholder: 'Select Users', // Placeholder untuk select
                allowClear: true, // Izinkan penghapusan pilihan
