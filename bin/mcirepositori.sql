@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 31, 2024 at 08:10 AM
+-- Generation Time: Nov 04, 2024 at 03:28 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.28
 
@@ -186,7 +186,8 @@ CREATE TABLE `forum_comments` (
 
 INSERT INTO `forum_comments` (`id`, `thread_id`, `user_id`, `comment`, `likes`, `unlikes`, `created_at`) VALUES
 (47, 1, 10, 'How do you stay updated with the latest news and developments in your area of interest?', 1, 0, '2024-10-14 08:46:06'),
-(48, 4, 9, 'Improving coding skills truly is a continuous process! The more you code, the better you get at identifying patterns, writing efficient algorithms, and problem-solving. It\'s not just about learning new languages but also about mastering the fundamentals, contributing to open-source projects, and actively seeking feedback from peers. What are some techniques or resources that have helped you the most in your coding journey?', 1, 0, '2024-10-14 09:43:23');
+(48, 4, 9, 'Improving coding skills truly is a continuous process! The more you code, the better you get at identifying patterns, writing efficient algorithms, and problem-solving. It\'s not just about learning new languages but also about mastering the fundamentals, contributing to open-source projects, and actively seeking feedback from peers. What are some techniques or resources that have helped you the most in your coding journey?', 1, 0, '2024-10-14 09:43:23'),
+(49, 1, 11, 'developments in your area of interest?', 0, 0, '2024-10-31 08:12:51');
 
 -- --------------------------------------------------------
 
@@ -238,11 +239,12 @@ CREATE TABLE `forum_threads` (
 --
 
 INSERT INTO `forum_threads` (`id`, `category_id`, `posted_by`, `title`, `content`, `replies_count`, `views_count`, `user_id`, `created_at`) VALUES
-(1, 7, 12, 'Current news and discussion', 'Stay informed with the latest updates and engage in meaningful discussions. This platform serves as a hub for current events, research findings, and expert opinions.', 18, 315, '10,11', '2024-10-03 02:24:52'),
+(1, 7, 12, 'Current news and discussion', 'Stay informed with the latest updates and engage in meaningful discussions. This platform serves as a hub for current events, research findings, and expert opinions.', 19, 319, '10,11', '2024-10-03 02:24:52'),
 (4, 2, 12, 'Tips for improving your coding skills', 'Enhancing your coding abilities is a journey that involves practice, learning, and exploration.', 6, 1140, '9', '2024-10-01 02:27:08'),
 (6, 12, 1, 'Trends and Innovation in the World of Analytics', 'We\'ll discuss how organizations can leverage the latest tools and techniques to improve decision making, increase operational efficiency, and create added value for customers. Let\'s explore this exciting journey and understand how these trends and innovations will shape the future of analytics.', 0, 3, '9,12', '2024-10-16 23:08:01'),
-(9, 1, 13, 'The Future of Fixed Cellular Services in the 5G Era', 'With the increasingly rapid development of 5G networks, fixed cellular services continue to adapt to meet market needs. Discuss how this technology is impacting the telecommunications industry and what users can expect in the future.', 0, 1, '', '2024-10-17 06:40:51'),
-(10, 7, 1, 'sample', 'sajdjksjdkajdk', 0, 0, '16', '2024-10-30 21:14:23');
+(9, 1, 13, 'The Future of Fixed Cellular Services in the 5G Era', 'With the increasingly rapid development of 5G networks, fixed cellular services continue to adapt to meet market needs. Discuss how this technology is impacting the telecommunications industry and what users can expect in the future.', 0, 2, '', '2024-10-17 06:40:51'),
+(10, 7, 1, 'sample', 'sajdjksjdkajdk', 0, 0, '16', '2024-10-30 21:14:23'),
+(11, 4, 1, 'sdsadas', '<p>sdasdsdsad</p><ol><li>sdsdd</li><li>asdasd</li></ol>', 0, 0, '11', '2024-10-31 02:26:59');
 
 -- --------------------------------------------------------
 
@@ -265,23 +267,11 @@ CREATE TABLE `login_logs` (
 --
 
 INSERT INTO `login_logs` (`id`, `user_id`, `email`, `login_time`, `ip_address`, `browser`, `status`) VALUES
-(193, 1, 'admin@telkomsel.co.id', '2024-10-30 09:20:56', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(194, 1, 'admin@telkomsel.co.id', '2024-10-30 14:03:18', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(195, 1, 'admin@telkomsel.co.id', '2024-10-30 17:56:35', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(196, 13, 'fixed@telkomsel.co.id', '2024-10-30 19:01:16', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(197, 1, 'admin@telkomsel.co.id', '2024-10-31 09:55:27', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(198, 1, 'admin@telkomsel.co.id', '2024-10-31 10:13:31', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(199, 1, 'admin@telkomsel.co.id', '2024-10-31 10:17:45', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(200, 12, 'mobile@telkomsel.co.id', '2024-10-31 10:22:09', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(201, 1, 'admin@telkomsel.co.id', '2024-10-31 10:29:39', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Fail'),
-(202, 1, 'admin@telkomsel.co.id', '2024-10-31 10:29:56', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(203, 1, 'admin@telkomsel.co.id', '2024-10-31 10:37:36', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(204, 1, 'admin@telkomsel.co.id', '2024-10-31 10:39:26', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Fail'),
-(205, 1, 'admin@telkomsel.co.id', '2024-10-31 11:00:35', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(206, 1, 'admin@telkomsel.co.id', '2024-10-31 11:07:42', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(207, 13, 'fixed@telkomsel.co.id', '2024-10-31 11:13:11', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(208, 1, 'admin@telkomsel.co.id', '2024-10-31 11:22:22', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(209, 1, 'admin@telkomsel.co.id', '2024-10-31 13:39:01', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success');
+(1, 11, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-10-31 15:12:05', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(2, 1, 'admin@telkomsel.co.id', '2024-10-31 15:15:11', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(3, 1, 'admin@telkomsel.co.id', '2024-11-01 09:16:55', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(4, 1, 'admin@telkomsel.co.id', '2024-11-01 19:44:48', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(5, 1, 'admin@telkomsel.co.id', '2024-11-04 09:21:38', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success');
 
 -- --------------------------------------------------------
 
@@ -510,9 +500,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `microsoft_id`, `avatar`, `job_title`, `role`, `created_at`, `updated_at`) VALUES
 (1, 'Superadmin', 'admin@telkomsel.co.id', '21232f297a57a5a743894a0e4a801fc3', NULL, NULL, NULL, '1', '2024-10-15 05:25:41', NULL),
-(9, 'Abieza Syahdilla', 'abieza.eresha@gmail.com', '202cb962ac59075b964b07152d234b70', 'd1a9b7cd-6037-4542-b5e5-b5e376a90d2c', '', 'Technical Support', '2', '2024-10-31 03:22:30', '2024-10-31 03:22:30'),
+(9, 'Abieza Syahdilla', 'abieza.eresha@gmail.com', '202cb962ac59075b964b07152d234b70', 'd1a9b7cd-6037-4542-b5e5-b5e376a90d2c', '', 'Technical Support', '2', '2024-10-31 07:20:03', '2024-10-31 07:20:03'),
 (10, 'Development', 'development@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'Manager Development', '2', '2024-10-09 09:25:30', NULL),
-(11, 'abieza_sp_risqulloh_x', 'abieza_sp_risqulloh_x@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', '14c904bb-6872-4098-8b88-afc1585b7066', NULL, 'Technical Support', '2', '2024-10-11 08:53:11', '2024-10-11 08:53:11'),
+(11, 'abieza_sp_risqulloh_x', 'abieza_sp_risqulloh_x@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', '14c904bb-6872-4098-8b88-afc1585b7066', NULL, 'Technical Support', '2', '2024-10-31 08:12:05', '2024-10-31 08:12:05'),
 (12, 'Douglas McGee', 'mobile@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'Fixed Development', '3', '2024-10-15 05:06:07', NULL),
 (13, 'David Wilson', 'fixed@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', NULL, NULL, NULL, '4', '2024-10-29 03:27:51', NULL),
 (16, 'James Smith', 'digital@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', NULL, NULL, NULL, '5', '2024-10-29 00:25:52', NULL);
@@ -789,7 +779,7 @@ ALTER TABLE `forum_category`
 -- AUTO_INCREMENT for table `forum_comments`
 --
 ALTER TABLE `forum_comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `forum_replies`
@@ -801,13 +791,13 @@ ALTER TABLE `forum_replies`
 -- AUTO_INCREMENT for table `forum_threads`
 --
 ALTER TABLE `forum_threads`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `login_logs`
 --
 ALTER TABLE `login_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=210;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -831,7 +821,7 @@ ALTER TABLE `replies`
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `type`
