@@ -55,11 +55,11 @@ class Login extends CI_Controller
                 // Simpan email ke flashdata
                 $this->session->set_flashdata('email', $email);
 
-                // Ambil ID pengguna berdasarkan email untuk catatan log
-                $user_id = $this->get_user_id_by_email($id);
+                // // Ambil ID pengguna berdasarkan email untuk catatan log
+                // $user_id = $this->get_user_id_by_email($id);
 
-                // // Catat log ke database (Fail)
-                $this->log_login($user_id, $email, 'Fail');
+                // // // Catat log ke database (Fail)
+                // $this->log_login($user_id, $email, 'Fail');
 
                 // Redirect back to login with error
                 $this->session->set_flashdata('error', 'Invalid Email or Password');
