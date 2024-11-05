@@ -450,6 +450,51 @@
        });
    </script>
 
+   <script>
+       $(document).ready(function() {
+           // Activate user AJAX call
+           $('.activate-user').on('click', function() {
+               var userId = $(this).data('user-id');
+               $.ajax({
+                   url: '<?= base_url("admin/dashboard/activate_user") ?>/' + userId,
+                   method: 'POST',
+                   success: function(response) {
+                       var result = JSON.parse(response);
+                       if (result.status === 'success') {
+                           // Update status text to 'AKTIF'
+                           $('#status-' + userId).text('AKTIF');
+                           // Disable or hide the activate button
+                           $('#user-' + userId + ' .activate-user').prop('disabled', true);
+
+                           // Show success alert with SweetAlert2 and reload page on confirmation
+                           Swal.fire({
+                               title: 'Success!',
+                               text: 'User status has been updated to AKTIF.',
+                               icon: 'success',
+                               confirmButtonText: 'OK',
+                               confirmButtonColor: '#3085d6'
+                           }).then((result) => {
+                               if (result.isConfirmed) {
+                                   // Refresh the page after clicking OK
+                                   location.reload();
+                               }
+                           });
+                       }
+                   },
+                   error: function() {
+                       Swal.fire({
+                           title: 'Error!',
+                           text: 'Failed to update user status. Please try again.',
+                           icon: 'error',
+                           confirmButtonText: 'OK',
+                           confirmButtonColor: '#d33'
+                       });
+                   }
+               });
+           });
+       });
+   </script>
+
 
    </body>
 

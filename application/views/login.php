@@ -297,14 +297,14 @@
                 <label for="email" class="left-align"><b>Email</b>
                     <span style="color: #E11C1C;"><b>*</b></span>
                 </label>
-                <input type="text" name="email" placeholder="Masukkan email / Enter your email" value="<?= $this->session->flashdata('email') ?>" autocomplete="off" required>
+                <input type="text" name="email" placeholder="Masukkan email / Enter your email" value="<?= $this->session->flashdata('email') ?>" required>
                 <br>
                 <label for="email" class="left-align"><b>Password</b>
                     <span style="color: #E11C1C;"><b>*</b></span>
                 </label>
                 <input type="password" name="password" placeholder="Masukkan password / Enter your password" required>
                 <br>
-                <a href="https://192.168.182.67:5000/login?app_type=portalnews" class="google-login">
+                <a href="https://192.168.0.127:5000/login?app_type=portalnews" class="google-login">
                     <img src="<?= base_url('assets') ?>/images/microsoft.png" width="20" alt="Google Icon"> Sign in with Microsoft
                 </a>
                 <br>

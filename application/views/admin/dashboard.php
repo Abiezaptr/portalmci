@@ -9,6 +9,81 @@
         </a>
     </div>
 
+    <?php if ($this->session->userdata('role') == 1): ?>
+        <div class="row">
+            <?php if ($nonaktif_count > 0): ?>
+                <div class="col-xl-12 col-md-6 mb-4">
+                    <div class="card" style="border-left: 5px solid #800000; background-color: #ffffff; shadow h-100 py-2;">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: maroon;">
+                                        <i class="fa fa-info-circle"></i>&nbsp; Notification
+                                    </div>
+                                    <div class="h7 mb-0">You have <?php if (!empty($nonaktif_count) && $nonaktif_count > 0): ?>
+                                            <?= $nonaktif_count ?>
+                                        <?php endif; ?> login access request
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-sm" data-toggle="modal" data-target="#listModal" style="color: #800000;">View requests</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+
+    <!-- Modal for User List -->
+    <div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="listModalLabel">Login access request</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Users</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $no = 1;
+                                foreach ($nonaktif_users as $user): ?>
+                                    <tr id="user-<?= $user->id ?>">
+                                        <td><?= $no++ ?></td>
+                                        <td><?= $user->username ?></td>
+                                        <td><?= $user->email ?></td>
+                                        <td id="status-<?= $user->id ?>"><?= $user->status ?></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success activate-user"
+                                                data-user-id="<?= $user->id ?>">
+                                                Activate
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Content Row -->
     <div class="row">
 

@@ -416,6 +416,9 @@
                             <img src="<?= base_url('assets/images/user.png') ?>" alt="User Image" class="user-image" style="width: 30px; height: 30px; border-radius: 50%;">
                         </a>
                         <div class="dropdown-menu" aria-labelledby="userDropdown">
+                            <?php if (in_array($this->session->userdata('role'), [1, 3, 4, 5, 6])): ?>
+                                <a class="dropdown-item" href="<?= site_url('dashboard') ?>">Dashboard</a>
+                            <?php endif; ?>
                             <a class="dropdown-item" href="<?= site_url('login/logout') ?>">Logout</a>
                         </div>
                     </li>

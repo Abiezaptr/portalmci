@@ -18,7 +18,7 @@ class User extends CI_Controller
         $data['title'] = 'Manage User';
 
         // Query dengan filter role
-        $roles = [3, 4, 5, 6];
+        $roles = [1, 3, 4, 5, 6];
         $this->db->where_in('role', $roles);
         $data['users'] = $this->db->get('users')->result_array();
 
@@ -35,14 +35,18 @@ class User extends CI_Controller
     {
         $data['title'] = 'Insert User';
 
-        // Query untuk semua username dan email tanpa filter role
-        $data['all_users'] = $this->db->select('username, email')->get('users')->result_array();
+        // Query untuk username dan email dengan filter status 'NONAKTIF'
+        $data['all_users'] = $this->db->select('username, email')
+            ->where('status', 'AKTIF')
+            ->get('users')
+            ->result_array();
 
         // Load tampilan
         $this->load->view('template/cms/header', $data);
         $this->load->view('admin/user/add', $data);
         $this->load->view('template/cms/footer');
     }
+
 
     public function get_email_by_username()
     {
@@ -56,8 +60,6 @@ class User extends CI_Controller
         }
     }
 
-
-
     public function insert()
     {
         // Ambil data dari form
@@ -65,22 +67,34 @@ class User extends CI_Controller
         $email = $this->input->post('email');
         $role = $this->input->post('role');
 
-        // Siapkan data untuk di-insert, dengan password yang di-hash menggunakan md5
-        $data = [
-            'username' => $username,
-            'email' => $email,
-            'role' => $role,
-            'password' => md5('123'), // Password default dengan md5 hash
-            'created_at' => date('Y-m-d H:i:s'), // Optional: add created timestamp
-        ];
+        // Cek apakah user dengan username tersebut sudah ada
+        $existing_user = $this->db->get_where('users', ['username' => $username])->row_array();
 
-        // Insert data ke database
-        $this->db->insert('users', $data);
+        if ($existing_user) {
+            // Jika user sudah ada, update role-nya
+            $this->db->where('username', $username);
+            $this->db->update('users', ['role' => $role]);
 
-        // Set notifikasi berhasil dan redirect ke halaman kategori
-        $this->session->set_flashdata('success', 'Users added successfully.');
+            $this->session->set_flashdata('success', 'User role updated successfully.');
+        } else {
+            // Jika user tidak ada, insert data baru
+            $data = [
+                'username' => $username,
+                'email' => $email,
+                'role' => $role,
+                'password' => md5('123'), // Password default dengan md5 hash
+                'created_at' => date('Y-m-d H:i:s'), // Optional: add created timestamp
+            ];
+
+            $this->db->insert('users', $data);
+
+            $this->session->set_flashdata('success', 'User added successfully.');
+        }
+
+        // Redirect ke halaman manage-user
         redirect('manage-user');
     }
+
 
     public function update($id)
     {

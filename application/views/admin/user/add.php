@@ -17,9 +17,7 @@
         </div>
 
         <div class="card-body">
-            <form action="<?= site_url('admin/forum/submit'); ?>" method="POST">
-
-                <input type="hidden" name="posted_by" value="<?php echo $this->session->userdata('id'); ?>">
+            <form action="<?= site_url('add-user'); ?>" method="POST">
 
                 <!-- Title Row (Full Width) -->
                 <div class="row">
@@ -51,6 +49,8 @@
                         <div class="form-group">
                             <label for="role">Role</label>
                             <select class="form-control" id="role" name="role" required>
+                                <option hidden>-- Please Select --</option>
+                                <option value="1">Superadmin</option>
                                 <option value="3">Admin Mobile</option>
                                 <option value="4">Admin Fixed</option>
                                 <option value="5">Admin Digital Insight</option>

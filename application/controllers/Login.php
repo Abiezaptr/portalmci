@@ -31,6 +31,7 @@ class Login extends CI_Controller
                     'username'        => $user->username,
                     'email'           => $user->email,
                     'id'              => $user->id,
+                    'job_title'              => $user->job_title,
                     'microsoft_id'    => $user->microsoft_id,
                     'role'            => $user->role
                 ]);
@@ -88,23 +89,79 @@ class Login extends CI_Controller
         ]);
     }
 
+    // public function handleCallback()
+    // {
+    //     // Set timezone
+    //     date_default_timezone_set('Asia/Jakarta');
+
+    //     // Ambil data dari request
+    //     $displayName = $this->input->get('displayName');
+    //     $microsoftID = $this->input->get('id');
+    //     $jobTitle = $this->input->get('jobTitle');
+    //     $mail = $this->input->get('mail');
+    //     $password = md5('123'); // Default password
+
+    //     // Cek apakah pengguna sudah terdaftar
+    //     $user = $this->db->get_where('users', ['microsoft_id' => $microsoftID])->row();
+
+    //     if ($user) {
+    //         // Jika pengguna sudah terdaftar, perbarui data jika perlu
+    //         $dataToUpdate = [
+    //             'updated_at' => date('Y-m-d H:i:s'),
+    //         ];
+    //         $this->db->where('id', $user->id)->update('users', $dataToUpdate);
+    //         $userId = $user->id;
+    //         $role = $user->role;
+    //         $userEmail = $user->email;
+    //     } else {
+    //         // Jika pengguna belum terdaftar, buat pengguna baru
+    //         $newUser = [
+    //             'username' => $displayName,
+    //             'email' => $mail,
+    //             'password' => $password, // Simpan password yang di-hash
+    //             'microsoft_id' => $microsoftID,
+    //             'job_title' => $jobTitle,
+    //             'role' => 2, // Default role
+    //             'status' => 'NONAKTIF', // Default role
+    //             'created_at' => date('Y-m-d H:i:s'),
+    //             'updated_at' => date('Y-m-d H:i:s'),
+    //         ];
+    //         $this->db->insert('users', $newUser);
+    //         $userId = $this->db->insert_id();
+    //         $role = 2; // Default role
+    //         $userEmail = $mail;
+    //     }
+
+    //     // Set session data
+    //     $this->session->set_userdata([
+    //         'id' => $userId,
+    //         'username' => $displayName,
+    //         'email' => $mail,
+    //         'role' => $role,
+    //         'logged_in' => TRUE
+    //     ]);
+
+    //     $this->log_login($userId, $mail, 'Success');
+    //     redirect('home');
+    // }
+
     public function handleCallback()
     {
         // Set timezone
         date_default_timezone_set('Asia/Jakarta');
 
-        // Ambil data dari request
+        // Retrieve data from the request
         $displayName = $this->input->get('displayName');
         $microsoftID = $this->input->get('id');
         $jobTitle = $this->input->get('jobTitle');
         $mail = $this->input->get('mail');
         $password = md5('123'); // Default password
 
-        // Cek apakah pengguna sudah terdaftar
+        // Check if the user is already registered
         $user = $this->db->get_where('users', ['microsoft_id' => $microsoftID])->row();
 
         if ($user) {
-            // Jika pengguna sudah terdaftar, perbarui data jika perlu
+            // If the user is already registered, update their data if necessary
             $dataToUpdate = [
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
@@ -113,14 +170,15 @@ class Login extends CI_Controller
             $role = $user->role;
             $userEmail = $user->email;
         } else {
-            // Jika pengguna belum terdaftar, buat pengguna baru
+            // If the user is not registered, create a new user
             $newUser = [
                 'username' => $displayName,
                 'email' => $mail,
-                'password' => $password, // Simpan password yang di-hash
+                'password' => $password, // Store hashed password
                 'microsoft_id' => $microsoftID,
                 'job_title' => $jobTitle,
                 'role' => 2, // Default role
+                'status' => 'NONAKTIF', // Default status
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
@@ -135,13 +193,22 @@ class Login extends CI_Controller
             'id' => $userId,
             'username' => $displayName,
             'email' => $mail,
+            'job_title' => $jobTitle,
             'role' => $role,
             'logged_in' => TRUE
         ]);
 
+        // ** Fetch and set user permissions into session **
+        $permissions = $this->db->get_where('permissions', ['user_id' => $userId])->row_array();
+        $this->session->set_userdata('permissions', $permissions);
+
+        // Log the login attempt
         $this->log_login($userId, $mail, 'Success');
+
+        // Redirect to home
         redirect('home');
     }
+
 
     private function get_user_id_by_email($email)
     {

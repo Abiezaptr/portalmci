@@ -29,10 +29,10 @@
                          <thead>
                              <tr>
                                  <th>#</th>
-                                 <th>Name</th>
+                                 <th>Username</th>
                                  <th>Email</th>
                                  <th>Role</th>
-                                 <th>Join Date</th>
+                                 <th>Status</th>
                                  <th></th>
                              </tr>
                          </thead>
@@ -46,16 +46,24 @@
                                          <td style="color: maroon;"><?= $user['email']; ?></td>
                                          <td>
                                              <?php if ($user['role'] == '3'): ?>
-                                                 <span class="badge badge-success">Admin Mobile</span>
+                                                 <span class="badge badge-light">Admin Mobile</span>
+                                             <?php elseif ($user['role'] == '1'): ?>
+                                                 <span class="badge badge-light">Superadmin</span>
                                              <?php elseif ($user['role'] == '4'): ?>
-                                                 <span class="badge badge-danger">Admin Fixed</span>
+                                                 <span class="badge badge-light">Admin Fixed</span>
                                              <?php elseif ($user['role'] == '5'): ?>
-                                                 <span class="badge badge-warning">Admin Digital</span>
+                                                 <span class="badge badge-light">Admin Digital</span>
                                              <?php elseif ($user['role'] == '6'): ?>
-                                                 <span class="badge badge-secondary">Admin Global</span>
+                                                 <span class="badge badge-light">Admin Global</span>
                                              <?php endif; ?>
                                          </td>
-                                         <td><?= date('d M Y, H:i', strtotime($user['created_at'])); ?></td>
+                                         <td>
+                                             <?php if ($user['status'] == 'AKTIF'): ?>
+                                                 <span class="badge badge-success">Active</span>
+                                             <?php elseif ($user['status'] == 'NONAKTIF'): ?>
+                                                 <span class="badge badge-danger">Deactivate</span>
+                                             <?php endif; ?>
+                                         </td>
                                          <td>
                                              <a href="#" data-toggle="modal" data-target="#updateUserModal<?= $user['id']; ?>" class="btn btn-sm"><i class="fa fa-pencil-alt" style="color: maroon;"></i></a>&nbsp;
                                              <?php if ($this->session->userdata('role') == 1) : ?>

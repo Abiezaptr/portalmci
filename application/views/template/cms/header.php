@@ -202,9 +202,6 @@
                         <i class="fas fa-fw fa-users-cog"></i>
                         <span>Role Permissions</span></a>
                 </li>
-
-
-
             <?php else: ?>
                 <!-- Mobile Content -->
                 <?php if (isset($permissions['mobile']) && $permissions['mobile'] == 1): ?>
@@ -355,7 +352,59 @@
                             </div>
                         </li>
 
-                        <!-- <div class="topbar-divider d-none d-sm-block"></div> -->
+                        <!-- Nav Item - Alerts -->
+                        <?php if ($this->session->userdata('role') == 1): ?>
+                            <?php
+                            // Query to get users with status "NONAKTIF"
+                            $nonaktif_users = $this->db->where('status', 'NONAKTIF')->get('users')->result_array();
+                            $nonaktif_count = count($nonaktif_users);
+                            ?>
+
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-bell fa-fw"></i>
+
+                                    <!-- Display badge if there are "NONAKTIF" users -->
+                                    <?php if ($nonaktif_count > 0): ?>
+                                        <span class="badge badge-danger badge-counter"><?= $nonaktif_count ?></span>
+                                    <?php endif; ?>
+                                </a>
+
+                                <!-- Dropdown - Alerts -->
+                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                    aria-labelledby="alertsDropdown">
+                                    <h6 class="dropdown-header" style="background-color: maroon;">
+                                        Notification
+                                    </h6>
+
+                                    <!-- Display each "NONAKTIF" user with a new account request message -->
+                                    <?php if ($nonaktif_count > 0): ?>
+                                        <?php foreach ($nonaktif_users as $user): ?>
+                                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                                <div class="mr-3">
+                                                    <div class="icon-circle bg-warning">
+                                                        <i class="fas fa-exclamation-triangle text-white"></i>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="small text-gray-500"><?= date('F j, Y') ?></div>
+                                                    <span class="font-weight-bold"><?= $user['username'] ?> has successfully registered a new account.</span>
+                                                </div>
+                                            </a>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <a class="dropdown-item text-center small text-gray-500" href="#">No new alerts</a>
+                                    <?php endif; ?>
+
+                                    <a class="dropdown-item text-center small text-gray-500" href="#">Read All</a>
+                                </div>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php if ($this->session->userdata('role') == 1): ?>
+                            <div class="topbar-divider d-none d-sm-block"></div>
+                        <?php endif; ?>
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
@@ -363,18 +412,32 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="img-profile rounded-circle"
                                     src="<?= base_url('assets/cms') ?>/img/undraw_profile.svg">
-                                <span class="ml-2 d-none d-lg-inline text-gray-600 small"> <?php echo $this->session->userdata('username'); ?></span>
-
+                                <div class="ml-2 d-none d-lg-inline text-gray-600">
+                                    <span class="d-block"><small><?php echo $this->session->userdata('username'); ?></small></span>
+                                    <span class="text-gray-500 small" style="margin-top: -2px;"><?php echo $this->session->userdata('job_title'); ?></span>
+                                </div>
                             </a>
+
+
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
+
+                                <!-- Link to Dashboard -->
+                                <a class="dropdown-item" href="<?= site_url('home'); ?>">
+                                    <i class="fas fa-home fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Homepage
+                                </a>
+
+                                <!-- Divider -->
+                                <div class="dropdown-divider"></div>
 
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
                             </div>
+
                         </li>
 
                     </ul>

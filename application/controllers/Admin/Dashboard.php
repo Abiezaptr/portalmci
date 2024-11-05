@@ -15,34 +15,18 @@ class Dashboard extends CI_Controller
         }
     }
 
-    // public function index()
-    // {
-    //     $data['title'] = 'Dashboard';
-
-    //     // Ambil jumlah pengguna terdaftar dengan role tertentu (3, 4, 5, 6)
-    //     $data['total_users'] = $this->db->where_in('role', [3, 4, 5, 6])->count_all_results('users');
-
-    //     $data['report'] = $this->db->where('type', 'pdf')->count_all_results('reports');
-
-    //     $data['article'] = $this->db->where('type', 'article')->count_all_results('reports');
-
-    //     $data['videos'] = $this->db->count_all('videos');
-
-    //     // Load the view with the video data
-    //     $this->load->view('template/cms/header', $data);
-    //     $this->load->view('admin/dashboard', $data);
-    //     $this->load->view('template/cms/footer');
-    // }
-
     public function index()
     {
         $data['title'] = 'Dashboard';
 
         // Total Count
-        $data['total_users'] = $this->db->where_in('role', [3, 4, 5, 6])->count_all_results('users');
+        $data['total_users'] = $this->db->where_in('role', [1, 3, 4, 5, 6])->count_all_results('users');
         $data['report'] = $this->db->where('type', 'pdf')->count_all_results('reports');
         $data['article'] = $this->db->where('type', 'article')->count_all_results('reports');
         $data['videos'] = $this->db->count_all('videos');
+        // Query to get count of users with status "NONAKTIF"
+        $data['nonaktif_count'] = $this->db->where('status', 'NONAKTIF')->count_all_results('users');
+
 
         // Count reports and videos by category
         $categories = ['Mobile', 'Fixed', 'Digital Insight', 'Global'];
@@ -84,9 +68,23 @@ class Dashboard extends CI_Controller
         $this->db->order_by('date', 'ASC');
         $data['upcoming_events'] = $this->db->get('events')->result();
 
+        $data['nonaktif_users'] = $this->db->where('status', 'NONAKTIF')
+            ->order_by('created_at', 'DESC') // Replace 'id' with the column you want to order by
+            ->get('users')
+            ->result();
+
+
         // Load the view
         $this->load->view('template/cms/header', $data);
         $this->load->view('admin/dashboard', $data);
         $this->load->view('template/cms/footer');
+    }
+
+    // Controller
+    public function activate_user($user_id)
+    {
+        // Update the status to AKTIF
+        $this->db->where('id', $user_id)->update('users', ['status' => 'AKTIF']);
+        echo json_encode(['status' => 'success']);
     }
 }
