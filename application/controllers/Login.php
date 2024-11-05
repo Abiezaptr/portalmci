@@ -321,4 +321,35 @@ class Login extends CI_Controller
         $query = $this->db->get();
         return array_column($query->result_array(), 'log_id');
     }
+
+    public function forgot_password()
+    {
+        $data['title'] = 'Reset Password';
+
+        // Load the view to enter email and new password
+        $this->load->view('reset_password', $data);
+    }
+
+    public function reset_password()
+    {
+        // Get email and new password from form submission
+        $email = $this->input->post('email');
+        $new_password = $this->input->post('new_password');
+
+        // Check if email exists in users table
+        $query = $this->db->get_where('users', ['email' => $email]);
+        if ($query->num_rows() > 0) {
+            // Update with the provided new password (hashed with MD5)
+            $this->db->update('users', ['password' => md5($new_password)], ['email' => $email]);
+
+            // Set flashdata message for successful password reset
+            $this->session->set_flashdata('success', 'Password has been successfully reset.');
+        } else {
+            // Set flashdata message for email not found
+            $this->session->set_flashdata('error', 'Email not found.');
+        }
+
+        // Redirect back to the forgot password page to display the message
+        redirect('login');
+    }
 }

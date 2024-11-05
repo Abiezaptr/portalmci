@@ -100,3 +100,6 @@ $route['event'] = 'admin/event/index';
 $route['add-event'] = 'admin/event/insert';
 $route['update-event/(:num)'] = 'admin/event/update/$1';
 $route['delete-event/(:num)'] = 'admin/event/delete/$1';
+
+// rute forgot password
+$route['reset-password'] = 'login/forgot_password';
