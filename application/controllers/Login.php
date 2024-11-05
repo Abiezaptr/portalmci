@@ -56,7 +56,7 @@ class Login extends CI_Controller
                 $this->session->set_flashdata('email', $email);
 
                 // // Ambil ID pengguna berdasarkan email untuk catatan log
-                // $user_id = $this->get_user_id_by_email($id);
+                $user_id = $this->get_user_id_by_email($id);
 
                 // // // Catat log ke database (Fail)
                 // $this->log_login($user_id, $email, 'Fail');
