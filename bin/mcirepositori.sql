@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 04, 2024 at 03:28 AM
+-- Generation Time: Nov 05, 2024 at 10:07 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.28
 
@@ -37,14 +37,6 @@ CREATE TABLE `comments` (
   `unlikes` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `comments`
---
-
-INSERT INTO `comments` (`id`, `id_report`, `user_id`, `name`, `comment_text`, `likes`, `unlikes`, `created_at`) VALUES
-(5, 7, 9, 'Unknown', 'The comparison between mobile and fixed broadband depends on various factors like speed, reliability, and flexibility', 1, 0, '2024-10-10 08:35:34'),
-(6, 7, 10, 'Unknown', 'In essence, if you prioritize mobility and can access a strong 5G network, mobile broadband might be a good option. On the other hand, fixed broadband is ideal for stable, high-speed internet with unlimited data.', 0, 0, '2024-10-10 08:38:07');
 
 -- --------------------------------------------------------
 
@@ -142,6 +134,30 @@ INSERT INTO `download_views` (`id`, `user_id`, `document_id`, `ip_address`, `dow
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `events`
+--
+
+CREATE TABLE `events` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `date` datetime NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `events`
+--
+
+INSERT INTO `events` (`id`, `title`, `image`, `date`, `location`, `description`) VALUES
+(2, 'Workshop Digital Marketing', 'digital.jpg', '2024-11-06 10:00:00', 'Head Office TSO', 'Pelatihan Digital Marketing'),
+(3, 'Family Gathering Telkomsel', 'gatering1.jpg', '2024-11-23 09:00:00', 'Ancol Dreamland', 'Acara kumpul keluarga untuk mempererat hubungan antar karyawan dan keluarga.'),
+(4, 'Rapat Koordinasi Tahunan', 'rapat-kerja1.jpg', '2024-11-18 08:00:00', 'Hotel Indonesia Kempinski, Jakarta', 'Rapat tahunan untuk membahas pencapaian dan rencana perusahaan');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `forum_category`
 --
 
@@ -180,15 +196,6 @@ CREATE TABLE `forum_comments` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `forum_comments`
---
-
-INSERT INTO `forum_comments` (`id`, `thread_id`, `user_id`, `comment`, `likes`, `unlikes`, `created_at`) VALUES
-(47, 1, 10, 'How do you stay updated with the latest news and developments in your area of interest?', 1, 0, '2024-10-14 08:46:06'),
-(48, 4, 9, 'Improving coding skills truly is a continuous process! The more you code, the better you get at identifying patterns, writing efficient algorithms, and problem-solving. It\'s not just about learning new languages but also about mastering the fundamentals, contributing to open-source projects, and actively seeking feedback from peers. What are some techniques or resources that have helped you the most in your coding journey?', 1, 0, '2024-10-14 09:43:23'),
-(49, 1, 11, 'developments in your area of interest?', 0, 0, '2024-10-31 08:12:51');
-
 -- --------------------------------------------------------
 
 --
@@ -206,16 +213,6 @@ CREATE TABLE `forum_replies` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `forum_replies`
---
-
-INSERT INTO `forum_replies` (`id`, `comment_id`, `parent_id`, `name`, `reply_text`, `likes`, `unlikes`, `created_at`) VALUES
-(14, 21, NULL, 'Development', 'Is it true? what are the steps?', 0, 0, '2024-10-04 03:09:44'),
-(15, 22, NULL, 'Robert', 'Salah satu teknologi yang menonjol pada tahun 2024 adalah kecerdasan buatan generatif (Generative AI), seperti ChatGPT dan model AI lainnya. Teknologi ini semakin banyak digunakan dalam berbagai industri untuk membantu otomatisasi, kreatifitas, dan analisis data. Selain itu, komputasi kuantum juga menunjukkan kemajuan besar, terutama dalam pengembangan perangkat keras yang lebih efisien dan simulasi ilmiah yang kompleks.', 0, 0, '2024-10-04 07:58:14'),
-(16, 22, 15, 'Mumunjr', 'komputasi kuantum juga menunjukkan kemajuan besar, terutama dalam pengembangan perangkat keras yang lebih efisien', 0, 0, '2024-10-04 08:00:44'),
-(17, 25, NULL, 'Abieza', 'Pada 2024, energi terbarukan semakin efisien berkat inovasi di teknologi baterai dan solar panel. Baterai solid-state yang lebih efisien dan tahan lama sudah mulai diproduksi, membuat penyimpanan energi lebih andal. Solar panel generasi terbaru juga menjadi lebih terjangkau dengan efisiensi konversi yang meningkat. Hydrogen fuel cells juga mulai diadopsi dalam transportasi dan industri.', 0, 0, '2024-10-04 08:00:39');
-
 -- --------------------------------------------------------
 
 --
@@ -227,6 +224,7 @@ CREATE TABLE `forum_threads` (
   `category_id` int(11) NOT NULL,
   `posted_by` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
+  `image` text DEFAULT NULL,
   `content` text NOT NULL,
   `replies_count` int(11) NOT NULL DEFAULT 0,
   `views_count` int(11) DEFAULT 0,
@@ -238,13 +236,11 @@ CREATE TABLE `forum_threads` (
 -- Dumping data for table `forum_threads`
 --
 
-INSERT INTO `forum_threads` (`id`, `category_id`, `posted_by`, `title`, `content`, `replies_count`, `views_count`, `user_id`, `created_at`) VALUES
-(1, 7, 12, 'Current news and discussion', 'Stay informed with the latest updates and engage in meaningful discussions. This platform serves as a hub for current events, research findings, and expert opinions.', 19, 319, '10,11', '2024-10-03 02:24:52'),
-(4, 2, 12, 'Tips for improving your coding skills', 'Enhancing your coding abilities is a journey that involves practice, learning, and exploration.', 6, 1140, '9', '2024-10-01 02:27:08'),
-(6, 12, 1, 'Trends and Innovation in the World of Analytics', 'We\'ll discuss how organizations can leverage the latest tools and techniques to improve decision making, increase operational efficiency, and create added value for customers. Let\'s explore this exciting journey and understand how these trends and innovations will shape the future of analytics.', 0, 3, '9,12', '2024-10-16 23:08:01'),
-(9, 1, 13, 'The Future of Fixed Cellular Services in the 5G Era', 'With the increasingly rapid development of 5G networks, fixed cellular services continue to adapt to meet market needs. Discuss how this technology is impacting the telecommunications industry and what users can expect in the future.', 0, 2, '', '2024-10-17 06:40:51'),
-(10, 7, 1, 'sample', 'sajdjksjdkajdk', 0, 0, '16', '2024-10-30 21:14:23'),
-(11, 4, 1, 'sdsadas', '<p>sdasdsdsad</p><ol><li>sdsdd</li><li>asdasd</li></ol>', 0, 0, '11', '2024-10-31 02:26:59');
+INSERT INTO `forum_threads` (`id`, `category_id`, `posted_by`, `title`, `image`, `content`, `replies_count`, `views_count`, `user_id`, `created_at`) VALUES
+(1, 7, 12, 'Current news and discussion', NULL, 'Stay informed with the latest updates and engage in meaningful discussions. This platform serves as a hub for current events, research findings, and expert opinions.', 19, 322, '', '2024-10-03 02:24:52'),
+(4, 2, 12, 'Tips for improving your coding skills', NULL, 'Enhancing your coding abilities is a journey that involves practice, learning, and exploration.', 6, 1141, '', '2024-10-01 02:27:08'),
+(6, 12, 1, 'Trends and Innovation in the World of Analytics', NULL, 'We\'ll discuss how organizations can leverage the latest tools and techniques to improve decision making, increase operational efficiency, and create added value for customers. Let\'s explore this exciting journey and understand how these trends and innovations will shape the future of analytics.', 0, 3, '', '2024-10-16 23:08:01'),
+(9, 1, 13, 'The Future of Fixed Cellular Services in the 5G Era', NULL, 'With the increasingly rapid development of 5G networks, fixed cellular services continue to adapt to meet market needs. Discuss how this technology is impacting the telecommunications industry and what users can expect in the future.', 0, 2, '', '2024-10-17 06:40:51');
 
 -- --------------------------------------------------------
 
@@ -262,17 +258,6 @@ CREATE TABLE `login_logs` (
   `status` enum('Success','Fail') DEFAULT 'Success'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `login_logs`
---
-
-INSERT INTO `login_logs` (`id`, `user_id`, `email`, `login_time`, `ip_address`, `browser`, `status`) VALUES
-(1, 11, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-10-31 15:12:05', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(2, 1, 'admin@telkomsel.co.id', '2024-10-31 15:15:11', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(3, 1, 'admin@telkomsel.co.id', '2024-11-01 09:16:55', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(4, 1, 'admin@telkomsel.co.id', '2024-11-01 19:44:48', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
-(5, 1, 'admin@telkomsel.co.id', '2024-11-04 09:21:38', '192.168.182.67', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success');
-
 -- --------------------------------------------------------
 
 --
@@ -289,16 +274,6 @@ CREATE TABLE `permissions` (
   `forum` tinyint(11) NOT NULL DEFAULT 0,
   `event` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `permissions`
---
-
-INSERT INTO `permissions` (`id`, `user_id`, `mobile`, `fixed`, `digital`, `global`, `forum`, `event`) VALUES
-(1, 12, 1, 1, 1, 0, 1, 1),
-(2, 13, 0, 1, 0, 0, 1, 1),
-(3, 14, 0, 0, 1, 0, 1, 1),
-(4, 15, 0, 0, 0, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -339,15 +314,6 @@ CREATE TABLE `replies` (
   `unlikes` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `replies`
---
-
-INSERT INTO `replies` (`id`, `comment_id`, `parent_id`, `user_id`, `reply_text`, `likes`, `unlikes`, `created_at`) VALUES
-(41, 6, NULL, 9, 'especially with the advent of 5G, is becoming a viable alternative for many users, offering faster speeds in areas with poor fixed-line infrastructure', 0, 0, '2024-10-10 08:39:01'),
-(42, 6, 41, 10, 'such as online gaming and video conferencing. Fixed broadband often comes with unlimited data, which is a significant advantage for heavy users', 0, 0, '2024-10-10 08:40:39'),
-(43, 6, 42, 11, 'Fixed broadband often comes with unlimited data', 0, 0, '2024-10-11 08:53:32');
 
 -- --------------------------------------------------------
 
@@ -490,6 +456,7 @@ CREATE TABLE `users` (
   `avatar` text DEFAULT NULL,
   `job_title` text DEFAULT NULL,
   `role` varchar(255) NOT NULL,
+  `status` enum('AKTIF','NONAKTIF','','') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -498,14 +465,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `microsoft_id`, `avatar`, `job_title`, `role`, `created_at`, `updated_at`) VALUES
-(1, 'Superadmin', 'admin@telkomsel.co.id', '21232f297a57a5a743894a0e4a801fc3', NULL, NULL, NULL, '1', '2024-10-15 05:25:41', NULL),
-(9, 'Abieza Syahdilla', 'abieza.eresha@gmail.com', '202cb962ac59075b964b07152d234b70', 'd1a9b7cd-6037-4542-b5e5-b5e376a90d2c', '', 'Technical Support', '2', '2024-10-31 07:20:03', '2024-10-31 07:20:03'),
-(10, 'Development', 'development@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'Manager Development', '2', '2024-10-09 09:25:30', NULL),
-(11, 'abieza_sp_risqulloh_x', 'abieza_sp_risqulloh_x@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', '14c904bb-6872-4098-8b88-afc1585b7066', NULL, 'Technical Support', '2', '2024-10-31 08:12:05', '2024-10-31 08:12:05'),
-(12, 'Douglas McGee', 'mobile@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'Fixed Development', '3', '2024-10-15 05:06:07', NULL),
-(13, 'David Wilson', 'fixed@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', NULL, NULL, NULL, '4', '2024-10-29 03:27:51', NULL),
-(16, 'James Smith', 'digital@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', NULL, NULL, NULL, '5', '2024-10-29 00:25:52', NULL);
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `microsoft_id`, `avatar`, `job_title`, `role`, `status`, `created_at`, `updated_at`) VALUES
+(22, 'ABIEZA SYAHDILLA PUTERA RISQULLOH', 'abieza_sp_risqulloh_x@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', '14c904bb-6872-4098-8b88-afc1585b7066', NULL, 'Technical Support', '1', 'AKTIF', '2024-11-05 08:54:55', '2024-11-05 08:52:18');
 
 -- --------------------------------------------------------
 
@@ -643,6 +604,12 @@ ALTER TABLE `download_views`
   ADD KEY `document_id` (`document_id`);
 
 --
+-- Indexes for table `events`
+--
+ALTER TABLE `events`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `forum_category`
 --
 ALTER TABLE `forum_category`
@@ -770,6 +737,12 @@ ALTER TABLE `download_views`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
+-- AUTO_INCREMENT for table `events`
+--
+ALTER TABLE `events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `forum_category`
 --
 ALTER TABLE `forum_category`
@@ -791,19 +764,19 @@ ALTER TABLE `forum_replies`
 -- AUTO_INCREMENT for table `forum_threads`
 --
 ALTER TABLE `forum_threads`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `login_logs`
 --
 ALTER TABLE `login_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -839,7 +812,7 @@ ALTER TABLE `upload_log`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `user_document_permissions`
