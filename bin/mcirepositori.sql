@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 05, 2024 at 10:07 AM
+-- Generation Time: Nov 06, 2024 at 04:31 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.28
 
@@ -258,6 +258,24 @@ CREATE TABLE `login_logs` (
   `status` enum('Success','Fail') DEFAULT 'Success'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `login_logs`
+--
+
+INSERT INTO `login_logs` (`id`, `user_id`, `email`, `login_time`, `ip_address`, `browser`, `status`) VALUES
+(42, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-05 17:57:54', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(43, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-05 17:59:40', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(44, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-05 18:10:11', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(45, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-05 19:46:25', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(46, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-05 19:47:47', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(47, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-05 19:48:03', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(48, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-05 19:49:43', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(49, 23, 'None', '2024-11-05 19:50:53', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(50, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-05 19:51:06', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(51, 23, 'None', '2024-11-05 19:52:00', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(52, 24, 'None', '2024-11-05 19:53:00', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success'),
+(53, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-05 19:53:24', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'Success');
+
 -- --------------------------------------------------------
 
 --
@@ -466,7 +484,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `microsoft_id`, `avatar`, `job_title`, `role`, `status`, `created_at`, `updated_at`) VALUES
-(22, 'ABIEZA SYAHDILLA PUTERA RISQULLOH', 'abieza_sp_risqulloh_x@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', '14c904bb-6872-4098-8b88-afc1585b7066', NULL, 'Technical Support', '1', 'AKTIF', '2024-11-05 08:54:55', '2024-11-05 08:52:18');
+(22, 'ABIEZA SYAHDILLA PUTERA RISQULLOH', 'abieza_sp_risqulloh_x@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', '14c904bb-6872-4098-8b88-afc1585b7066', NULL, 'Technical Support', '1', 'AKTIF', '2024-11-05 12:53:24', '2024-11-05 12:53:24');
 
 -- --------------------------------------------------------
 
@@ -770,13 +788,13 @@ ALTER TABLE `forum_threads`
 -- AUTO_INCREMENT for table `login_logs`
 --
 ALTER TABLE `login_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -812,7 +830,7 @@ ALTER TABLE `upload_log`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `user_document_permissions`
