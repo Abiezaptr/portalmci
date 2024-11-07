@@ -288,8 +288,8 @@
                 <div class="login-logo">
                     <img src="<?= base_url('assets') ?>/images/telko.png" width="30" alt="logo-img">
                 </div>
-                <p class="left-align" style="color: #E11C1C; font-weight: bold; font-size: 24px;"><b>Reset Password</b></p>
-                <p class="left-align">Change the password to access your account</p>
+                <p class="left-align" style="color: #E11C1C; font-weight: bold; font-size: 24px;"><b>Forgot Password</b></p>
+                <p class="left-align">Please enter your email address, to be able to reset your password</p>
                 <br>
 
                 <label for="email" class="left-align"><b>Email</b><span style="color: #E11C1C;"><b>*</b></span></label>
@@ -302,9 +302,10 @@
                 </label>
                 <input type="password" id="new_password" name="new_password" placeholder="Enter your new password" style="visibility: hidden; opacity: 0; transition: opacity 0.3s;" required>
                 <br>
-
                 <button type="button" id="checkEmailButton">Check Email</button>
                 <button type="submit" id="resetButton" style="display: none;">Reset Password</button>
+                <br>
+                <a href="<?= site_url('login') ?>" class="mt-3" style="color: maroon;">Back to Login</a>
             </form>
         </div>
         <div class="image-section">
@@ -337,17 +338,38 @@
                         });
                         $('#checkEmailButton').hide();
                         $('#resetButton').show();
+
+                        // SweetAlert success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Email Valid',
+                            text: 'You can now reset your password.',
+                            showConfirmButton: true
+                        });
                     } else {
-                        alert(response.message);
+                        // SweetAlert error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops!',
+                            text: response.message,
+                            showConfirmButton: true
+                        });
                     }
                 },
                 error: function() {
-                    alert('An error occurred. Please try again.');
+                    // SweetAlert error for Ajax failure
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'An error occurred',
+                        text: 'Please try again later.',
+                        showConfirmButton: true
+                    });
                 }
             });
         });
     });
 </script>
+
 
 <?php if ($this->session->flashdata('success')) : ?>
     <script>
