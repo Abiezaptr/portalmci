@@ -289,7 +289,6 @@
                 <div class="login-logo">
                     <img src="<?= base_url('assets') ?>/images/telko.png" width="30" alt="logo-img">
                 </div>
-                <p class="left-align" style="color: #000000;">Selamat datang di</p>
                 <p class="left-align" style="color: #E11C1C; font-weight: bold; font-size: 24px;"><b>MCI Repository Portal</b></p>
 
                 <p class="left-align">Login to access your account</p>
@@ -303,7 +302,7 @@
                     <b>Password</b>
                     <span style="color: #E11C1C;"><b>*</b></span>
                     <span style="float: right;">
-                        <a href="<?= site_url('reset-password') ?>" style="font-size: 14px; color: maroon; text-decoration: none;">Forgot Password?</a>
+                        <a href="<?= site_url('reset-password') ?>" style="font-size: 12px; color: maroon; text-decoration: none;">Forgot Password?</a>
                     </span>
                 </label>
                 <input type="password" name="password" placeholder="Masukkan password / Enter your password" required>

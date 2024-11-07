@@ -74,7 +74,7 @@
 </div>
 
 <div class="page-content page-2">
-    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="5000">
+    <!-- <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="5000">
         <div class="carousel-inner">
             <?php if (!empty($reports)) : ?>
                 <?php $chunks = array_chunk($reports, 4); ?>
@@ -123,7 +123,68 @@
                 <li data-target="#carouselExampleControls" data-slide-to="<?php echo $index; ?>" class="<?php echo $index === 0 ? 'active' : ''; ?>"></li>
             <?php endforeach; ?>
         </ol>
+    </div> -->
+
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="5000">
+        <div class="carousel-inner">
+            <?php if (!empty($reports)) : ?>
+                <?php $chunks = array_chunk($reports, 4); ?>
+                <?php foreach ($chunks as $index => $chunk) : ?>
+                    <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
+                        <div class="row">
+                            <?php foreach ($chunk as $report) : ?>
+                                <div class="col-md-3">
+                                    <a href="<?php echo $report['type'] === 'article'
+                                                    ? site_url('view-article/' . urlencode(str_replace(' ', '-', $report['title'])))
+                                                    : site_url('view-report/' . urlencode(str_replace(' ', '-', $report['title']))); ?>">
+                                        <div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">
+                                            <div class="skeleton">
+                                                <img src="<?php echo base_url('uploads/image/' . $report['image']); ?>" class="card-img-top" alt="">
+                                                <div class="card-body">
+                                                    <p class="card-text text-dark">
+                                                        <small>
+                                                            <?php
+                                                            $maxLength = 50;
+                                                            if (strlen($report['title']) > $maxLength) {
+                                                                echo substr($report['title'], 0, $maxLength) . '...';
+                                                            } else {
+                                                                echo $report['title'];
+                                                            }
+                                                            ?>
+                                                        </small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <p>No reports found.</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Next and Previous buttons with added maroon color and spacing -->
+        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev" style="width: 5%; left: -4%; color: maroon;">
+            <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: maroon; border-radius: 50%;"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next" style="width: 5%; right: -4%; color: maroon;">
+            <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: maroon; border-radius: 50%;"></span>
+            <span class="sr-only">Next</span>
+        </a>
+
+        <br><br><br><br>
+        <ol class="carousel-indicators custom-indicators mt-4">
+            <?php foreach ($chunks as $index => $chunk) : ?>
+                <li data-target="#carouselExampleControls" data-slide-to="<?php echo $index; ?>" class="<?php echo $index === 0 ? 'active' : ''; ?>"></li>
+            <?php endforeach; ?>
+        </ol>
     </div>
+
 </div>
 
 <div class="page-content">

@@ -523,7 +523,7 @@
                     <a class="nav-link" href="<?= site_url('global') ?>">Global</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('contact-us') ?>">Contact Us</a>
+                    <a class="nav-link" href="<?= site_url('contact-us') ?>">Contact</a>
                 </li>
                 <?php if ($this->session->userdata('id')): ?>
                     <li class="nav-item dropdown">
@@ -541,7 +541,7 @@
                 <?php else: ?>
                     <li class="nav-item">
                         <a class="nav-link search-icon" href="<?= base_url('login'); ?>">
-                            <b><i class="fa-regular fa-user"></i>&nbsp; Sign in</b>
+                            Login
                         </a>
                     </li>
                 <?php endif; ?>
