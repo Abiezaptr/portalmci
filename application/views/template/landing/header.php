@@ -486,7 +486,7 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <a class="navbar-brand" id="brand-title" href="<?= site_url('home') ?>"><b>MCI ONLINE REPOSITORY</b></a>
+        <a class="navbar-brand" id="brand-title" href="<?= site_url('home') ?>" style="font-size: 17px;"><b>MCI ONLINE REPOSITORY</b></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -511,19 +511,19 @@
                 </li> -->
 
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('mobile') ?>">Mobile</a>
+                    <a class="nav-link" style="font-size: 14px;" href="<?= site_url('mobile') ?>">Mobile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('fixed') ?>">Fixed</a>
+                    <a class="nav-link" style="font-size: 14px;" href="<?= site_url('fixed') ?>">Fixed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('digital-insight') ?>">Digital Insight</a>
+                    <a class="nav-link" style="font-size: 14px;" href="<?= site_url('digital-insight') ?>">Digital Insight</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('global') ?>">Global</a>
+                    <a class="nav-link" style="font-size: 14px;" href="<?= site_url('global') ?>">Global</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('contact-us') ?>">Contact</a>
+                    <a class="nav-link" style="font-size: 14px;" href="<?= site_url('contact-us') ?>">Contact</a>
                 </li>
                 <?php if ($this->session->userdata('id')): ?>
                     <li class="nav-item dropdown">
@@ -540,7 +540,7 @@
                     </li>
                 <?php else: ?>
                     <li class="nav-item">
-                        <a class="nav-link search-icon" href="<?= base_url('login'); ?>">
+                        <a class="nav-link search-icon" style="font-size: 14px;" href="<?= base_url('login'); ?>">
                             Login
                         </a>
                     </li>
