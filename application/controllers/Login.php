@@ -296,4 +296,21 @@ class Login extends CI_Controller
         // Redirect back to the forgot password page to display the message
         redirect('login');
     }
+
+    public function check_email()
+    {
+        // Get email from AJAX request
+        $email = $this->input->post('email');
+
+        // Check if the email exists in the users table
+        $query = $this->db->get_where('users', ['email' => $email]);
+
+        if ($query->num_rows() > 0) {
+            // Email exists
+            echo json_encode(['status' => 'success']);
+        } else {
+            // Email not found
+            echo json_encode(['status' => 'error', 'message' => 'Email not found.']);
+        }
+    }
 }

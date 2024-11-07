@@ -284,27 +284,27 @@
 <body>
     <div class="container">
         <div class="login-section">
-            <form action="<?= base_url('login/reset_password') ?>" method="POST">
-
+            <form id="resetPasswordForm" action="<?= base_url('login/reset_password') ?>" method="POST">
                 <div class="login-logo">
                     <img src="<?= base_url('assets') ?>/images/telko.png" width="30" alt="logo-img">
                 </div>
                 <p class="left-align" style="color: #E11C1C; font-weight: bold; font-size: 24px;"><b>Reset Password</b></p>
-
                 <p class="left-align">Change the password to access your account</p>
                 <br>
-                <label for="email" class="left-align"><b>Email</b>
-                    <span style="color: #E11C1C;"><b>*</b></span>
-                </label>
-                <input type="text" name="email" placeholder="Masukkan email / Enter your email" value="<?= $this->session->flashdata('email') ?>" required>
+
+                <label for="email" class="left-align"><b>Email</b><span style="color: #E11C1C;"><b>*</b></span></label>
+                <input type="text" id="email" name="email" placeholder="Enter your email" required>
                 <br>
-                <label for="email" class="left-align">
-                    <b>New Password</b>
-                    <span style="color: #E11C1C;"><b>*</b></span>
+
+                <!-- Password label and input are hidden initially -->
+                <label for="new_password" class="left-align" style="visibility: hidden; opacity: 0; transition: opacity 0.3s;">
+                    <b>New Password</b><span style="color: #E11C1C;"><b>*</b></span>
                 </label>
-                <input type="password" name="new_password" placeholder="Masukkan password / Enter your password" required>
+                <input type="password" id="new_password" name="new_password" placeholder="Enter your new password" style="visibility: hidden; opacity: 0; transition: opacity 0.3s;" required>
                 <br>
-                <button type="submit">Reset Password</button>
+
+                <button type="button" id="checkEmailButton">Check Email</button>
+                <button type="submit" id="resetButton" style="display: none;">Reset Password</button>
             </form>
         </div>
         <div class="image-section">
@@ -314,6 +314,40 @@
 </body>
 
 </html>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#checkEmailButton').click(function() {
+            const email = $('#email').val();
+
+            $.ajax({
+                url: '<?= base_url('login/check_email') ?>',
+                type: 'POST',
+                data: {
+                    email: email
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Reveal the password field and label with a fade-in effect
+                        $('label[for="new_password"], #new_password').css({
+                            'visibility': 'visible',
+                            'opacity': '1'
+                        });
+                        $('#checkEmailButton').hide();
+                        $('#resetButton').show();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
+    });
+</script>
 
 <?php if ($this->session->flashdata('success')) : ?>
     <script>
