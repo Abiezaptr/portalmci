@@ -517,7 +517,7 @@
                     <a class="nav-link" style="font-size: 14px;" href="<?= site_url('fixed') ?>">Fixed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" style="font-size: 14px;" href="<?= site_url('digital-insight') ?>">Digital Insight</a>
+                    <a class="nav-link" style="font-size: 14px;" href="<?= site_url('digital-insight') ?>">Digital</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" style="font-size: 14px;" href="<?= site_url('global') ?>">Global</a>

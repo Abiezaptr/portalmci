@@ -402,13 +402,13 @@
                     <a class="nav-link" href="<?= site_url('fixed') ?>" style="font-size: 14px;">Fixed</a>
                 </li>
                 <li class="nav-item <?= ($current_uri == 'digital-insight') ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= site_url('digital-insight') ?>" style="font-size: 14px;">Digital Insight</a>
+                    <a class="nav-link" href="<?= site_url('digital-insight') ?>" style="font-size: 14px;">Digital</a>
                 </li>
                 <li class="nav-item <?= ($current_uri == 'global') ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= site_url('global') ?>" style="font-size: 14px;">Global</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('contact-us') ?>" style="font-size: 14px;">Contact Us</a>
+                    <a class="nav-link" href="<?= site_url('contact-us') ?>" style="font-size: 14px;">Contact</a>
                 </li>
                 <?php if ($this->session->userdata('id')): ?>
                     <li class="nav-item dropdown">

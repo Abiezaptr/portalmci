@@ -80,6 +80,16 @@
             <?php endif; ?>
         </div>
 
+        <!-- Next and Previous buttons with added maroon color and spacing -->
+        <a class="carousel-control-prev" href="#carouselExampleControls1" role="button" data-slide="prev" style="width: 5%; left: -4%; color: maroon;">
+            <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: maroon; border-radius: 50%;"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls1" role="button" data-slide="next" style="width: 5%; right: -4%; color: maroon;">
+            <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: maroon; border-radius: 50%;"></span>
+            <span class="sr-only">Next</span>
+        </a>
+
         <br><br><br><br>
         <ol class="carousel-indicators custom-indicators mt-4">
             <?php foreach ($chunks as $index => $chunk) : ?>
@@ -136,6 +146,18 @@
                 <p class="text-center"><small>There are no interesting articles available yet, please check back later for the latest news.</small></p>
             <?php endif; ?>
         </div>
+
+        <?php if (!empty($articles)) : ?>
+            <!-- Next and Previous buttons with added maroon color and spacing -->
+            <a class="carousel-control-prev" href="#carouselExampleControls2" role="button" data-slide="prev" style="width: 5%; left: -4%; color: maroon;">
+                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: maroon; border-radius: 50%;"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls2" role="button" data-slide="next" style="width: 5%; right: -4%; color: maroon;">
+                <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: maroon; border-radius: 50%;"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        <?php endif; ?>
 
         <?php if (!empty($articles)) : ?>
             <br><br><br><br>
@@ -203,12 +225,26 @@
             <?php endif; ?>
         </div>
 
-        <br><br><br><br>
-        <ol class="carousel-indicators custom-indicators mt-4">
-            <?php foreach ($video as $index => $chunk) : ?>
-                <li data-target="#carouselExampleControls3" data-slide-to="<?php echo $index; ?>" class="<?php echo $index === 0 ? 'active' : ''; ?>"></li>
-            <?php endforeach; ?>
-        </ol>
+        <?php if (!empty($videos)) : ?>
+            <!-- Next and Previous buttons with added maroon color and spacing -->
+            <a class="carousel-control-prev" href="#carouselExampleControls3" role="button" data-slide="prev" style="width: 5%; left: -4%; color: maroon;">
+                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: maroon; border-radius: 50%;"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls3" role="button" data-slide="next" style="width: 5%; right: -4%; color: maroon;">
+                <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: maroon; border-radius: 50%;"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        <?php endif; ?>
+
+        <?php if (!empty($videos)) : ?>
+            <br><br><br><br>
+            <ol class="carousel-indicators custom-indicators mt-4">
+                <?php foreach ($video as $index => $chunk) : ?>
+                    <li data-target="#carouselExampleControls3" data-slide-to="<?php echo $index; ?>" class="<?php echo $index === 0 ? 'active' : ''; ?>"></li>
+                <?php endforeach; ?>
+            </ol>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -217,7 +253,7 @@
     <div class="btn-container">
         <a href="https://10.2.114.197/mcirepository" target="_blank" class="btn-quick btn-danger">Libraries</a>
         <button class="btn-quick btn-danger">Articles</button>
-        <button class="btn-quick btn-danger">Forum</button>
+        <a href="<?= site_url('forum') ?>" class="btn-quick btn-danger">Forum</a>
         <button class="btn-quick btn-danger">Events</button>
         <a href="https://forms.gle/g6mapWMKBdzRoHqFA" target="_blank" class="btn-quick btn-danger">Request</a>
     </div>

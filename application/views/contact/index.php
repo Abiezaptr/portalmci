@@ -502,7 +502,7 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top red">
-        <a class="navbar-brand" id="brand-title" href="<?= site_url('home') ?>"><b>MCI ONLINE REPOSITORY</b></a>
+        <a class="navbar-brand" id="brand-title" href="<?= site_url('home') ?>" style="font-size: 17px;"><b>MCI ONLINE REPOSITORY</b></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -526,26 +526,39 @@
                     </div>
                 </li> -->
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('mobile') ?>">Mobile</a>
+                    <a class="nav-link" href="<?= site_url('mobile') ?>" style="font-size: 14px;">Mobile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('fixed') ?>">Fixed</a>
+                    <a class="nav-link" href="<?= site_url('fixed') ?>" style="font-size: 14px;">Fixed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('digital-insight') ?>">Digital Insight</a>
+                    <a class="nav-link" href="<?= site_url('digital-insight') ?>" style="font-size: 14px;">Digital Insight</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('global') ?>">Global</a>
+                    <a class="nav-link" href="<?= site_url('global') ?>" style="font-size: 14px;">Global</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="<?= site_url('contact') ?>">Contact Us</a>
+                    <a class="nav-link" href="<?= site_url('contact') ?>" style="font-size: 14px;">Contact</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link search-icon" href="#" id="searchIcon">
-                        <i class="fa fa-search"></i>
-                    </a>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search all GSMA">
-                </li>
+                <?php if ($this->session->userdata('id')): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="<?= base_url('assets/images/user.png') ?>" alt="User Image" class="user-image" style="width: 30px; height: 30px; border-radius: 50%;">
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="userDropdown">
+                            <?php if (in_array($this->session->userdata('role'), [1, 3, 4, 5, 6])): ?>
+                                <a class="dropdown-item" href="<?= site_url('dashboard') ?>">Dashboard</a>
+                            <?php endif; ?>
+                            <a class="dropdown-item" href="<?= site_url('login/logout') ?>">Logout</a>
+                        </div>
+                    </li>
+                <?php else: ?>
+                    <li class="nav-item">
+                        <a class="nav-link search-icon" href="<?= base_url('login'); ?>" style="font-size: 14px;">
+                            Login
+                        </a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
     </nav>
