@@ -60,6 +60,8 @@ class Event extends CI_Controller
         }
 
         $this->db->insert('events', $data);
+
+        $this->session->set_flashdata('success', 'Events insert successfully.');
         redirect('event');
     }
 
@@ -101,6 +103,8 @@ class Event extends CI_Controller
         // Update data di database
         $this->db->where('id', $id);
         $this->db->update('events', $data);
+
+        $this->session->set_flashdata('success', 'Events update successfully.');
         redirect('event');
     }
 
@@ -117,6 +121,8 @@ class Event extends CI_Controller
 
         // Hapus data dari database
         $this->db->delete('events', ['id' => $id]);
+
+        $this->session->set_flashdata('success', 'Events delete successfully.');
         redirect('event');
     }
 }

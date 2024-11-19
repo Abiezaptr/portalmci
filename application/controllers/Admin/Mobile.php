@@ -104,6 +104,8 @@ class Mobile extends CI_Controller
         // Insert into the database
         $this->db->insert('reports', $data);
 
+        $this->session->set_flashdata('success', 'Report insert successfully.');
+
         // Redirect or load a view with a success message
         redirect('admin/mobile'); // Redirect to the mobile page or another page
     }
@@ -199,7 +201,7 @@ class Mobile extends CI_Controller
         $this->db->update('reports', $data, ['id' => $id]);
 
         // Redirect with success message
-        $this->session->set_flashdata('message', 'Report updated successfully.');
+        $this->session->set_flashdata('success', 'Report updated successfully.');
         redirect('admin/mobile'); // Redirect to the mobile page or another page
     }
 
@@ -226,7 +228,7 @@ class Mobile extends CI_Controller
             $this->db->delete('reports', ['id' => $id]);
 
             // Redirect or load a view with a success message
-            $this->session->set_flashdata('message', 'Report deleted successfully.');
+            $this->session->set_flashdata('success', 'Report deleted successfully.');
             redirect('admin/mobile'); // Redirect to the mobile page or another page
         } else {
             // If the report doesn't exist

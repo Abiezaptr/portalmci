@@ -251,7 +251,7 @@
         <button class="btn-quick btn-danger">Articles</button>
         <a href="<?= site_url('forum') ?>" class="btn-quick btn-danger">Forum</a>
         <button class="btn-quick btn-danger">Events</button>
-        <a href="https://forms.gle/g6mapWMKBdzRoHqFA" target="_blank" class="btn-quick btn-danger">Request</a>
+        <a href="https://tsel.id/RequestResearch" target="_blank" class="btn-quick btn-danger">Request</a>
     </div>
 </div>
 

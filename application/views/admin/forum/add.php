@@ -40,7 +40,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="title" style="font-size: 13px; font-weight: 600;">Image <small class="text-danger">* Optional</small></label>
-                            <input type="file" class="form-control" id="title" name="image" placeholder="Enter title" required>
+                            <input type="file" class="form-control" id="title" name="image" placeholder="Enter title">
                         </div>
                     </div>
                 </div>

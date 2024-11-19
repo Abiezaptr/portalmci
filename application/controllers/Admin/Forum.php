@@ -28,6 +28,7 @@ class Forum extends CI_Controller
             $this->db->join('users', 'forum_threads.user_id = users.id', 'left');
             $this->db->join('forum_category', 'forum_category.id = forum_threads.category_id', 'left');
             $this->db->group_by('forum_threads.id'); // Group by thread ID
+            $this->db->order_by('forum_threads.created_at', 'desc'); // Group by thread ID
             $data['threads'] = $this->db->get('forum_threads')->result_array();
         } else {
             // Jika bukan role 1, ambil thread yang diposting oleh user yang sama
@@ -64,76 +65,6 @@ class Forum extends CI_Controller
         $this->load->view('template/cms/footer');
     }
 
-    // public function submit()
-    // {
-    //     // Ambil data dari form
-    //     $title = $this->input->post('title');
-    //     $content = $this->input->post('content');
-    //     $category_id = $this->input->post('category_id');
-    //     $posted_by = $this->input->post('posted_by');
-    //     $user_ids = $this->input->post('user_id');
-
-    //     // Siapkan data untuk disimpan ke tabel forum
-    //     $data = [
-    //         'title' => $title,
-    //         'content' => $content,
-    //         'category_id' => $category_id,
-    //         'posted_by' => $posted_by,
-    //         'replies_count' => 0,
-    //         'views_count' => 0,
-    //         'created_at' => date('Y-m-d H:i:s'),
-    //     ];
-
-    //     // Simpan data forum ke tabel forum
-    //     $this->db->insert('forum_threads', $data);
-    //     $forum_id = $this->db->insert_id(); // Ambil ID forum yang baru saja dimasukkan
-
-    //     // Gabungkan user_id yang dipilih menjadi string
-    //     if ($user_ids) {
-    //         $user_ids_string = implode(',', $user_ids); // Menggabungkan menjadi format "12,14,17"
-    //         $this->db->update('forum_threads', ['user_id' => $user_ids_string], ['id' => $forum_id]);
-    //     }
-
-    //     // Redirect ke halaman forum atau berikan pesan sukses
-    //     $this->session->set_flashdata('success', 'Thread created successfully.');
-    //     redirect('admin/forum'); // Sesuaikan dengan rute yang sesuai
-    // }
-
-    // public function submit()
-    // {
-    //     // Collect form data
-    //     $title = $this->input->post('title');
-    //     $content = $this->input->post('content');
-    //     $category_id = $this->input->post('category_id');
-    //     $posted_by = $this->input->post('posted_by');
-    //     $user_ids = $this->input->post('user_id');
-
-    //     // Prepare data for the forum_threads table
-    //     $data = [
-    //         'title' => $title,
-    //         'content' => $content, // Contains both text and image URLs
-    //         'category_id' => $category_id,
-    //         'posted_by' => $posted_by,
-    //         'replies_count' => 0,
-    //         'views_count' => 0,
-    //         'created_at' => date('Y-m-d H:i:s'),
-    //     ];
-
-    //     // Save to forum_threads table
-    //     $this->db->insert('forum_threads', $data);
-    //     $forum_id = $this->db->insert_id();
-
-    //     // Save user IDs as a comma-separated string if provided
-    //     if ($user_ids) {
-    //         $user_ids_string = implode(',', $user_ids);
-    //         $this->db->update('forum_threads', ['user_id' => $user_ids_string], ['id' => $forum_id]);
-    //     }
-
-    //     // Redirect with success message
-    //     $this->session->set_flashdata('success', 'Thread created successfully.');
-    //     redirect('admin/forum');
-    // }
-
     public function submit()
     {
         // Collect form data
@@ -143,25 +74,25 @@ class Forum extends CI_Controller
         $posted_by = $this->input->post('posted_by');
         $user_ids = $this->input->post('user_id');
 
-        // Handle image upload if provided
-        $image_name = null;
-        if (!empty($_FILES['image']['name'])) {
-            $config['upload_path'] = './uploads/forum_threads/'; // Set the upload directory
-            $config['allowed_types'] = 'jpg|jpeg|png|gif'; // Set allowed file types
-            $config['file_name'] = time() . '_' . $_FILES['image']['name']; // Unique file name
+        // Handle image upload
+        if ($_FILES['image']['name']) {
+            // Configure upload for the image
+            $config['upload_path'] = './uploads/forum_threads/';
+            $config['allowed_types'] = 'jpg|jpeg|png';
+            $this->upload->initialize($config);
 
-            $this->load->library('upload', $config);
-
-            if ($this->upload->do_upload('image')) {
-                $image_data = $this->upload->data();
-                $image_name = $image_data['file_name']; // Save only the file name
-            } else {
-                // Handle upload error
+            // Attempt to upload the new image
+            if (!$this->upload->do_upload('image')) {
                 $error = $this->upload->display_errors();
-                $this->session->set_flashdata('error', 'Image upload failed: ' . $error);
-                redirect('admin/forum');
-                return;
+                $this->session->set_flashdata('error', 'Image upload error: ' . $error);
+                redirect('admin/forum/edit'); // Redirect back to edit page on error
+            } else {
+                // Update the image data
+                $data['image'] = $this->upload->data('file_name');
             }
+        } else {
+            // If no new image is uploaded, keep the old image
+            $data['image'] = $thread['image'];
         }
 
         // Prepare data for the forum_threads table
@@ -170,7 +101,7 @@ class Forum extends CI_Controller
             'content' => $content, // Contains both text and image URLs
             'category_id' => $category_id,
             'posted_by' => $posted_by,
-            'image' => $image_name, // Save only the image name if available
+            'image' => $data['image'],
             'replies_count' => 0,
             'views_count' => 0,
             'created_at' => date('Y-m-d H:i:s'),
