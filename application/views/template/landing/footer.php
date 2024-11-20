@@ -163,6 +163,14 @@
      });
  </script>
 
+ <script>
+     document.getElementById('scroll-to-events').addEventListener('click', function() {
+         document.getElementById('events-section').scrollIntoView({
+             behavior: 'smooth' // untuk scroll halus
+         });
+     });
+ </script>
+
  </body>
 
  </html>

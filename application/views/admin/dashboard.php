@@ -231,16 +231,37 @@
                     <h6 class="m-0 font-weight-bold" style="color: maroon;">Upcoming Event</h6>
                 </div>
                 <div class="card-body">
-                    <?php foreach ($upcoming_events as $event): ?>
-                        <div class="mb-3">
-                            <h6 style="font-weight: bold; color: maroon;">
-                                <i class="fa fa-calendar-alt"></i>&nbsp; <?php echo $event->title; ?>
-                            </h6>
-                            <p style="margin-bottom: 5px;">Date: <?php echo date('F j, Y', strtotime($event->date)); ?></p>
-                            <p style="margin-top: -5px;">Location: <?php echo $event->location; ?></p>
+                    <?php if (!empty($upcoming_events)): ?>
+                        <?php foreach ($upcoming_events as $event): ?>
+                            <div class="event-card mb-4 p-3" style="border-radius: 10px; background-color: #f9f9f9; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                                <!-- Title dan Icon -->
+                                <h6 style="font-weight: bold; color: #800000;">
+                                    <i class="fa fa-calendar-alt"></i>&nbsp; <?php echo $event->title; ?>
+                                </h6>
+
+                                <hr>
+
+                                <!-- Tanggal -->
+                                <p style="font-size: 14px; color: #777; margin-bottom: 5px;">
+                                    <i class="fa fa-calendar-day"></i>&nbsp; <?php echo date('F j, Y', strtotime($event->start_date)); ?>
+                                </p>
+
+                                <!-- Lokasi -->
+                                <p style="font-size: 14px; color: #555; margin-top: -5px;">
+                                    <i class="fa fa-map-marker-alt"></i>&nbsp; <?php echo $event->location; ?>
+                                </p>
+
+                                <!-- Tombol Detail -->
+                                <a href="<?= site_url('event') ?>" class="btn btn-sm" style="border-radius: 20px; text-transform: uppercase; background-color: maroon; color: white; padding: 5px 10px; font-size: 12px; border: none;">View Events</a>
+                            </div>
+                            <hr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="alert alert-info">
+                            <p>No upcoming events found.</p>
                         </div>
-                        <hr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
+
                 </div>
             </div>
         </div>

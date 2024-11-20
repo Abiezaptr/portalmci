@@ -45,8 +45,9 @@ class Home extends CI_Controller
 			->row_array(); // Fetch one row as an array
 
 		// Ambil acara yang akan datang
-		$this->db->where('date >=', date('Y-m-d'));
-		$this->db->order_by('date', 'ASC');
+		$this->db->where('start_date >=', date('Y-m-d'));  // Pastikan start_date lebih besar atau sama dengan hari ini
+		$this->db->or_where('end_date >=', date('Y-m-d'));  // Atau end_date lebih besar atau sama dengan hari ini
+		$this->db->order_by('start_date', 'ASC');  // Urutkan berdasarkan start_date secara ascending
 		$data['upcoming_events'] = $this->db->get('events')->result();
 
 		// Load the view with the video data

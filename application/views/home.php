@@ -64,7 +64,7 @@
         <a href="https://10.2.114.197/mcirepository" target="_blank" class="btn-quick btn-danger">Libraries</a>
         <a href="<?= site_url('articles') ?>" class="btn-quick btn-danger">Articles</a>
         <a href="<?= site_url('forum') ?>" class="btn-quick btn-danger">Forum</a>
-        <button class="btn-quick btn-danger">Events</button>
+        <button class="btn-quick btn-danger" id="scroll-to-events">Events</button>
         <a href="https://tsel.id/RequestResearch" target="_blank" class="btn-quick btn-danger">Request</a>
     </div>
 </div>
@@ -215,23 +215,23 @@
     </div>
 </div>
 
-<div class="page-content">
+<div class="page-content" id="events-section">
     <h4>Upcoming Events</h4>
     <br>
     <div class="upcoming-events">
         <?php foreach ($upcoming_events as $index => $event): ?>
             <div class="event <?php echo $index % 2 == 0 ? 'event-left' : 'event-right'; ?>">
-                <img src="<?= base_url('uploads/event/' . $event->image); ?>" alt="<?php echo $event->title; ?>" style="filter: blur(2px);">
+                <img src="<?= base_url('assets/images/event3.jpg'); ?>" alt="<?php echo $event->title; ?>" style="filter: blur(2px);">
                 <div class="event-info">
                     <h5><small>Upcoming</small></h5>
                     <h4><?php echo $event->title; ?></h4>
-                    <p><?php echo date('F j, Y', strtotime($event->date)); ?></p>
+                    <p><?php echo date('F j, Y', strtotime($event->start_date)); ?></p>
                     <p><?php echo $event->location; ?></p>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
-
 </div>
+
 
 <br><br><br>

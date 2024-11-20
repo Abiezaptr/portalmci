@@ -23,47 +23,65 @@ class Event extends CI_Controller
     {
         $data['title'] = 'Event Calendar';
 
-        // Mendapatkan tanggal hari ini dalam timezone Asia/Jakarta
-        $today = date('Y-m-d');
-
-        // Query hanya untuk event yang akan datang
-        $this->db->where('date >=', $today);
-        $query = $this->db->get('events');
-
-        $data['events'] = $query->result();
-
         $this->load->view('template/cms/header', $data);
         $this->load->view('admin/event/view', $data);
         $this->load->view('template/cms/footer');
     }
 
+    public function getEvents()
+    {
+        // Ambil tanggal saat ini
+        $today = date('Y-m-d');
+
+        // Ambil event yang start_date lebih besar atau sama dengan hari ini, dan end_date lebih besar atau sama dengan hari ini
+        $this->db->where('start_date >=', $today);
+        $this->db->or_where('end_date >=', $today);
+        $events = $this->db->get('events')->result();
+
+        $data = [];
+        foreach ($events as $event) {
+            $data[] = [
+                'title'       => $event->title,
+                'start'       => $event->start_date,
+                'end'         => $event->end_date ? date('Y-m-d', strtotime($event->end_date . ' +1 day')) : null, // Tambahkan 1 hari untuk FullCalendar
+                'location'    => $event->location,
+                'description' => $event->description,
+                'color'       => $event->color
+            ];
+        }
+
+        echo json_encode($data);
+    }
+
+
     // Menyimpan event baru
     public function insert()
     {
+        // Ambil data dari form
         $data = [
-            'title' => $this->input->post('title'),
-            'date' => $this->input->post('date'),
-            'location' => $this->input->post('location'),
-            'description' => $this->input->post('description')
+            'title'       => $this->input->post('title'),
+            'start_date'  => $this->input->post('start_date'),
+            'end_date'    => $this->input->post('end_date'),
+            'location'    => $this->input->post('location'),
+            'description' => $this->input->post('description'),
+            'color'       => $this->input->post('color')
         ];
 
-        // Proses upload gambar
-        $config['upload_path']   = './uploads/event'; // Pastikan folder ini sudah ada dan writable
-        $config['allowed_types'] = 'gif|jpg|png|jpeg';
-        $config['max_size']      = 2048; // Maksimal 2MB
-
-        $this->upload->initialize($config);
-
-        if ($this->upload->do_upload('image')) {
-            $uploadData = $this->upload->data();
-            $data['image'] = $uploadData['file_name'];
+        // Validasi tanggal (start_date harus lebih awal dari end_date)
+        if (strtotime($data['start_date']) > strtotime($data['end_date'])) {
+            $this->session->set_flashdata('error', 'Start date cannot be later than end date.');
+            redirect('event');
+            return;
         }
 
+        // Masukkan data ke database
         $this->db->insert('events', $data);
 
-        $this->session->set_flashdata('success', 'Events insert successfully.');
+        // Berikan notifikasi sukses
+        $this->session->set_flashdata('success', 'Event inserted successfully.');
         redirect('event');
     }
+
 
     // Memperbarui event
     public function update($id)
