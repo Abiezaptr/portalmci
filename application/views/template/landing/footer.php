@@ -1,45 +1,6 @@
  <!-- Footer -->
  <footer class="footer">
      <div class="container">
-         <div class="row">
-             <div class="col-md-3">
-                 <h5>Quick Links</h5>
-                 <ul>
-                     <li><a href="#">Home</a></li>
-                     <li><a href="#">Services</a></li>
-                     <li><a href="#">Contact</a></li>
-                     <li><a href="#">Privacy Policy</a></li>
-                 </ul>
-             </div>
-             <div class="col-md-3">
-                 <h5>Quick Links</h5>
-                 <ul>
-                     <li><a href="#">Home</a></li>
-                     <li><a href="#">Services</a></li>
-                     <li><a href="#">Contact</a></li>
-                     <li><a href="#">Privacy Policy</a></li>
-                 </ul>
-             </div>
-             <div class="col-md-3">
-                 <h5>Quick Links</h5>
-                 <ul>
-                     <li><a href="#">Home</a></li>
-                     <li><a href="#">Services</a></li>
-                     <li><a href="#">Contact</a></li>
-                     <li><a href="#">Privacy Policy</a></li>
-                 </ul>
-             </div>
-             <div class="col-md-3">
-                 <h5>Quick Links</h5>
-                 <ul>
-                     <li><a href="#">Home</a></li>
-                     <li><a href="#">Services</a></li>
-                     <li><a href="#">Contact</a></li>
-                     <li><a href="#">Privacy Policy</a></li>
-                 </ul>
-             </div>
-         </div>
-         <hr>
          <div class="text-left mt-5 d-flex justify-content-between">
              <p>&copy; 2024 MCI Online Repository.</p>
              <span>Advance Analytics and Growth Marketing</span>

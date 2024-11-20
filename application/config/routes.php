@@ -103,3 +103,6 @@ $route['delete-event/(:num)'] = 'admin/event/delete/$1';
 
 // rute forgot password
 $route['reset-password'] = 'login/forgot_password';
+
+// rute event user
+$route['events-calendar'] = 'events/index';

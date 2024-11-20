@@ -64,7 +64,7 @@
         <a href="https://10.2.114.197/mcirepository" target="_blank" class="btn-quick btn-danger">Libraries</a>
         <a href="<?= site_url('articles') ?>" class="btn-quick btn-danger">Articles</a>
         <a href="<?= site_url('forum') ?>" class="btn-quick btn-danger">Forum</a>
-        <button class="btn-quick btn-danger" id="scroll-to-events">Events</button>
+        <a href="<?= site_url('events-calendar') ?>" class="btn-quick btn-danger">Events</a>
         <a href="https://tsel.id/RequestResearch" target="_blank" class="btn-quick btn-danger">Request</a>
     </div>
 </div>
