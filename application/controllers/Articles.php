@@ -40,7 +40,7 @@ class Articles extends CI_Controller
 
         // Ambil data artikel sesuai halaman
         $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-        $data['articles'] = $this->db->select('title, desc, category')
+        $data['articles'] = $this->db->select('title, desc, category, image, created_at AS date')
             ->from('reports')
             ->where('type', 'article')
             ->order_by('created_at', 'DESC')
