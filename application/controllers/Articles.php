@@ -12,7 +12,7 @@ class Articles extends CI_Controller
         $this->load->library('pagination');
         $config['base_url'] = site_url('articles/index'); // URL pagination
         $config['total_rows'] = $this->db->where('type', 'article')->count_all_results('reports'); // Total data
-        $config['per_page'] = 6; // Jumlah artikel per halaman
+        $config['per_page'] = 9; // Jumlah artikel per halaman
         $config['uri_segment'] = 3; // Posisi segmen di URL
 
         // Customisasi tampilan pagination dengan Bootstrap
