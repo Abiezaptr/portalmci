@@ -54,9 +54,10 @@
                                 <hr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <div class="alert alert-info">
-                                <p>No upcoming events found.</p>
+                            <div class="text-center">
+                                <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No Comments" style="width: 100px; height: auto;">
                             </div>
+                            <p class="text-center mt-3"><small>No upcoming events found.</small></p>
                         <?php endif; ?>
 
                     </div>

@@ -222,6 +222,7 @@
         <?php foreach ($upcoming_events as $index => $event): ?>
             <div class="event <?php echo $index % 2 == 0 ? 'event-left' : 'event-right'; ?>">
                 <img src="<?= base_url('assets/images/event3.jpg'); ?>" alt="<?php echo $event->title; ?>" style="filter: blur(2px);">
+                <br>
                 <div class="event-info">
                     <h5><small>Upcoming</small></h5>
                     <h4><?php echo $event->title; ?></h4>

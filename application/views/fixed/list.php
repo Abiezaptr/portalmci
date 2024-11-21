@@ -257,9 +257,9 @@
     <h2>Quick links</h2>
     <div class="btn-container">
         <a href="https://10.2.114.197/mcirepository" target="_blank" class="btn-quick btn-danger">Libraries</a>
-        <button class="btn-quick btn-danger">Articles</button>
+        <a href="<?= site_url('articles') ?>" class="btn-quick btn-danger">Articles</a>
         <a href="<?= site_url('forum') ?>" class="btn-quick btn-danger">Forum</a>
-        <button class="btn-quick btn-danger">Events</button>
+        <a href="<?= site_url('events-calendar') ?>" class="btn-quick btn-danger">Events</a>
         <a href="https://tsel.id/RequestResearch" target="_blank" class="btn-quick btn-danger">Request</a>
     </div>
 </div>
