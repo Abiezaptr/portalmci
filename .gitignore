@@ -12,8 +12,8 @@ application/logs/*
 !application/config/
 
 # Ignore file autoload.php, config.php, dan database.php dalam folder config
-application/config/autoload.php
 application/config/config.php
+application/config/autoload.php
 application/config/database.php
 
 
@@ -23,7 +23,7 @@ user_guide_src/build/*
 user_guide_src/cilexer/build/*
 user_guide_src/cilexer/dist/*
 user_guide_src/cilexer/pycilexer.egg-info/*
-/vendor/
+
 
 # IDE Files
 #-------------------------

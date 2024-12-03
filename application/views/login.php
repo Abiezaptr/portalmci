@@ -307,7 +307,10 @@
                 </label>
                 <input type="password" name="password" placeholder="Masukkan password / Enter your password" required>
                 <br>
-                <a href="https://10.2.114.197:5000/login?app_type=portalnews" class="google-login">
+                <!-- <a href="https://10.2.114.197:5000/login?app_type=portalnews" class="google-login">
+                    <img src="<?= base_url('assets') ?>/images/microsoft.png" width="20" alt="Google Icon"> Sign in with Microsoft
+                </a> -->
+                <a href="<?= site_url('microsoft') ?>" class="google-login">
                     <img src="<?= base_url('assets') ?>/images/microsoft.png" width="20" alt="Google Icon"> Sign in with Microsoft
                 </a>
                 <br>
