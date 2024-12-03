@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2024 at 01:10 PM
+-- Generation Time: Dec 03, 2024 at 11:51 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.28
 
@@ -139,9 +139,11 @@ INSERT INTO `download_views` (`id`, `user_id`, `document_id`, `ip_address`, `dow
 
 CREATE TABLE `events` (
   `id` int(11) NOT NULL,
+  `event_name` varchar(225) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
+  `image` text DEFAULT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL,
   `location` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `color` varchar(7) NOT NULL DEFAULT '#007bff'
@@ -151,9 +153,10 @@ CREATE TABLE `events` (
 -- Dumping data for table `events`
 --
 
-INSERT INTO `events` (`id`, `title`, `start_date`, `end_date`, `location`, `description`, `color`) VALUES
-(6, 'Meeting with Team', '2024-11-20', '2024-11-21', 'Telkomsel Smart Office', 'This is a weekly team meeting to discuss project updates, tasks, and any blockers. All team members are required to attend.', '#c2192a'),
-(7, 'Creative Writing Workshop', '2024-11-22', '2024-11-22', 'Downtown Conference Hall', 'Join us for an intensive creative writing workshop where you\'ll learn new techniques and improve your writing skills.', '#ffbb00');
+INSERT INTO `events` (`id`, `event_name`, `title`, `image`, `start_date`, `end_date`, `location`, `description`, `color`) VALUES
+(11, 'Workshop Subdir Advanced Analytics and Growth Marketing', 'Farewell Party', 'WhatsApp_Image_2024-12-03_at_16_36_00.jpeg', '2024-12-04 12:00:00', '2024-12-04 14:00:00', 'Telkomsel Smart Office, Lt. 10, Holding Room', 'Trend on Human Capital on 2024 Onwards – Optimize organization effectiveness through adjusted operating model and enhance right-size organization with lean structure & agile way of working to maximize the company effectiveness and redesign the skill & capability map on digital aspects and value-added functions for talent fulfillment.', '#007bff'),
+(12, 'Workshop Subdir Advanced Analytics and Growth Marketing', 'Workshop AAGM', 'WhatsApp_Image_2024-12-03_at_16_36_001.jpeg', '2024-12-04 14:00:00', '2024-12-04 17:00:00', 'Telkomsel Smart Office, Lt. 10, Holding Room', 'Trend on Human Capital on 2024 Onwards – Optimize organization effectiveness through adjusted operating model and enhance right-size organization with lean structure & agile way of working to maximize the company effectiveness and redesign the skill & capability map on digital aspects and value-added functions for talent fulfillment.', '#ffd500'),
+(13, 'Workshop Subdir Advanced Analytics and Growth Marketing', 'Workshop Subdir Advanced Analytics and Growth Marketing', 'WhatsApp_Image_2024-12-03_at_16_36_09.jpeg', '2024-12-05 06:30:00', '2024-12-05 16:00:00', 'Meeting Point Parking Area Jungleland', 'Trekking Sentul Curug Cibingbin & Makan Siang Bersama', '#e100ff');
 
 -- --------------------------------------------------------
 
@@ -286,7 +289,9 @@ INSERT INTO `login_logs` (`id`, `user_id`, `email`, `login_time`, `ip_address`, 
 (62, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-20 09:20:48', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Success'),
 (63, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-20 09:23:27', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Success'),
 (64, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-20 09:45:15', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Success'),
-(65, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-20 11:36:20', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Success');
+(65, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-20 11:36:20', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Success'),
+(66, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-11-21 10:14:58', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Success'),
+(67, 22, 'abieza_sp_risqulloh_x@telkomsel.co.id', '2024-12-03 15:40:41', '192.168.0.127', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Success');
 
 -- --------------------------------------------------------
 
@@ -496,7 +501,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `microsoft_id`, `avatar`, `job_title`, `role`, `status`, `created_at`, `updated_at`) VALUES
-(22, 'ABIEZA SYAHDILLA PUTERA RISQULLOH', 'abieza_sp_risqulloh_x@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', '14c904bb-6872-4098-8b88-afc1585b7066', NULL, 'Technical Support', '1', 'AKTIF', '2024-11-08 02:55:07', '2024-11-05 12:53:24');
+(22, 'ABIEZA SYAHDILLA PUTERA RISQULLOH', 'abieza_sp_risqulloh_x@telkomsel.co.id', '202cb962ac59075b964b07152d234b70', '14c904bb-6872-4098-8b88-afc1585b7066', NULL, 'Technical Support', '1', 'AKTIF', '2024-12-03 09:43:01', '2024-12-03 09:43:01');
 
 -- --------------------------------------------------------
 
@@ -770,7 +775,7 @@ ALTER TABLE `download_views`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `forum_category`
@@ -800,7 +805,7 @@ ALTER TABLE `forum_threads`
 -- AUTO_INCREMENT for table `login_logs`
 --
 ALTER TABLE `login_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `permissions`
