@@ -55,32 +55,88 @@ class Event extends CI_Controller
 
 
     // Menyimpan event baru
+    // public function insert()
+    // {
+    //     // Ambil data dari form
+    //     $data = [
+    //         'title'       => $this->input->post('title'),
+    //         'start_date'  => $this->input->post('start_date'),
+    //         'end_date'    => $this->input->post('end_date'),
+    //         'location'    => $this->input->post('location'),
+    //         'description' => $this->input->post('description'),
+    //         'color'       => $this->input->post('color')
+    //     ];
+
+    //     // Validasi tanggal (start_date harus lebih awal dari end_date)
+    //     if (strtotime($data['start_date']) > strtotime($data['end_date'])) {
+    //         $this->session->set_flashdata('error', 'Start date cannot be later than end date.');
+    //         redirect('event');
+    //         return;
+    //     }
+
+    //     // Masukkan data ke database
+    //     $this->db->insert('events', $data);
+
+    //     // Berikan notifikasi sukses
+    //     $this->session->set_flashdata('success', 'Event inserted successfully.');
+    //     redirect('event');
+    // }
+
     public function insert()
     {
-        // Ambil data dari form
-        $data = [
-            'title'       => $this->input->post('title'),
-            'start_date'  => $this->input->post('start_date'),
-            'end_date'    => $this->input->post('end_date'),
-            'location'    => $this->input->post('location'),
-            'description' => $this->input->post('description'),
-            'color'       => $this->input->post('color')
-        ];
+        // Get form data
+        $event_name = $this->input->post('event_name');
+        $title = $this->input->post('title');
+        $start_date = $this->input->post('start_date');
+        $end_date = $this->input->post('end_date');
+        $location = $this->input->post('location');
+        $description = $this->input->post('description');
+        $color = $this->input->post('color');
 
-        // Validasi tanggal (start_date harus lebih awal dari end_date)
-        if (strtotime($data['start_date']) > strtotime($data['end_date'])) {
-            $this->session->set_flashdata('error', 'Start date cannot be later than end date.');
-            redirect('event');
-            return;
+        // Handle file uploads
+        $image = $_FILES['image']['name'];
+        $file = $_FILES['file']['name'];
+
+        // Upload image
+        if ($image) {
+            // Configure upload for image
+            $config['upload_path'] = './uploads/event/'; // Path for images
+            $config['allowed_types'] = 'jpg|jpeg|png'; // Allowed image types
+
+            // Initialize the upload library with the config
+            $this->upload->initialize($config);
+
+            // Perform the upload
+            if (!$this->upload->do_upload('image')) {
+                // Handle image upload error
+                $error = $this->upload->display_errors();
+                echo "Image upload error: " . $error;
+                return;
+            } else {
+                $image = $this->upload->data('file_name'); // Get the uploaded file name
+            }
         }
 
-        // Masukkan data ke database
+        // Prepare data for insertion
+        $data = array(
+            'event_name' => $event_name,
+            'title' => $title,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'location' => $location,
+            'description' => $description,
+            'color' => $color,
+            'image' => $image,
+        );
+
+        // Insert into the database
         $this->db->insert('events', $data);
 
-        // Berikan notifikasi sukses
-        $this->session->set_flashdata('success', 'Event inserted successfully.');
-        redirect('event');
+        $this->session->set_flashdata('success', 'Events insert successfully.');
+        // Redirect or load a view with a success message
+        redirect('event'); // Redirect to the mobile page or another page
     }
+
 
 
     // Memperbarui event

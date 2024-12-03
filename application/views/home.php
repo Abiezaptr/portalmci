@@ -221,14 +221,19 @@
     <div class="upcoming-events">
         <?php foreach ($upcoming_events as $index => $event): ?>
             <div class="event <?php echo $index % 2 == 0 ? 'event-left' : 'event-right'; ?>">
-                <img src="<?= base_url('assets/images/event3.jpg'); ?>" alt="<?php echo $event->title; ?>" style="filter: blur(2px);">
-                <br>
-                <div class="event-info">
-                    <h5><small>Upcoming</small></h5>
-                    <h4><?php echo $event->title; ?></h4>
-                    <p><?php echo date('F j, Y', strtotime($event->start_date)); ?></p>
-                    <p><?php echo $event->location; ?></p>
+                <div style="position: relative; width: 100%; height: 300px;">
+                    <img src="<?= base_url('uploads/event/' . $event->image); ?>" alt="<?= $event->title; ?>" style="filter: blur(3px); width: 100%; height: 100%; object-fit: cover;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px;">
+                        <!-- White Card -->
+                        <div style="background-color: white; opacity: 0.8; padding: 15px; border-radius: 10px;">
+                            <h2 style="font-size: 24px; font-weight: bold; text-align: center; color: #333;"><?= $event->title; ?></h2>
+                            <p style="text-align: center; font-size: 16px; color: #333;"><?php echo date('F j, Y, H:i', strtotime($event->start_date)); ?></p>
+                            <hr>
+                            <p style="text-align: center; font-size: 16px; color: #333;"><?= $event->location; ?></p>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         <?php endforeach; ?>
     </div>

@@ -28,7 +28,7 @@
 
      <!-- Modal untuk Tambah Pengguna Baru -->
      <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
-         <div class="modal-dialog" role="document">
+         <div class="modal-dialog modal-lg" role="document">
              <div class="modal-content">
                  <div class="modal-header">
                      <h5 class="modal-title" id="addUserModalLabel">Add New Event</h5>
@@ -39,16 +39,24 @@
                  <form action="<?= site_url('add-event'); ?>" method="post" enctype="multipart/form-data">
                      <div class="modal-body">
                          <div class="form-group">
+                             <label for="title">Event Name</label>
+                             <input type="text" name="event_name" id="title" class="form-control" required>
+                         </div>
+                         <div class="form-group">
                              <label for="title">Event Title</label>
                              <input type="text" name="title" id="title" class="form-control" required>
                          </div>
                          <div class="form-group">
+                             <label for="title">Event Image <small class="text-danger">*opional</small></label>
+                             <input type="file" name="image" id="title" class="form-control">
+                         </div>
+                         <div class="form-group">
                              <label for="start_date">Start Date</label>
-                             <input type="date" name="start_date" id="start_date" class="form-control" required>
+                             <input type="datetime-local" name="start_date" id="start_date" class="form-control" required>
                          </div>
                          <div class="form-group">
                              <label for="end_date">End Date</label>
-                             <input type="date" name="end_date" id="end_date" class="form-control" required>
+                             <input type="datetime-local" name="end_date" id="end_date" class="form-control" required>
                          </div>
                          <div class="form-group">
                              <label for="color">Event Color</label>
