@@ -10,12 +10,15 @@ class Mobile extends CI_Controller
         // Query to get data from the 'reports' table where category is 'digital' and type is 'pdf'
         $data['reports'] = $this->db->where('category', 'mobile')
             ->where('type', 'pdf')
+            ->order_by('created_at', 'DESC') // Urutkan berdasarkan kolom created_at secara descending
             ->get('reports')
             ->result_array();
+
 
         // Query to get data from the 'reports' table where category is 'fixed' and type is 'articles'
         $data['articles'] = $this->db->where('category', 'mobile')
             ->where('type', 'article')
+            ->order_by('created_at', 'DESC')
             ->get('reports')
             ->result_array();
 

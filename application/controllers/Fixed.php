@@ -10,12 +10,14 @@ class Fixed extends CI_Controller
 		// Query to get data from the 'reports' table where category is 'fixed' and type is 'pdf'
 		$data['reports'] = $this->db->where('category', 'fixed')
 			->where('type', 'pdf')
+			->order_by('created_at', 'DESC')
 			->get('reports')
 			->result_array();
 
 		// Query to get data from the 'reports' table where category is 'fixed' and type is 'articles'
 		$data['articles'] = $this->db->where('category', 'fixed')
 			->where('type', 'article')
+			->order_by('created_at', 'DESC')
 			->get('reports')
 			->result_array();
 
