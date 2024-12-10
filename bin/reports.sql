@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 09, 2024 at 06:37 AM
+-- Generation Time: Dec 10, 2024 at 03:53 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.28
 
@@ -81,7 +81,8 @@ INSERT INTO `reports` (`id`, `title`, `desc`, `image`, `category`, `type`, `file
 (55, 'Customer Segmentation as a Revenue Generator for profit purposes', NULL, 'Untitled.png', 'mobile', 'pdf', 'Customer_Segmentation_as_a_Revenue_Generator_for_profit_purposes.pdf', NULL, '2024-12-08 21:32:52', 0, 0),
 (56, '2025 Trends to Watch Service Provider Markets in Asia Oceania', NULL, 'Untitled1.png', 'mobile', 'pdf', '2025_Trends_to_Watch_Service_Provider_Markets_in_Asia_Oceania_PDF.pdf', NULL, '2024-12-08 21:42:59', 0, 0),
 (57, 'Preparing for 6G Global PoliciesJ StandardsJ and Regulatory Activities', NULL, 'preparing_6g.png', 'mobile', 'pdf', 'Preparing_for_6G_Global_PoliciesJ_StandardsJ_and_Regulatory_ActivitiesPDF.pdf', NULL, '2024-12-08 23:30:23', 0, 0),
-(58, 'Definitive Report Modern online Consumer Behavior', NULL, 'Untitled2.png', 'mobile', 'pdf', 'definitive-report-modern-online-consumer-behavior.pdf', NULL, '2024-12-08 23:31:12', 0, 0);
+(58, 'Definitive Report Modern online Consumer Behavior', NULL, 'Untitled2.png', 'mobile', 'pdf', 'definitive-report-modern-online-consumer-behavior.pdf', NULL, '2024-12-08 23:31:12', 0, 0),
+(59, 'Insights 2024 : Attitudes toward AI', NULL, 'Untitled4.png', 'mobile', 'pdf', 'Insights_2024_Attitudes_To_AI_Full_Report.pdf', NULL, '2024-12-09 20:42:47', 0, 0);
 
 --
 -- Indexes for dumped tables
@@ -101,7 +102,7 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

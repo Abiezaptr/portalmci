@@ -2,6 +2,17 @@
     <br><br>
 
     <section>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" style="list-style: none; padding: 0; margin: 0;">
+                <li class="breadcrumb-item" style="display: inline; color: black;">
+                    <a href="<?= site_url('home') ?>" style="color: black; text-decoration: none;">Home</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page" style="color: rgb(177, 41, 41); display: inline;">
+                    Latest Articles
+                </li>
+            </ol>
+        </nav>
+        <br>
         <!-- Sidebar -->
         <aside class="sidebar">
             <ol>

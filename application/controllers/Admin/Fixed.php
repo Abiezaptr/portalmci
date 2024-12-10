@@ -22,6 +22,7 @@ class Fixed extends CI_Controller
         // Fetch data from the 'report' table where category is 'mobile'
         $this->db->where('category', 'fixed'); // Specify the category condition
         $this->db->where('type', 'pdf');
+        $this->db->order_by('created_at', 'DESC');
         $data['reports'] = $this->db->get('reports')->result_array(); // Fetch results as an array
 
         // Load the views
@@ -240,6 +241,7 @@ class Fixed extends CI_Controller
         // Fetch data from the 'reports' table where category is 'mobile' and type is 'article'
         $this->db->where('category', 'fixed'); // Specify the category condition
         $this->db->where('type', 'article'); // Specify the type condition
+        $this->db->order_by('created_at', 'DESC');
         $data['reports'] = $this->db->get('reports')->result_array(); // Fetch results as an array
 
         // Load the views
