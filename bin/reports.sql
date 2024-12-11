@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2024 at 03:53 AM
+-- Generation Time: Dec 11, 2024 at 03:47 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.28
 
@@ -82,7 +82,12 @@ INSERT INTO `reports` (`id`, `title`, `desc`, `image`, `category`, `type`, `file
 (56, '2025 Trends to Watch Service Provider Markets in Asia Oceania', NULL, 'Untitled1.png', 'mobile', 'pdf', '2025_Trends_to_Watch_Service_Provider_Markets_in_Asia_Oceania_PDF.pdf', NULL, '2024-12-08 21:42:59', 0, 0),
 (57, 'Preparing for 6G Global PoliciesJ StandardsJ and Regulatory Activities', NULL, 'preparing_6g.png', 'mobile', 'pdf', 'Preparing_for_6G_Global_PoliciesJ_StandardsJ_and_Regulatory_ActivitiesPDF.pdf', NULL, '2024-12-08 23:30:23', 0, 0),
 (58, 'Definitive Report Modern online Consumer Behavior', NULL, 'Untitled2.png', 'mobile', 'pdf', 'definitive-report-modern-online-consumer-behavior.pdf', NULL, '2024-12-08 23:31:12', 0, 0),
-(59, 'Insights 2024 : Attitudes toward AI', NULL, 'Untitled4.png', 'mobile', 'pdf', 'Insights_2024_Attitudes_To_AI_Full_Report.pdf', NULL, '2024-12-09 20:42:47', 0, 0);
+(59, 'Insights 2024 : Attitudes toward AI', NULL, 'Untitled4.png', 'mobile', 'pdf', 'Insights_2024_Attitudes_To_AI_Full_Report.pdf', NULL, '2024-12-09 20:42:47', 0, 0),
+(60, 'Metaverse Platform Attributes and Customer Experience Measurement', NULL, 'Metaverse_platform.png', 'digital insight', 'pdf', 'DCI_Metaverse_platform_attributes_and_customer_experience_measurement.pdf', NULL, '2024-12-10 20:29:02', 0, 0),
+(61, 'Ultrahigh Speed Fixed Broadband and Development', NULL, 'Metaverse_platform1.png', 'fixed', 'pdf', 'Fixed_-_2023_-_Arronte_Ledo_-_Ultrahigh‐Speed_Fixed_Broadband_and_Rural_Development.pdf', NULL, '2024-12-10 20:33:32', 0, 0),
+(62, 'Analysis Of Telkom\'s Strategy And Business Model Fixed', NULL, 'Metaverse_platform2.png', 'fixed', 'pdf', 'Fixed_Analysis_Of_Telkoms_Strategy_And_Business_Model_Fixed.pdf', NULL, '2024-12-10 20:37:51', 0, 0),
+(63, 'Consumer Engagement in Fixed Broadband', NULL, 'Metaverse_platform4.png', 'fixed', 'pdf', 'fixed_consumer-engagement-in-fixed-broadband-report.pdf', NULL, '2024-12-10 20:40:46', 0, 0),
+(64, 'Consumer Memory for Television', NULL, 'Metaverse_platform5.png', 'fixed', 'pdf', 'Fixed_Consumer_Memory_for_Television.pdf', NULL, '2024-12-10 20:43:33', 0, 0);
 
 --
 -- Indexes for dumped tables
@@ -102,7 +107,7 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
