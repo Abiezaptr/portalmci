@@ -8,8 +8,12 @@ class Home extends CI_Controller
 	{
 		parent::__construct();
 		date_default_timezone_set('Asia/Jakarta');
-	}
 
+		// Cek apakah session user_id ada, jika tidak redirect ke halaman login
+		if (!$this->session->userdata('id')) {
+			redirect('login'); // Ganti 'login' sesuai dengan route halaman login Anda
+		}
+	}
 	public function index()
 	{
 		// Fetch the latest videos from the 'videos' table
