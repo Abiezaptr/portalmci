@@ -22,6 +22,7 @@ class Fixed extends CI_Controller
 		$data['reports'] = $this->db->where('category', 'fixed')
 			->where('type', 'pdf')
 			->order_by('created_at', 'DESC')
+			->limit(5)
 			->get('reports')
 			->result_array();
 
@@ -29,6 +30,7 @@ class Fixed extends CI_Controller
 		$data['articles'] = $this->db->where('category', 'fixed')
 			->where('type', 'article')
 			->order_by('created_at', 'DESC')
+			->limit(10)
 			->get('reports')
 			->result_array();
 

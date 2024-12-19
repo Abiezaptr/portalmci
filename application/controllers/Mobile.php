@@ -22,6 +22,7 @@ class Mobile extends CI_Controller
         $data['reports'] = $this->db->where('category', 'mobile')
             ->where('type', 'pdf')
             ->order_by('created_at', 'DESC') // Urutkan berdasarkan kolom created_at secara descending
+            ->limit(5) // Batasi hasil menjadi 5 data
             ->get('reports')
             ->result_array();
 
@@ -30,6 +31,7 @@ class Mobile extends CI_Controller
         $data['articles'] = $this->db->where('category', 'mobile')
             ->where('type', 'article')
             ->order_by('created_at', 'DESC')
+            ->limit(10)
             ->get('reports')
             ->result_array();
 
