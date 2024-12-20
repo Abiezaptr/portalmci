@@ -26,7 +26,12 @@
     <br>
 
     <!-- carousel report -->
-    <h5 class="mt-5">Report</h5>
+    <div class="d-flex justify-content-between align-items-center mt-5">
+        <h5>Report</h5>
+        <div>
+            <input type="text" id="searchField" class="form-control" placeholder="Search reports..." style="width: 300px;">
+        </div>
+    </div>
     <hr>
     <br>
     <div id="carouselExampleControls1" class="carousel slide" data-ride="carousel" data-interval="5000">
@@ -312,6 +317,66 @@
             if (img.complete) {
                 img.dispatchEvent(new Event("load"));
             }
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#searchField').on('input', function() {
+            var query = $(this).val();
+
+            $.ajax({
+                url: '<?= site_url('mobile/search_reports') ?>', // Adjust the controller method URL
+                type: 'POST',
+                data: {
+                    search_query: query
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status == 'success') {
+                        // Update the carousel with the new reports
+                        var carouselContent = '';
+                        var carouselIndicators = '';
+                        $.each(response.reports, function(index, chunk) {
+                            carouselContent += '<div class="carousel-item' + (index === 0 ? ' active' : '') + '">';
+                            carouselContent += '<div class="row">';
+                            $.each(chunk, function(i, report) {
+                                var title = report.title.replace(/\s+/g, '-');
+                                var url = report.type === 'article' ? 'view-article/' + encodeURIComponent(title) : 'view-report/' + encodeURIComponent(title);
+                                carouselContent += '<div class="col-md-3">';
+                                carouselContent += '<a href="<?= site_url('') ?>' + url + '">';
+                                carouselContent += '<div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">';
+                                carouselContent += '<div class="skeleton">';
+                                carouselContent += '<img src="<?= base_url('uploads/image/') ?>' + report.image + '" class="card-img-top" alt="">';
+                                carouselContent += '<div class="card-body">';
+                                carouselContent += '<p class="card-text text-dark"><small>' + (report.title.length > 50 ? report.title.substring(0, 50) + '...' : report.title) + '</small></p>';
+                                carouselContent += '</div>';
+                                carouselContent += '</div>';
+                                carouselContent += '</div>';
+                                carouselContent += '</a>';
+                                carouselContent += '</div>';
+                            });
+                            carouselContent += '</div>';
+                            carouselContent += '</div>';
+                        });
+
+                        // Update the carousel inner
+                        $('#carouselExampleControls1 .carousel-inner').html(carouselContent);
+
+                        // Update carousel indicators
+                        var indicatorHtml = '';
+                        $.each(response.reports, function(index, chunk) {
+                            indicatorHtml += '<li data-target="#carouselExampleControls1" data-slide-to="' + index + '" class="' + (index === 0 ? 'active' : '') + '"></li>';
+                        });
+                        $('#carouselExampleControls1 .carousel-indicators').html(indicatorHtml);
+                    } else {
+                        // If no reports found, display a message
+                        $('#carouselExampleControls1 .carousel-inner').html('<p>No reports found.</p>');
+                        $('#carouselExampleControls1 .carousel-indicators').html('');
+                    }
+                }
+            });
         });
     });
 </script>

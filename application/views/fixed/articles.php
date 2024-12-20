@@ -763,21 +763,12 @@
                 <div class="modal-body text-center">
                     <p>Bagikan artikel ini melalui</p>
                     <div class="d-flex justify-content-center">
-                        <a class="btn btn-outline-primary btn-circle mx-2" disabled>
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a class="btn btn-outline-dark btn-circle mx-2" disabled>
-                            <i class="fab fa-twitter"></i>
-                        </a>
                         <a class="btn btn-outline-success btn-circle mx-2" disabled>
                             <i class="fab fa-whatsapp"></i>
                         </a>
-                        <a href="mailto:?subject=<?= urlencode($page_title) ?>&body=<?= urlencode(current_url()) ?>" class="btn btn-outline-secondary btn-circle mx-2">
-                            <i class="fa-solid fa-envelope"></i>
-                        </a>
-                        <a href="#" class="btn btn-outline-secondary btn-circle mx-2" onclick="navigator.clipboard.writeText('<?= current_url() ?>'); alert('Link copied to clipboard!');">
+                        <!-- <a href="#" class="btn btn-outline-secondary btn-circle mx-2" onclick="navigator.clipboard.writeText('<?= current_url() ?>'); alert('Link copied to clipboard!');">
                             <i class="fa-solid fa-link"></i>
-                        </a>
+                        </a> -->
                     </div>
                 </div>
             </div>
