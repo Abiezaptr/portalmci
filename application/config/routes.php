@@ -106,3 +106,10 @@ $route['reset-password'] = 'login/forgot_password';
 
 // rute event user
 $route['events-calendar'] = 'events/index';
+
+// Rute untuk log tracking
+$route['log-history'] = 'login/login_history';
+
+// Rute untuk ai-assistant
+$route['assistant'] = 'chat/index';
+$route['chatbot'] = 'chat/chatbot';

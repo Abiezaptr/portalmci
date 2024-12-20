@@ -25,6 +25,7 @@ class Home extends CI_Controller
 		// Fetch the latest reports from the 'reports' table, ordered by 'created_at'
 		$this->db->order_by('created_at', 'DESC');
 		$this->db->where('type !=', 'article');
+		$this->db->limit(8);
 		$query = $this->db->get('reports');
 		$reports = $query->result_array(); // Fetch as an array
 

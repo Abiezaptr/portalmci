@@ -13,7 +13,6 @@ application/logs/*
 
 # Ignore file autoload.php, config.php, dan database.php dalam folder config
 application/config/config.php
-application/config/autoload.php
 application/config/database.php
 
 

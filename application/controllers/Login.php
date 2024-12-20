@@ -220,9 +220,9 @@ class Login extends CI_Controller
         $data['read_logs'] = $this->get_user_read_logs();
 
         // Load view dengan data yang sudah disiapkan
-        $this->load->view('template/header', $data);
+        $this->load->view('template/libraries/header', $data);
         $this->load->view('history_log/index', $data);
-        $this->load->view('template/footer');
+        $this->load->view('template/libraries/footer');
     }
 
     // Method untuk menandai notifikasi sebagai sudah dibaca
