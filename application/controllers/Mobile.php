@@ -105,12 +105,14 @@ class Mobile extends CI_Controller
     {
         $search_query = $this->input->post('search_query');
         $category = 'mobile'; // Kategori yang ingin dicari
+        $type = 'pdf'; // Tambahkan filter berdasarkan type
 
         // Jika ada pencarian, ambil semua data yang sesuai dengan kata kunci
         if (!empty($search_query)) {
-            // Pencarian berdasarkan judul dan kategori
+            // Pencarian berdasarkan judul, kategori, dan tipe
             $this->db->like('title', $search_query);
             $this->db->where('category', $category); // Filter berdasarkan kategori
+            $this->db->where('type', $type); // Filter berdasarkan type
             $query = $this->db->get('reports'); // Mengambil laporan dari database
 
             $reports = $query->result_array();
@@ -118,6 +120,7 @@ class Mobile extends CI_Controller
             // Jika tidak ada pencarian, ambil hanya 5 data pertama, urutkan dengan 'created_at' (contoh)
             $this->db->limit(5); // Batasi hanya 5 data
             $this->db->where('category', $category); // Filter berdasarkan kategori
+            $this->db->where('type', $type); // Filter berdasarkan type
             $this->db->order_by('created_at', 'DESC'); // Urutkan berdasarkan kolom 'created_at' (terbaru)
             $query = $this->db->get('reports');
 

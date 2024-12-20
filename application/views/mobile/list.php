@@ -9,6 +9,10 @@
         justify-content: center;
         text-align: center;
     }
+
+    #searchField {
+        border-radius: 10px;
+    }
 </style>
 
 <div class="page-content mb-1">
@@ -25,12 +29,16 @@
     </nav>
     <br>
 
+    <div class="row">
+        <div class="col-md-12">
+            <input type="text" id="searchField" class="form-control" placeholder="Search reports...">
+        </div>
+    </div>
+
+
     <!-- carousel report -->
     <div class="d-flex justify-content-between align-items-center mt-5">
         <h5>Report</h5>
-        <div>
-            <input type="text" id="searchField" class="form-control" placeholder="Search reports..." style="width: 300px;">
-        </div>
     </div>
     <hr>
     <br>
@@ -264,62 +272,7 @@
     </div>
 </div>
 
-<style>
-    /* Skeleton CSS */
-    .skeleton {
-        background-color: #e0e0e0;
-        border-radius: 4px;
-        width: 100%;
-        height: 200px;
-        /* Adjust this height according to your image size */
-        position: relative;
-        overflow: hidden;
-    }
 
-    .skeleton::after {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0;
-        left: -100%;
-        height: 100%;
-        width: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-        animation: loading 1.5s infinite;
-    }
-
-    @keyframes loading {
-        100% {
-            left: 100%;
-        }
-    }
-
-    /* Hide the actual image until it's fully loaded */
-    .card-img-top {
-        display: none;
-    }
-</style>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const images = document.querySelectorAll(".card-img-top");
-
-        images.forEach((img) => {
-            img.addEventListener("load", function() {
-                setTimeout(() => {
-                    const skeleton = img.closest(".skeleton");
-                    skeleton.classList.remove("skeleton");
-                    img.style.display = "block"; // Show the actual image
-                }, 3000); // Delay of 3 seconds
-            });
-
-            // If the image is already cached by the browser, trigger the load event
-            if (img.complete) {
-                img.dispatchEvent(new Event("load"));
-            }
-        });
-    });
-</script>
 
 <script>
     $(document).ready(function() {

@@ -9,6 +9,10 @@
         justify-content: center;
         text-align: center;
     }
+
+    #searchField {
+        border-radius: 10px;
+    }
 </style>
 
 <div class="page-content mb-1">
@@ -24,6 +28,12 @@
         </ol>
     </nav>
     <br>
+
+    <div class="row">
+        <div class="col-md-12">
+            <input type="text" id="searchField" class="form-control" placeholder="Search reports...">
+        </div>
+    </div>
 
     <!-- carousel report -->
     <h5 class="mt-5">Report</h5>
@@ -271,59 +281,62 @@
     </div>
 </div>
 
-<style>
-    /* Skeleton CSS */
-    .skeleton {
-        background-color: #e0e0e0;
-        border-radius: 4px;
-        width: 100%;
-        height: 200px;
-        /* Adjust this height according to your image size */
-        position: relative;
-        overflow: hidden;
-    }
-
-    .skeleton::after {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0;
-        left: -100%;
-        height: 100%;
-        width: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-        animation: loading 1.5s infinite;
-    }
-
-    @keyframes loading {
-        100% {
-            left: 100%;
-        }
-    }
-
-    /* Hide the actual image until it's fully loaded */
-    .card-img-top {
-        display: none;
-    }
-</style>
-
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const images = document.querySelectorAll(".card-img-top");
+    $(document).ready(function() {
+        $('#searchField').on('input', function() {
+            var query = $(this).val();
 
-        images.forEach((img) => {
-            img.addEventListener("load", function() {
-                setTimeout(() => {
-                    const skeleton = img.closest(".skeleton");
-                    skeleton.classList.remove("skeleton");
-                    img.style.display = "block"; // Show the actual image
-                }, 3000); // Delay of 3 seconds
+            $.ajax({
+                url: '<?= site_url('globals/search_reports') ?>', // Adjust the controller method URL
+                type: 'POST',
+                data: {
+                    search_query: query
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status == 'success') {
+                        // Update the carousel with the new reports
+                        var carouselContent = '';
+                        var carouselIndicators = '';
+                        $.each(response.reports, function(index, chunk) {
+                            carouselContent += '<div class="carousel-item' + (index === 0 ? ' active' : '') + '">';
+                            carouselContent += '<div class="row">';
+                            $.each(chunk, function(i, report) {
+                                var title = report.title.replace(/\s+/g, '-');
+                                var url = report.type === 'article' ? 'view-article/' + encodeURIComponent(title) : 'view-report/' + encodeURIComponent(title);
+                                carouselContent += '<div class="col-md-3">';
+                                carouselContent += '<a href="<?= site_url('') ?>' + url + '">';
+                                carouselContent += '<div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">';
+                                carouselContent += '<div class="skeleton">';
+                                carouselContent += '<img src="<?= base_url('uploads/image/') ?>' + report.image + '" class="card-img-top" alt="">';
+                                carouselContent += '<div class="card-body">';
+                                carouselContent += '<p class="card-text text-dark"><small>' + (report.title.length > 50 ? report.title.substring(0, 50) + '...' : report.title) + '</small></p>';
+                                carouselContent += '</div>';
+                                carouselContent += '</div>';
+                                carouselContent += '</div>';
+                                carouselContent += '</a>';
+                                carouselContent += '</div>';
+                            });
+                            carouselContent += '</div>';
+                            carouselContent += '</div>';
+                        });
+
+                        // Update the carousel inner
+                        $('#carouselExampleControls1 .carousel-inner').html(carouselContent);
+
+                        // Update carousel indicators
+                        var indicatorHtml = '';
+                        $.each(response.reports, function(index, chunk) {
+                            indicatorHtml += '<li data-target="#carouselExampleControls1" data-slide-to="' + index + '" class="' + (index === 0 ? 'active' : '') + '"></li>';
+                        });
+                        $('#carouselExampleControls1 .carousel-indicators').html(indicatorHtml);
+                    } else {
+                        // If no reports found, display a message
+                        $('#carouselExampleControls1 .carousel-inner').html('<p>No reports found.</p>');
+                        $('#carouselExampleControls1 .carousel-indicators').html('');
+                    }
+                }
             });
-
-            // If the image is already cached by the browser, trigger the load event
-            if (img.complete) {
-                img.dispatchEvent(new Event("load"));
-            }
         });
     });
 </script>
