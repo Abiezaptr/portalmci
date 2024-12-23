@@ -41,39 +41,15 @@
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold" style="color: maroon;">Upcoming Event</h6>
                     </div>
-                    <div class="card-body">
-                        <?php if (!empty($upcoming_events)): ?>
-                            <?php foreach ($upcoming_events as $event): ?>
-                                <div class="event-card mb-4 p-3" style="border-radius: 10px; background-color: #f9f9f9; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                                    <!-- Title dan Icon -->
-                                    <h6 style="font-weight: bold; color: #800000;">
-                                        <i class="fa fa-calendar-alt"></i>&nbsp; <?php echo $event->title; ?>
-                                    </h6>
-
-                                    <hr>
-
-                                    <!-- Tanggal -->
-                                    <p style="font-size: 14px; color: #777; margin-bottom: 5px;">
-                                        <i class="fa fa-calendar-day"></i>&nbsp; <?php echo date('F j, Y', strtotime($event->start_date)); ?>
-                                    </p>
-
-                                    <!-- Lokasi -->
-                                    <p style="font-size: 14px; color: #555; margin-top: -5px;">
-                                        <i class="fa fa-map-marker-alt"></i>&nbsp; <?php echo $event->location; ?>
-                                    </p>
-                                </div>
-                                <hr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <div class="text-center">
-                                <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No Comments" style="width: 100px; height: auto;">
-                            </div>
-                            <p class="text-center mt-3"><small>No upcoming events found.</small></p>
-                        <?php endif; ?>
-
+                    <div class="card-body upcoming-event-section">
+                        <div class="text-center">
+                            <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No Comments" style="width: 100px; height: auto;">
+                        </div>
+                        <p class="text-center mt-3"><small>No upcoming events found.</small></p>
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 </div>

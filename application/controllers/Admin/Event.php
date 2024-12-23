@@ -38,49 +38,25 @@ class Event extends CI_Controller
         $this->db->or_where('end_date >=', $today);
         $events = $this->db->get('events')->result();
 
+        // Log the events to check if image data is present
+        log_message('info', print_r($events, true)); // This will log the events to your log file
+
         $data = [];
         foreach ($events as $event) {
             $data[] = [
                 'title'       => $event->title,
                 'start'       => $event->start_date,
-                'end'         => $event->end_date ? date('Y-m-d', strtotime($event->end_date . ' +1 day')) : null, // Tambahkan 1 hari untuk FullCalendar
+                'end'         => $event->end_date ? date('Y-m-d', strtotime($event->end_date . ' +1 day')) : null,
                 'location'    => $event->location,
                 'description' => $event->description,
-                'color'       => $event->color
+                'color'       => $event->color,
+                'image'       => $event->image // Ensure this is being set
             ];
         }
 
         echo json_encode($data);
     }
 
-
-    // Menyimpan event baru
-    // public function insert()
-    // {
-    //     // Ambil data dari form
-    //     $data = [
-    //         'title'       => $this->input->post('title'),
-    //         'start_date'  => $this->input->post('start_date'),
-    //         'end_date'    => $this->input->post('end_date'),
-    //         'location'    => $this->input->post('location'),
-    //         'description' => $this->input->post('description'),
-    //         'color'       => $this->input->post('color')
-    //     ];
-
-    //     // Validasi tanggal (start_date harus lebih awal dari end_date)
-    //     if (strtotime($data['start_date']) > strtotime($data['end_date'])) {
-    //         $this->session->set_flashdata('error', 'Start date cannot be later than end date.');
-    //         redirect('event');
-    //         return;
-    //     }
-
-    //     // Masukkan data ke database
-    //     $this->db->insert('events', $data);
-
-    //     // Berikan notifikasi sukses
-    //     $this->session->set_flashdata('success', 'Event inserted successfully.');
-    //     redirect('event');
-    // }
 
     public function insert()
     {

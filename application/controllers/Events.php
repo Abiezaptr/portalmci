@@ -41,15 +41,19 @@ class Events extends CI_Controller
         $this->db->or_where('end_date >=', $today);
         $events = $this->db->get('events')->result();
 
+        // Log the events to check if image data is present
+        log_message('info', print_r($events, true)); // This will log the events to your log file
+
         $data = [];
         foreach ($events as $event) {
             $data[] = [
                 'title'       => $event->title,
                 'start'       => $event->start_date,
-                'end'         => $event->end_date ? date('Y-m-d', strtotime($event->end_date . ' +1 day')) : null, // Tambahkan 1 hari untuk FullCalendar
+                'end'         => $event->end_date ? date('Y-m-d', strtotime($event->end_date . ' +1 day')) : null,
                 'location'    => $event->location,
                 'description' => $event->description,
-                'color'       => $event->color
+                'color'       => $event->color,
+                'image'       => $event->image // Ensure this is being set
             ];
         }
 
