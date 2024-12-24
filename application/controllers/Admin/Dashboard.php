@@ -93,7 +93,7 @@ class Dashboard extends CI_Controller
         foreach ($upload_logs as $log) {
             $notifications[] = [
                 'type' => 'upload_log',
-                'message' => $log->username . ' telah mengunggah dokumen ' . $log->document_name . '.',
+                'message' => $log->username . ' ' . $log->message . '.',
                 'timestamp' => $log->upload_time
             ];
         }

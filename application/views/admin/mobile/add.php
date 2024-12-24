@@ -38,7 +38,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="category" style="font-size: 13px; font-weight: 600;">Category</label>
+                            <label for="category" style="font-size: 13px; font-weight: 600;">Group</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-list"></i></span>

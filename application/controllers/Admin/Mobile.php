@@ -9,6 +9,8 @@ class Mobile extends CI_Controller
         $this->load->database(); // Load the database
         $this->load->library('upload'); // Load the upload library
 
+        date_default_timezone_set('Asia/Jakarta');
+
         // Cek apakah session user_id ada, jika tidak redirect ke halaman login
         if (!$this->session->userdata('id')) {
             redirect('login'); // Ganti 'login' sesuai dengan route halaman login Anda
@@ -29,6 +31,7 @@ class Mobile extends CI_Controller
         $user_logs = $this->user_log();
         $upload_logs = $this->get_upload_logs();
         $user_read_logs = $this->get_user_read_logs();
+        $invitation_thread_logs = $this->get_invitation_thread_logs();
 
         // Menggabungkan semua log ke dalam satu array
         $notifications = [];
@@ -36,7 +39,7 @@ class Mobile extends CI_Controller
         foreach ($user_logs as $log) {
             $notifications[] = [
                 'type' => 'user_log',
-                'message' => $log->username . ' telah berhasil mendaftarkan akun.',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
                 'timestamp' => $log->created_at
             ];
         }
@@ -44,7 +47,7 @@ class Mobile extends CI_Controller
         foreach ($upload_logs as $log) {
             $notifications[] = [
                 'type' => 'upload_log',
-                'message' => 'User ' . $log->username . ' telah mengunggah dokumen ' . $log->document_name . '.',
+                'message' => $log->username . ' ' . $log->message . '.',
                 'timestamp' => $log->upload_time
             ];
         }
@@ -63,6 +66,24 @@ class Mobile extends CI_Controller
                     'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
                     'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
                 ];
+            }
+        }
+
+        foreach ($invitation_thread_logs as $log) {
+            $user_ids = explode(',', $log->user_id);
+            foreach ($user_ids as $user_id) {
+                $this->db->select('username');
+                $this->db->from('users');
+                $this->db->where('id', $user_id);
+                $user = $this->db->get()->row();
+
+                if ($user) {
+                    $notifications[] = [
+                        'type' => 'invitation_thread_log',
+                        'message' => $user->username . ' ' . $log->message,
+                        'timestamp' => $log->invitation_time
+                    ];
+                }
             }
         }
 
@@ -118,6 +139,17 @@ class Mobile extends CI_Controller
         return array_column($query->result_array(), 'log_id');
     }
 
+    public function get_invitation_thread_logs()
+    {
+        $this->db->select('invitation_thread_log.*, invited_by_users.username as invited_by_username');
+        $this->db->from('invitation_thread_log');
+        $this->db->join('users as invited_by_users', 'invitation_thread_log.invited_by = invited_by_users.id');
+        $this->db->order_by('invitation_thread_log.invitation_time', 'DESC');
+        $this->db->limit(5);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function add()
     {
         $data['title'] = 'New Report | Mobile Content';
@@ -126,6 +158,7 @@ class Mobile extends CI_Controller
         $user_logs = $this->user_log();
         $upload_logs = $this->get_upload_logs();
         $user_read_logs = $this->get_user_read_logs();
+        $invitation_thread_logs = $this->get_invitation_thread_logs();
 
         // Menggabungkan semua log ke dalam satu array
         $notifications = [];
@@ -133,7 +166,7 @@ class Mobile extends CI_Controller
         foreach ($user_logs as $log) {
             $notifications[] = [
                 'type' => 'user_log',
-                'message' => $log->username . ' telah berhasil mendaftarkan akun.',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
                 'timestamp' => $log->created_at
             ];
         }
@@ -141,7 +174,7 @@ class Mobile extends CI_Controller
         foreach ($upload_logs as $log) {
             $notifications[] = [
                 'type' => 'upload_log',
-                'message' => 'User ' . $log->username . ' telah mengunggah dokumen ' . $log->document_name . '.',
+                'message' => $log->username . ' ' . $log->message . '.',
                 'timestamp' => $log->upload_time
             ];
         }
@@ -160,6 +193,24 @@ class Mobile extends CI_Controller
                     'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
                     'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
                 ];
+            }
+        }
+
+        foreach ($invitation_thread_logs as $log) {
+            $user_ids = explode(',', $log->user_id);
+            foreach ($user_ids as $user_id) {
+                $this->db->select('username');
+                $this->db->from('users');
+                $this->db->where('id', $user_id);
+                $user = $this->db->get()->row();
+
+                if ($user) {
+                    $notifications[] = [
+                        'type' => 'invitation_thread_log',
+                        'message' => $user->username . ' ' . $log->message,
+                        'timestamp' => $log->invitation_time
+                    ];
+                }
             }
         }
 
@@ -231,7 +282,7 @@ class Mobile extends CI_Controller
             }
         }
 
-        // Prepare data for insertion
+        // Prepare data for insertion into reports table
         $data = array(
             'title' => $title,
             'category' => $category,
@@ -241,14 +292,32 @@ class Mobile extends CI_Controller
             'created_at' => date('Y-m-d H:i:s'), // Optional: add created timestamp
         );
 
-        // Insert into the database
+        // Insert into the reports table
         $this->db->insert('reports', $data);
 
-        $this->session->set_flashdata('success', 'Report insert successfully.');
+        // Get the last inserted report ID
+        $report_id = $this->db->insert_id();
+
+        // Prepare data for insertion into report_log table
+        // Prepare data for insertion into report_log table
+        $log_data = array(
+            'user_id' => $this->session->userdata('id'), // Get user_id from session
+            'report_id' => $report_id,
+            'upload_time' => date('Y-m-d H:i:s'), // Current timestamp
+            'message' => 'telah menambahkan report ' . $title . ' pada Group ' . $category, // Custom message with title and category
+            'is_read' => 0 // Default value for is_read
+        );
+
+
+        // Insert into the report_log table
+        $this->db->insert('report_log', $log_data);
+
+        $this->session->set_flashdata('success', 'Report inserted successfully.');
 
         // Redirect or load a view with a success message
         redirect('admin/mobile'); // Redirect to the mobile page or another page
     }
+
 
     public function edit($id)
     {
@@ -267,6 +336,7 @@ class Mobile extends CI_Controller
         $user_logs = $this->user_log();
         $upload_logs = $this->get_upload_logs();
         $user_read_logs = $this->get_user_read_logs();
+        $invitation_thread_logs = $this->get_invitation_thread_logs();
 
         // Menggabungkan semua log ke dalam satu array
         $notifications = [];
@@ -274,7 +344,7 @@ class Mobile extends CI_Controller
         foreach ($user_logs as $log) {
             $notifications[] = [
                 'type' => 'user_log',
-                'message' => $log->username . ' telah berhasil mendaftarkan akun.',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
                 'timestamp' => $log->created_at
             ];
         }
@@ -282,7 +352,7 @@ class Mobile extends CI_Controller
         foreach ($upload_logs as $log) {
             $notifications[] = [
                 'type' => 'upload_log',
-                'message' => 'User ' . $log->username . ' telah mengunggah dokumen ' . $log->document_name . '.',
+                'message' => $log->username . ' ' . $log->message . '.',
                 'timestamp' => $log->upload_time
             ];
         }
@@ -301,6 +371,24 @@ class Mobile extends CI_Controller
                     'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
                     'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
                 ];
+            }
+        }
+
+        foreach ($invitation_thread_logs as $log) {
+            $user_ids = explode(',', $log->user_id);
+            foreach ($user_ids as $user_id) {
+                $this->db->select('username');
+                $this->db->from('users');
+                $this->db->where('id', $user_id);
+                $user = $this->db->get()->row();
+
+                if ($user) {
+                    $notifications[] = [
+                        'type' => 'invitation_thread_log',
+                        'message' => $user->username . ' ' . $log->message,
+                        'timestamp' => $log->invitation_time
+                    ];
+                }
             }
         }
 
@@ -443,6 +531,7 @@ class Mobile extends CI_Controller
         $user_logs = $this->user_log();
         $upload_logs = $this->get_upload_logs();
         $user_read_logs = $this->get_user_read_logs();
+        $invitation_thread_logs = $this->get_invitation_thread_logs();
 
         // Menggabungkan semua log ke dalam satu array
         $notifications = [];
@@ -450,7 +539,7 @@ class Mobile extends CI_Controller
         foreach ($user_logs as $log) {
             $notifications[] = [
                 'type' => 'user_log',
-                'message' => $log->username . ' telah berhasil mendaftarkan akun.',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
                 'timestamp' => $log->created_at
             ];
         }
@@ -458,7 +547,7 @@ class Mobile extends CI_Controller
         foreach ($upload_logs as $log) {
             $notifications[] = [
                 'type' => 'upload_log',
-                'message' => 'User ' . $log->username . ' telah mengunggah dokumen ' . $log->document_name . '.',
+                'message' => $log->username . ' ' . $log->message . '.',
                 'timestamp' => $log->upload_time
             ];
         }
@@ -477,6 +566,24 @@ class Mobile extends CI_Controller
                     'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
                     'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
                 ];
+            }
+        }
+
+        foreach ($invitation_thread_logs as $log) {
+            $user_ids = explode(',', $log->user_id);
+            foreach ($user_ids as $user_id) {
+                $this->db->select('username');
+                $this->db->from('users');
+                $this->db->where('id', $user_id);
+                $user = $this->db->get()->row();
+
+                if ($user) {
+                    $notifications[] = [
+                        'type' => 'invitation_thread_log',
+                        'message' => $user->username . ' ' . $log->message,
+                        'timestamp' => $log->invitation_time
+                    ];
+                }
             }
         }
 
@@ -686,6 +793,7 @@ class Mobile extends CI_Controller
         $user_logs = $this->user_log();
         $upload_logs = $this->get_upload_logs();
         $user_read_logs = $this->get_user_read_logs();
+        $invitation_thread_logs = $this->get_invitation_thread_logs();
 
         // Menggabungkan semua log ke dalam satu array
         $notifications = [];
@@ -693,7 +801,7 @@ class Mobile extends CI_Controller
         foreach ($user_logs as $log) {
             $notifications[] = [
                 'type' => 'user_log',
-                'message' => $log->username . ' telah berhasil mendaftarkan akun.',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
                 'timestamp' => $log->created_at
             ];
         }
@@ -701,7 +809,7 @@ class Mobile extends CI_Controller
         foreach ($upload_logs as $log) {
             $notifications[] = [
                 'type' => 'upload_log',
-                'message' => 'User ' . $log->username . ' telah mengunggah dokumen ' . $log->document_name . '.',
+                'message' => $log->username . ' ' . $log->message . '.',
                 'timestamp' => $log->upload_time
             ];
         }
@@ -720,6 +828,24 @@ class Mobile extends CI_Controller
                     'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
                     'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
                 ];
+            }
+        }
+
+        foreach ($invitation_thread_logs as $log) {
+            $user_ids = explode(',', $log->user_id);
+            foreach ($user_ids as $user_id) {
+                $this->db->select('username');
+                $this->db->from('users');
+                $this->db->where('id', $user_id);
+                $user = $this->db->get()->row();
+
+                if ($user) {
+                    $notifications[] = [
+                        'type' => 'invitation_thread_log',
+                        'message' => $user->username . ' ' . $log->message,
+                        'timestamp' => $log->invitation_time
+                    ];
+                }
             }
         }
 
