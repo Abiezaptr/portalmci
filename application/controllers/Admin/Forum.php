@@ -9,11 +9,15 @@ class Forum extends CI_Controller
         $this->load->database(); // Load the database
         $this->load->library('upload'); // Load the upload library
 
+        // Set timezone to Asia/Jakarta
+        date_default_timezone_set('Asia/Jakarta');
+
         // Cek apakah session user_id ada, jika tidak redirect ke halaman login
         if (!$this->session->userdata('id')) {
             redirect('login'); // Ganti 'login' sesuai dengan route halaman login Anda
         }
     }
+
 
     public function index()
     {
@@ -75,6 +79,7 @@ class Forum extends CI_Controller
         $user_ids = $this->input->post('user_id');
 
         // Handle image upload
+        $image = null;
         if ($_FILES['image']['name']) {
             // Configure upload for the image
             $config['upload_path'] = './uploads/forum_threads/';
@@ -88,11 +93,8 @@ class Forum extends CI_Controller
                 redirect('admin/forum/edit'); // Redirect back to edit page on error
             } else {
                 // Update the image data
-                $data['image'] = $this->upload->data('file_name');
+                $image = $this->upload->data('file_name');
             }
-        } else {
-            // If no new image is uploaded, keep the old image
-            $data['image'] = $thread['image'];
         }
 
         // Prepare data for the forum_threads table
@@ -101,7 +103,7 @@ class Forum extends CI_Controller
             'content' => $content, // Contains both text and image URLs
             'category_id' => $category_id,
             'posted_by' => $posted_by,
-            'image' => $data['image'],
+            'image' => $image,
             'replies_count' => 0,
             'views_count' => 0,
             'created_at' => date('Y-m-d H:i:s'),
@@ -117,10 +119,25 @@ class Forum extends CI_Controller
             $this->db->update('forum_threads', ['user_id' => $user_ids_string], ['id' => $forum_id]);
         }
 
+        // Log invitations to invitation_thread_log
+        if ($user_ids) {
+            foreach ($user_ids as $user_id) {
+                $invitation_data = [
+                    'user_id' => $user_id,
+                    'thread_id' => $forum_id,
+                    'invited_by' => $posted_by,
+                    'message' => 'Diundang ke thread "' . $title . '".',
+                    'invitation_time' => date('Y-m-d H:i:s'),
+                ];
+                $this->db->insert('invitation_thread_log', $invitation_data);
+            }
+        }
+
         // Redirect with success message
         $this->session->set_flashdata('success', 'Thread created successfully.');
         redirect('admin/forum');
     }
+
 
     public function edit($id)
     {
@@ -216,6 +233,57 @@ class Forum extends CI_Controller
         if ($updated) {
             // If the update is successful
             $this->session->set_flashdata('success', 'Thread updated successfully.');
+
+            // Log invitations
+            $forum_id = $id;
+            $message = 'Diundang ke thread "' . $title . '"';
+            $posted_by = $thread['posted_by']; // Get invited_by from the thread's posted_by
+
+            // Get all existing log entries for this thread
+            $existing_logs = $this->db->get_where('invitation_thread_log', ['thread_id' => $forum_id])->result_array();
+
+            // Create an array of user IDs from the existing logs
+            $existing_user_ids = array_column($existing_logs, 'user_id');
+
+            // Update or insert logs for new or existing user IDs
+            foreach ($user_ids as $user_id) {
+                // Check if the log entry already exists for this user and thread
+                $log_entry = $this->db->get_where('invitation_thread_log', ['user_id' => $user_id, 'thread_id' => $forum_id])->row_array();
+
+                if ($log_entry) {
+                    // Update the existing log entry
+                    $log_data = [
+                        'message' => $message,
+                        'invitation_time' => date('Y-m-d H:i:s')
+                    ];
+
+                    $this->db->where(['user_id' => $user_id, 'thread_id' => $forum_id]);
+                    $this->db->update('invitation_thread_log', $log_data);
+                } else {
+                    // Insert a new log entry if it doesn't exist
+                    $log_data = [
+                        'user_id' => $user_id,
+                        'thread_id' => $forum_id,
+                        'invited_by' => $posted_by,
+                        'message' => $message,
+                        'invitation_time' => date('Y-m-d H:i:s')
+                    ];
+
+                    $this->db->insert('invitation_thread_log', $log_data);
+                }
+
+                // Remove the user_id from the existing_user_ids array if it exists
+                if (($key = array_search($user_id, $existing_user_ids)) !== false) {
+                    unset($existing_user_ids[$key]);
+                }
+            }
+
+            // Delete logs for user IDs that are no longer in the user_ids array
+            if (!empty($existing_user_ids)) {
+                $this->db->where('thread_id', $forum_id);
+                $this->db->where_in('user_id', $existing_user_ids);
+                $this->db->delete('invitation_thread_log');
+            }
         } else {
             // If the update fails
             $this->session->set_flashdata('error', 'Failed to update thread.');
@@ -224,7 +292,6 @@ class Forum extends CI_Controller
         // Redirect back to the forum page
         redirect('admin/forum');
     }
-
 
 
 

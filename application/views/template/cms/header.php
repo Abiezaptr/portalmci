@@ -369,40 +369,37 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-bell fa-fw"></i>
-
-                                    <!-- Display badge if there are "NONAKTIF" users -->
-                                    <?php if ($nonaktif_count > 0): ?>
-                                        <span class="badge badge-danger badge-counter"><?= $nonaktif_count ?></span>
-                                    <?php endif; ?>
+                                    <span class="badge badge-danger badge-counter"><?php echo $total_notifications; ?></span>
                                 </a>
 
                                 <!-- Dropdown - Alerts -->
                                 <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                     aria-labelledby="alertsDropdown">
                                     <h6 class="dropdown-header" style="background-color: maroon;">
-                                        Notification
+                                        Notifikasi Terbaru
                                     </h6>
 
                                     <!-- Display each "NONAKTIF" user with a new account request message -->
-                                    <?php if ($nonaktif_count > 0): ?>
-                                        <?php foreach ($nonaktif_users as $user): ?>
+                                    <?php if ($notifications > 0): ?>
+                                        <?php
+                                        date_default_timezone_set('Asia/Jakarta'); // Set the timezone to Asia/Jakarta
+                                        foreach ($notifications as $notification): ?>
                                             <a class="dropdown-item d-flex align-items-center" href="#">
-                                                <div class="mr-3">
-                                                    <div class="icon-circle bg-warning">
-                                                        <i class="fas fa-exclamation-triangle text-white"></i>
-                                                    </div>
-                                                </div>
+
                                                 <div>
-                                                    <div class="small text-gray-500"><?= date('F j, Y') ?></div>
-                                                    <span class="font-weight-bold"><?= $user['username'] ?> has successfully registered a new account.</span>
+                                                    <div class="small text-gray-500" data-timestamp="<?php echo strtotime($notification['timestamp']) * 1000; ?>">
+                                                        <!-- Initial display will be handled by JavaScript -->
+                                                    </div>
+                                                    <span class="font-weight-bold"><?php echo $notification['message']; ?></span>
                                                 </div>
                                             </a>
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <a class="dropdown-item text-center small text-gray-500" href="#">No new alerts</a>
+                                        <a class="dropdown-item text-center small text-gray-500" href="#">Read All</a>
                                     <?php endif; ?>
 
-                                    <a class="dropdown-item text-center small text-gray-500" href="#">Read All</a>
+
                                 </div>
                             </li>
                         <?php endif; ?>
@@ -450,3 +447,35 @@
 
                 </nav>
                 <!-- End of Topbar -->
+
+                <script>
+                    function timeAgo(timestamp) {
+                        const now = new Date();
+                        const seconds = Math.floor((now - timestamp) / 1000);
+                        let interval = Math.floor(seconds / 31536000);
+
+                        if (interval > 1) return interval + " years ago";
+                        interval = Math.floor(seconds / 2592000);
+                        if (interval > 1) return interval + " months ago";
+                        interval = Math.floor(seconds / 86400);
+                        if (interval > 1) return interval + " days ago";
+                        interval = Math.floor(seconds / 3600);
+                        if (interval > 1) return interval + " hours ago";
+                        interval = Math.floor(seconds / 60);
+                        if (interval > 1) return interval + " minutes ago";
+                        return seconds + " seconds ago";
+                    }
+
+                    function updateTimestamps() {
+                        const elements = document.querySelectorAll('.small.text-gray-500[data-timestamp]');
+                        elements.forEach(element => {
+                            const timestamp = new Date(parseInt(element.getAttribute('data-timestamp')));
+                            element.textContent = timeAgo(timestamp);
+                        });
+                    }
+
+                    // Initial update
+                    updateTimestamps();
+                    // Update every minute
+                    setInterval(updateTimestamps, 60000);
+                </script>

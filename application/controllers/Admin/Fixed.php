@@ -25,6 +25,58 @@ class Fixed extends CI_Controller
         $this->db->order_by('created_at', 'DESC');
         $data['reports'] = $this->db->get('reports')->result_array(); // Fetch results as an array
 
+        // Memanggil fungsi-fungsi yang ditambahkan
+        $user_logs = $this->user_log();
+        $upload_logs = $this->get_upload_logs();
+        $user_read_logs = $this->get_user_read_logs();
+
+        // Menggabungkan semua log ke dalam satu array
+        $notifications = [];
+
+        foreach ($user_logs as $log) {
+            $notifications[] = [
+                'type' => 'user_log',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun.',
+                'timestamp' => $log->created_at
+            ];
+        }
+
+        foreach ($upload_logs as $log) {
+            $notifications[] = [
+                'type' => 'upload_log',
+                'message' => 'User ' . $log->username . ' telah mengunggah dokumen ' . $log->document_name . '.',
+                'timestamp' => $log->upload_time
+            ];
+        }
+
+        foreach ($user_read_logs as $log_id) {
+            // Anda perlu mengambil detail log berdasarkan log_id jika diperlukan
+            // Misalnya, ambil detail dari tabel user_read_logs
+            $this->db->select('*');
+            $this->db->from('user_read_logs');
+            $this->db->where('log_id', $log_id);
+            $log_detail = $this->db->get()->row();
+
+            if ($log_detail) {
+                $notifications[] = [
+                    'type' => 'user_read_log',
+                    'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
+                    'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
+                ];
+            }
+        }
+
+        // Mengurutkan notifikasi berdasarkan timestamp
+        usort($notifications, function ($a, $b) {
+            return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+        });
+
+        // Batasi jumlah notifikasi yang ditampilkan (misalnya 5)
+        $data['notifications'] = array_slice($notifications, 0, 5);
+
+        // Menghitung total notifikasi
+        $data['total_notifications'] = count($notifications);
+
         // Load the views
         $this->load->view('template/cms/header', $data);
         $this->load->view('admin/fixed/view', $data); // Pass data to the view
@@ -34,6 +86,58 @@ class Fixed extends CI_Controller
     public function add()
     {
         $data['title'] = 'New Report';
+
+        // Memanggil fungsi-fungsi yang ditambahkan
+        $user_logs = $this->user_log();
+        $upload_logs = $this->get_upload_logs();
+        $user_read_logs = $this->get_user_read_logs();
+
+        // Menggabungkan semua log ke dalam satu array
+        $notifications = [];
+
+        foreach ($user_logs as $log) {
+            $notifications[] = [
+                'type' => 'user_log',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun.',
+                'timestamp' => $log->created_at
+            ];
+        }
+
+        foreach ($upload_logs as $log) {
+            $notifications[] = [
+                'type' => 'upload_log',
+                'message' => 'User ' . $log->username . ' telah mengunggah dokumen ' . $log->document_name . '.',
+                'timestamp' => $log->upload_time
+            ];
+        }
+
+        foreach ($user_read_logs as $log_id) {
+            // Anda perlu mengambil detail log berdasarkan log_id jika diperlukan
+            // Misalnya, ambil detail dari tabel user_read_logs
+            $this->db->select('*');
+            $this->db->from('user_read_logs');
+            $this->db->where('log_id', $log_id);
+            $log_detail = $this->db->get()->row();
+
+            if ($log_detail) {
+                $notifications[] = [
+                    'type' => 'user_read_log',
+                    'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
+                    'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
+                ];
+            }
+        }
+
+        // Mengurutkan notifikasi berdasarkan timestamp
+        usort($notifications, function ($a, $b) {
+            return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+        });
+
+        // Batasi jumlah notifikasi yang ditampilkan (misalnya 5)
+        $data['notifications'] = array_slice($notifications, 0, 5);
+
+        // Menghitung total notifikasi
+        $data['total_notifications'] = count($notifications);
 
         // Load the views
         $this->load->view('template/cms/header', $data);
@@ -121,6 +225,58 @@ class Fixed extends CI_Controller
             $this->session->set_flashdata('error', 'Report not found.');
             redirect('admin/mobile');
         }
+
+        // Memanggil fungsi-fungsi yang ditambahkan
+        $user_logs = $this->user_log();
+        $upload_logs = $this->get_upload_logs();
+        $user_read_logs = $this->get_user_read_logs();
+
+        // Menggabungkan semua log ke dalam satu array
+        $notifications = [];
+
+        foreach ($user_logs as $log) {
+            $notifications[] = [
+                'type' => 'user_log',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun.',
+                'timestamp' => $log->created_at
+            ];
+        }
+
+        foreach ($upload_logs as $log) {
+            $notifications[] = [
+                'type' => 'upload_log',
+                'message' => 'User ' . $log->username . ' telah mengunggah dokumen ' . $log->document_name . '.',
+                'timestamp' => $log->upload_time
+            ];
+        }
+
+        foreach ($user_read_logs as $log_id) {
+            // Anda perlu mengambil detail log berdasarkan log_id jika diperlukan
+            // Misalnya, ambil detail dari tabel user_read_logs
+            $this->db->select('*');
+            $this->db->from('user_read_logs');
+            $this->db->where('log_id', $log_id);
+            $log_detail = $this->db->get()->row();
+
+            if ($log_detail) {
+                $notifications[] = [
+                    'type' => 'user_read_log',
+                    'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
+                    'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
+                ];
+            }
+        }
+
+        // Mengurutkan notifikasi berdasarkan timestamp
+        usort($notifications, function ($a, $b) {
+            return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+        });
+
+        // Batasi jumlah notifikasi yang ditampilkan (misalnya 5)
+        $data['notifications'] = array_slice($notifications, 0, 5);
+
+        // Menghitung total notifikasi
+        $data['total_notifications'] = count($notifications);
 
         // Load the views
         $this->load->view('template/cms/header', $data);
@@ -243,6 +399,58 @@ class Fixed extends CI_Controller
         $this->db->where('type', 'article'); // Specify the type condition
         $this->db->order_by('created_at', 'DESC');
         $data['reports'] = $this->db->get('reports')->result_array(); // Fetch results as an array
+
+        // Memanggil fungsi-fungsi yang ditambahkan
+        $user_logs = $this->user_log();
+        $upload_logs = $this->get_upload_logs();
+        $user_read_logs = $this->get_user_read_logs();
+
+        // Menggabungkan semua log ke dalam satu array
+        $notifications = [];
+
+        foreach ($user_logs as $log) {
+            $notifications[] = [
+                'type' => 'user_log',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun.',
+                'timestamp' => $log->created_at
+            ];
+        }
+
+        foreach ($upload_logs as $log) {
+            $notifications[] = [
+                'type' => 'upload_log',
+                'message' => 'User ' . $log->username . ' telah mengunggah dokumen ' . $log->document_name . '.',
+                'timestamp' => $log->upload_time
+            ];
+        }
+
+        foreach ($user_read_logs as $log_id) {
+            // Anda perlu mengambil detail log berdasarkan log_id jika diperlukan
+            // Misalnya, ambil detail dari tabel user_read_logs
+            $this->db->select('*');
+            $this->db->from('user_read_logs');
+            $this->db->where('log_id', $log_id);
+            $log_detail = $this->db->get()->row();
+
+            if ($log_detail) {
+                $notifications[] = [
+                    'type' => 'user_read_log',
+                    'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
+                    'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
+                ];
+            }
+        }
+
+        // Mengurutkan notifikasi berdasarkan timestamp
+        usort($notifications, function ($a, $b) {
+            return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+        });
+
+        // Batasi jumlah notifikasi yang ditampilkan (misalnya 5)
+        $data['notifications'] = array_slice($notifications, 0, 5);
+
+        // Menghitung total notifikasi
+        $data['total_notifications'] = count($notifications);
 
         // Load the views
         $this->load->view('template/cms/header', $data);
@@ -435,6 +643,58 @@ class Fixed extends CI_Controller
         $this->db->where('category', 'fixed'); // Specify the category condition
         $data['videos'] = $this->db->get('videos')->result_array(); // Fetch results as an array
 
+        // Memanggil fungsi-fungsi yang ditambahkan
+        $user_logs = $this->user_log();
+        $upload_logs = $this->get_upload_logs();
+        $user_read_logs = $this->get_user_read_logs();
+
+        // Menggabungkan semua log ke dalam satu array
+        $notifications = [];
+
+        foreach ($user_logs as $log) {
+            $notifications[] = [
+                'type' => 'user_log',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun.',
+                'timestamp' => $log->created_at
+            ];
+        }
+
+        foreach ($upload_logs as $log) {
+            $notifications[] = [
+                'type' => 'upload_log',
+                'message' => 'User ' . $log->username . ' telah mengunggah dokumen ' . $log->document_name . '.',
+                'timestamp' => $log->upload_time
+            ];
+        }
+
+        foreach ($user_read_logs as $log_id) {
+            // Anda perlu mengambil detail log berdasarkan log_id jika diperlukan
+            // Misalnya, ambil detail dari tabel user_read_logs
+            $this->db->select('*');
+            $this->db->from('user_read_logs');
+            $this->db->where('log_id', $log_id);
+            $log_detail = $this->db->get()->row();
+
+            if ($log_detail) {
+                $notifications[] = [
+                    'type' => 'user_read_log',
+                    'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
+                    'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
+                ];
+            }
+        }
+
+        // Mengurutkan notifikasi berdasarkan timestamp
+        usort($notifications, function ($a, $b) {
+            return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+        });
+
+        // Batasi jumlah notifikasi yang ditampilkan (misalnya 5)
+        $data['notifications'] = array_slice($notifications, 0, 5);
+
+        // Menghitung total notifikasi
+        $data['total_notifications'] = count($notifications);
+
         // Load the views
         $this->load->view('template/cms/header', $data);
         $this->load->view('admin/fixed/view_videos', $data); // Pass data to the view
@@ -506,5 +766,40 @@ class Fixed extends CI_Controller
         }
 
         redirect('fixed-videos');
+    }
+
+    // Fungsi-fungsi yang ditambahkan
+    public function user_log()
+    {
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('users.status', 'NONAKTIF'); // Menambahkan kondisi untuk status non-aktif
+        $this->db->order_by('users.created_at', 'DESC'); // Mengurutkan berdasarkan waktu pembuatan pengguna
+        $this->db->limit(5); // Mengambil maksimal 5 entri
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    // Method untuk mengambil semua log
+    public function get_upload_logs()
+    {
+        $this->db->select('report_log.*, users.username, reports.title as document_name');
+        $this->db->from('report_log');
+        $this->db->join('users', 'report_log.user_id = users.id');
+        $this->db->join('reports', 'report_log.report_id = reports.id');
+        $this->db->order_by('upload_time', 'DESC');
+        $this->db->limit(5);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_user_read_logs()
+    {
+        $user_id = $this->session->userdata('id');
+        $this->db->select('log_id');
+        $this->db->from('user_read_logs');
+        $this->db->where('user_id', $user_id);
+        $query = $this->db->get();
+        return array_column($query->result_array(), 'log_id');
     }
 }
