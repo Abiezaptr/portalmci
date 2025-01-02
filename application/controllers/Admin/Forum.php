@@ -326,7 +326,6 @@ class Forum extends CI_Controller
         redirect('admin/forum');
     }
 
-
     public function edit($id)
     {
         $data['title'] = 'Edit Threads';
@@ -432,125 +431,6 @@ class Forum extends CI_Controller
         $this->load->view('admin/forum/edit', $data);
         $this->load->view('template/cms/footer');
     }
-
-    // public function update($id)
-    // {
-    //     // Check if the thread with the given ID exists
-    //     $thread = $this->db->get_where('forum_threads', ['id' => $id])->row_array();
-
-    //     if (empty($thread)) {
-    //         // If the thread is not found, display an error message
-    //         $this->session->set_flashdata('error', 'Thread not found.');
-    //         redirect('admin/forum');
-    //     }
-
-    //     // Get data from the form
-    //     $title = $this->input->post('title');
-    //     $content = $this->input->post('content');
-    //     $category_id = $this->input->post('category_id');
-    //     $user_ids = $this->input->post('user_id'); // Get user_id array
-
-    //     // Handle image upload
-    //     if ($_FILES['image']['name']) {
-    //         // Configure upload for the image
-    //         $config['upload_path'] = './uploads/forum_threads/';
-    //         $config['allowed_types'] = 'jpg|jpeg|png';
-    //         $this->upload->initialize($config);
-
-    //         // Attempt to upload the new image
-    //         if (!$this->upload->do_upload('image')) {
-    //             $error = $this->upload->display_errors();
-    //             $this->session->set_flashdata('error', 'Image upload error: ' . $error);
-    //             redirect('admin/forum/edit/' . $id); // Redirect back to edit page on error
-    //         } else {
-    //             // Delete the old image if it exists
-    //             $old_image_path = './uploads/forum_threads/' . $thread['image'];
-    //             if (file_exists($old_image_path)) {
-    //                 unlink($old_image_path); // Delete old image
-    //             }
-    //             // Update the image data
-    //             $data['image'] = $this->upload->data('file_name');
-    //         }
-    //     } else {
-    //         // If no new image is uploaded, keep the old image
-    //         $data['image'] = $thread['image'];
-    //     }
-
-    //     // Prepare the data for the update
-    //     $data = [
-    //         'title' => $title,
-    //         'content' => $content,
-    //         'image' => $data['image'], // Set the image here
-    //         'category_id' => $category_id,
-    //         'user_id' => implode(',', $user_ids) // Combine user_id into a string
-    //     ];
-
-    //     // Perform the update in the database
-    //     $this->db->where('id', $id);
-    //     $updated = $this->db->update('forum_threads', $data);
-
-    //     if ($updated) {
-    //         // If the update is successful
-    //         $this->session->set_flashdata('success', 'Thread updated successfully.');
-
-    //         // Log invitations
-    //         $forum_id = $id;
-    //         $message = 'Diundang ke thread "' . $title . '"';
-    //         $posted_by = $thread['posted_by']; // Get invited_by from the thread's posted_by
-
-    //         // Get all existing log entries for this thread
-    //         $existing_logs = $this->db->get_where('invitation_thread_log', ['thread_id' => $forum_id])->result_array();
-
-    //         // Create an array of user IDs from the existing logs
-    //         $existing_user_ids = array_column($existing_logs, 'user_id');
-
-    //         // Update or insert logs for new or existing user IDs
-    //         foreach ($user_ids as $user_id) {
-    //             // Check if the log entry already exists for this user and thread
-    //             $log_entry = $this->db->get_where('invitation_thread_log', ['user_id' => $user_id, 'thread_id' => $forum_id])->row_array();
-
-    //             if ($log_entry) {
-    //                 // Update the existing log entry
-    //                 $log_data = [
-    //                     'message' => $message,
-    //                     'invitation_time' => date('Y-m-d H:i:s')
-    //                 ];
-
-    //                 $this->db->where(['user_id' => $user_id, 'thread_id' => $forum_id]);
-    //                 $this->db->update('invitation_thread_log', $log_data);
-    //             } else {
-    //                 // Insert a new log entry if it doesn't exist
-    //                 $log_data = [
-    //                     'user_id' => $user_id,
-    //                     'thread_id' => $forum_id,
-    //                     'invited_by' => $posted_by,
-    //                     'message' => $message,
-    //                     'invitation_time' => date('Y-m-d H:i:s')
-    //                 ];
-
-    //                 $this->db->insert('invitation_thread_log', $log_data);
-    //             }
-
-    //             // Remove the user_id from the existing_user_ids array if it exists
-    //             if (($key = array_search($user_id, $existing_user_ids)) !== false) {
-    //                 unset($existing_user_ids[$key]);
-    //             }
-    //         }
-
-    //         // Delete logs for user IDs that are no longer in the user_ids array
-    //         if (!empty($existing_user_ids)) {
-    //             $this->db->where('thread_id', $forum_id);
-    //             $this->db->where_in('user_id', $existing_user_ids);
-    //             $this->db->delete('invitation_thread_log');
-    //         }
-    //     } else {
-    //         // If the update fails
-    //         $this->session->set_flashdata('error', 'Failed to update thread.');
-    //     }
-
-    //     // Redirect back to the forum page
-    //     redirect('admin/forum');
-    // }
 
     public function update($id)
     {

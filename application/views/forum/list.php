@@ -18,20 +18,24 @@
                 <?php foreach ($threads as $thread): ?>
                     <div class="card thread-card" style="margin-bottom: 20px; padding: 20px; position: relative; border-radius: 0;">
                         <div class="border-gradient" style="
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        bottom: 0;
-                        width: 8px;
-                        background: linear-gradient(180deg, #ff6a00, #ee0979, #fc6767, #ec008c); /* Gradasi warna */
-                        border-radius: 0;
-                    "></div>
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    width: 8px;
+                    background: linear-gradient(180deg, #ff6a00, #ee0979, #fc6767, #ec008c); /* Gradasi warna */
+                    border-radius: 0;
+                "></div>
 
                         <div class="thread-info" style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <a href="<?php echo base_url('form-discussion/' . $thread['id']); ?>" class="thread-title" style="font-weight: bold; color: #800000;"><?php echo $thread['title']; ?></a>
                             </div>
                         </div>
+
+                        <!-- Menambahkan gambar di sini -->
+                        <img src="<?php echo base_url('uploads/forum_threads/' . $thread['image']); ?>" alt="Deskripsi Gambar" style="width: 100%; max-height: 220px; height: auto; margin-top: 5px; margin-bottom: 5px;">
+
 
                         <div class="thread-meta" style="display: flex; align-items: center; margin-top: 2px;">
                             <div class="user-avatars">
@@ -54,7 +58,6 @@
                                 <?php endif; ?>
                             </div>
 
-
                             <span class="posted-time small text-muted" style="margin-left: 10px;" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
                                 <?= htmlspecialchars($thread['contribution_count']); ?> kontribusi&nbsp; ·&nbsp;
                                 <span style="font-size: 12px;" class="posted-time" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
@@ -62,7 +65,6 @@
                                 </span>
                             </span>
                         </div>
-
 
                         <p class="thread-description" style="font-size: 14px; color: black; margin-left: 2px; margin-top: 12px;">
                             <?= htmlspecialchars($thread['content']); ?>
@@ -76,6 +78,7 @@
                 <?php endforeach; ?>
             </div>
         </div>
+
 
         <div class="col-md-3">
             <!-- Modern journey section with a bold title -->
