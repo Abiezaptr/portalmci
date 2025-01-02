@@ -284,7 +284,7 @@ class Fixed extends CI_Controller
         // Prepare data for insertion into reports table
         $data = array(
             'title' => $title,
-            'category' => $category,
+            'category' => 'fixed',
             'type' => 'pdf',
             'image' => $image,
             'file' => $file,
@@ -297,12 +297,11 @@ class Fixed extends CI_Controller
         // Get the last inserted report ID
         $report_id = $this->db->insert_id();
 
-        // Prepare data for insertion into report_log table
         $log_data = array(
-            'user_id' => $this->session->userdata('user_id'), // Get user_id from session
+            'user_id' => $this->session->userdata('id'), // Get user_id from session
             'report_id' => $report_id,
             'upload_time' => date('Y-m-d H:i:s'), // Current timestamp
-            'message' => 'Report submitted successfully', // Custom message
+            'message' => 'telah menambahkan report ' . $title . ' pada Group Fixed', // Custom message with title and category
             'is_read' => 0 // Default value for is_read
         );
 

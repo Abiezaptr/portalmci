@@ -396,9 +396,9 @@
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <a class="dropdown-item text-center small text-gray-500" href="#">No new alerts</a>
-                                        <a class="dropdown-item text-center small text-gray-500" href="#">Read All</a>
                                     <?php endif; ?>
 
+                                    <a class="dropdown-item text-center small text-gray-500" href="#">Read All</a>
 
                                 </div>
                             </li>

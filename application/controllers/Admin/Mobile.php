@@ -285,8 +285,8 @@ class Mobile extends CI_Controller
         // Prepare data for insertion into reports table
         $data = array(
             'title' => $title,
-            'category' => $category,
-            'type' => $type,
+            'category' => 'mobile',
+            'type' => 'pdf',
             'image' => $image,
             'file' => $file,
             'created_at' => date('Y-m-d H:i:s'), // Optional: add created timestamp
@@ -299,12 +299,11 @@ class Mobile extends CI_Controller
         $report_id = $this->db->insert_id();
 
         // Prepare data for insertion into report_log table
-        // Prepare data for insertion into report_log table
         $log_data = array(
             'user_id' => $this->session->userdata('id'), // Get user_id from session
             'report_id' => $report_id,
             'upload_time' => date('Y-m-d H:i:s'), // Current timestamp
-            'message' => 'telah menambahkan report ' . $title . ' pada Group ' . $category, // Custom message with title and category
+            'message' => 'telah menambahkan report ' . $title . ' pada Group Mobile', // Custom message with title and category
             'is_read' => 0 // Default value for is_read
         );
 
