@@ -541,9 +541,10 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="<?= site_url('notification') ?>">
-                        <?php if ($notifications > 0): ?>
+                        <?php if ($total_relevant_notifications > 0): ?>
                             <i class="fas fa-circle notification-icon"></i> <!-- Circular icon -->
                         <?php endif; ?>
+
                         <i class="fas fa-bell"></i>
                     </a>
                 </li>

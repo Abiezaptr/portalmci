@@ -32,6 +32,7 @@ class Home extends CI_Controller
 		// Pass reports to the view
 		$data['reports'] = $reports;
 
+		// Fetch article report
 		$data['articleReport'] = $this->db->select('*')
 			->from('reports')
 			->where('title', 'Factors influencing the effects of the Starlink Satellite Project on the internet service provider market in Thailand')
@@ -42,6 +43,7 @@ class Home extends CI_Controller
 		// Pass the image URL to the view for dynamic background
 		$data['background_image'] = base_url('uploads/images/' . $data['articleReport']['image']);
 
+		// Fetch specific report
 		$data['specificReport'] = $this->db->select('*')
 			->from('reports')
 			->like('title', 'Are mobile and fixed broadband')
@@ -49,82 +51,80 @@ class Home extends CI_Controller
 			->get()
 			->row_array(); // Fetch one row as an array
 
-		// Ambil acara yang akan datang
-		$this->db->where('start_date >=', date('Y-m-d'));  // Pastikan start_date lebih besar atau sama dengan hari ini
-		$this->db->or_where('end_date >=', date('Y-m-d'));  // Atau end_date lebih besar atau sama dengan hari ini
-		$this->db->order_by('start_date', 'ASC');  // Urutkan berdasarkan start_date secara ascending
+		// Fetch upcoming events
+		$this->db->where('start_date >=', date('Y-m-d'));  // Ensure start_date is today or later
+		$this->db->or_where('end_date >=', date('Y-m-d'));  // Or end_date is today or later
+		$this->db->order_by('start_date', 'ASC');  // Sort by start_date ascending
 		$data['upcoming_events'] = $this->db->get('events')->result();
 
-		// Memanggil fungsi-fungsi yang ditambahkan
+		// Initialize a variable to track relevant notifications
+		$relevant_notifications = [];
+
+		// Fetch user logs (only for the current user)
 		$user_logs = $this->user_log();
-		$upload_logs = $this->get_upload_logs();
-		$user_read_logs = $this->get_user_read_logs();
-		$invitation_thread_logs = $this->get_invitation_thread_logs();
-
-		// Menggabungkan semua log ke dalam satu array
-		$notifications = [];
-
 		foreach ($user_logs as $log) {
-			$notifications[] = [
+			$relevant_notifications[] = [
 				'type' => 'user_log',
 				'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
 				'timestamp' => $log->created_at
 			];
 		}
 
+		// Fetch upload logs
+		$upload_logs = $this->get_upload_logs();
 		foreach ($upload_logs as $log) {
-			$notifications[] = [
-				'type' => 'upload_log',
-				'message' => $log->username . ' ' . $log->message . '.',
-				'timestamp' => $log->upload_time
-			];
+			// Check if the report is related to the current user
+			if ($log->user_id == $this->session->userdata('id')) {
+				$relevant_notifications[] = [
+					'type' => 'upload_log',
+					'message' => $log->username . ' ' . $log->message . '.',
+					'timestamp' => $log->upload_time
+				];
+			}
 		}
 
+		// Fetch user read logs
+		$user_read_logs = $this->get_user_read_logs();
 		foreach ($user_read_logs as $log_id) {
-			// Anda perlu mengambil detail log berdasarkan log_id jika diperlukan
-			// Misalnya, ambil detail dari tabel user_read_logs
 			$this->db->select('*');
 			$this->db->from('user_read_logs');
 			$this->db->where('log_id', $log_id);
 			$log_detail = $this->db->get()->row();
 
 			if ($log_detail) {
-				$notifications[] = [
+				$relevant_notifications[] = [
 					'type' => 'user_read_log',
 					'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
-					'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
+					'timestamp' => $log_detail->read_time
 				];
 			}
 		}
 
+		// Fetch invitation thread logs
+		$invitation_thread_logs = $this->get_invitation_thread_logs();
 		foreach ($invitation_thread_logs as $log) {
 			$user_ids = explode(',', $log->user_id);
 			foreach ($user_ids as $user_id) {
-				$this->db->select('username');
-				$this->db->from('users');
-				$this->db->where('id', $user_id);
-				$user = $this->db->get()->row();
-
-				if ($user) {
-					$notifications[] = [
+				if ($user_id == $this->session->userdata('id')) { // Check if the user is the current user
+					$relevant_notifications[] = [
 						'type' => 'invitation_thread_log',
-						'message' => $user->username . ' ' . $log->message,
+						'message' => $log->message,
 						'timestamp' => $log->invitation_time
 					];
 				}
 			}
 		}
 
-		// Mengurutkan notifikasi berdasarkan timestamp
-		usort($notifications, function ($a, $b) {
+		// Sort notifications by timestamp
+		usort($relevant_notifications, function ($a, $b) {
 			return strtotime($b['timestamp']) - strtotime($a['timestamp']);
 		});
 
-		// Batasi jumlah notifikasi yang ditampilkan (misalnya 5)
-		$data['notifications'] = array_slice($notifications, 0, 5);
+		// Limit the number of notifications displayed
+		$data['notifications'] = array_slice($relevant_notifications, 0, 5);
 
-		// Menghitung total notifikasi
-		$data['total_notifications'] = count($notifications);
+		// Count only relevant notifications
+		$data['total_relevant_notifications'] = count($relevant_notifications);
 
 		// Load the view with the video data
 		$this->load->view('template/landing/header', $data);
@@ -132,17 +132,20 @@ class Home extends CI_Controller
 		$this->load->view('template/landing/footer');
 	}
 
-	// Fungsi-fungsi yang ditambahkan
+	// Update the user_log function to filter by the current user
 	public function user_log()
 	{
+		$user_id = $this->session->userdata('id'); // Get the current user's ID
 		$this->db->select('*');
 		$this->db->from('users');
-		$this->db->where('users.status', 'NONAKTIF'); // Menambahkan kondisi untuk status non-aktif
-		$this->db->order_by('users.created_at', 'DESC'); // Mengurutkan berdasarkan waktu pembuatan pengguna
-		$this->db->limit(5); // Mengambil maksimal 5 entri
+		$this->db->where('users.id', $user_id); // Filter by the current user's ID
+		$this->db->where('users.status', 'NONAKTIF'); // Adding condition for inactive status
+		$this->db->order_by('users.created_at', 'DESC'); // Sort by user creation time
+		$this->db->limit(5); // Get a maximum of 5 entries
 		$query = $this->db->get();
 		return $query->result();
 	}
+
 
 	// Method untuk mengambil semua log
 	public function get_upload_logs()
