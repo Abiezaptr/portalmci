@@ -177,7 +177,7 @@ class Event extends CI_Controller
 
     public function insert()
     {
-        // Get form data
+        // Ambil data dari form
         $event_name = $this->input->post('event_name');
         $title = $this->input->post('title');
         $start_date = $this->input->post('start_date');
@@ -186,31 +186,30 @@ class Event extends CI_Controller
         $description = $this->input->post('description');
         $color = $this->input->post('color');
 
-        // Handle file uploads
+        // Tangani upload gambar
         $image = $_FILES['image']['name'];
-        $file = $_FILES['file']['name'];
 
-        // Upload image
+        // Upload gambar
         if ($image) {
-            // Configure upload for image
-            $config['upload_path'] = './uploads/event/'; // Path for images
-            $config['allowed_types'] = 'jpg|jpeg|png'; // Allowed image types
+            // Konfigurasi upload untuk gambar
+            $config['upload_path'] = './uploads/event/'; // Path untuk gambar
+            $config['allowed_types'] = 'jpg|jpeg|png'; // Tipe gambar yang diizinkan
 
-            // Initialize the upload library with the config
+            // Inisialisasi library upload dengan konfigurasi
             $this->upload->initialize($config);
 
-            // Perform the upload
+            // Lakukan upload
             if (!$this->upload->do_upload('image')) {
-                // Handle image upload error
+                // Tangani error upload gambar
                 $error = $this->upload->display_errors();
-                echo "Image upload error: " . $error;
+                echo "Error upload gambar: " . $error; // Pesan error dalam bahasa Indonesia
                 return;
             } else {
-                $image = $this->upload->data('file_name'); // Get the uploaded file name
+                $image = $this->upload->data('file_name'); // Dapatkan nama file yang diupload
             }
         }
 
-        // Prepare data for insertion
+        // Siapkan data untuk dimasukkan
         $data = array(
             'event_name' => $event_name,
             'title' => $title,
@@ -222,13 +221,14 @@ class Event extends CI_Controller
             'image' => $image,
         );
 
-        // Insert into the database
+        // Masukkan ke database
         $this->db->insert('events', $data);
 
-        $this->session->set_flashdata('success', 'Events insert successfully.');
-        // Redirect or load a view with a success message
-        redirect('event'); // Redirect to the mobile page or another page
+        $this->session->set_flashdata('success', 'Event berhasil ditambahkan.');
+        // Redirect atau muat tampilan dengan pesan sukses
+        redirect('event'); // Redirect ke halaman yang diinginkan
     }
+
 
 
 

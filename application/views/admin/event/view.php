@@ -48,15 +48,22 @@
                          </div>
                          <div class="form-group">
                              <label for="title">Event Image <small class="text-danger">*opional</small></label>
-                             <input type="file" name="image" id="title" class="form-control">
+                             <input type="file" name="image" class="form-control">
                          </div>
-                         <div class="form-group">
-                             <label for="start_date">Start Date</label>
-                             <input type="datetime-local" name="start_date" id="start_date" class="form-control" required>
-                         </div>
-                         <div class="form-group">
-                             <label for="end_date">End Date</label>
-                             <input type="datetime-local" name="end_date" id="end_date" class="form-control" required>
+                         <div class="row">
+                             <div class="col-md-6">
+                                 <div class="form-group">
+                                     <label for="start_date">Start Date</label>
+                                     <input type="datetime-local" name="start_date" id="start_date" class="form-control" required>
+                                 </div>
+                             </div>
+
+                             <div class="col-md-6">
+                                 <div class="form-group">
+                                     <label for="end_date">End Date</label>
+                                     <input type="datetime-local" name="end_date" id="end_date" class="form-control" required>
+                                 </div>
+                             </div>
                          </div>
                          <div class="form-group">
                              <label for="color">Event Color</label>
