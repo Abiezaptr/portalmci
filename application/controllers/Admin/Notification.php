@@ -23,61 +23,7 @@ class Notification extends CI_Controller
 
     public function index()
     {
-        $data['title'] = 'Dashboard';
-
-        // Total Count
-        $data['total_users'] = $this->db->where_in('role', [1, 3, 4, 5, 6])->count_all_results('users');
-        $data['report'] = $this->db->where('type', 'pdf')->count_all_results('reports');
-        $data['article'] = $this->db->where('type', 'article')->count_all_results('reports');
-        $data['videos'] = $this->db->count_all('videos');
-        // Query to get count of users with status "NONAKTIF"
-        $data['nonaktif_count'] = $this->db->where('status', 'NONAKTIF')->count_all_results('users');
-
-        // Count reports and videos by category
-        $categories = ['Mobile', 'Fixed', 'Digital Insight', 'Global'];
-        $data['report_counts'] = ['pdf' => [], 'article' => [], 'videos' => []];
-
-        foreach ($categories as $category) {
-            // Count PDF reports by category
-            $data['report_counts']['pdf'][$category] = $this->db->where('type', 'pdf')
-                ->where('category', $category)
-                ->count_all_results('reports');
-
-            // Count Article reports by category
-            $data['report_counts']['article'][$category] = $this->db->where('type', 'article')
-                ->where('category', $category)
-                ->count_all_results('reports');
-
-            // Count Videos by category
-            $data['report_counts']['videos'][$category] = $this->db->where('category', $category)
-                ->count_all_results('videos');
-        }
-
-        // Fetch thread count by month
-        $threads_by_month = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $threads_by_month[] = $this->db->where('MONTH(created_at)', $i)
-                ->count_all_results('forum_threads');
-        }
-        $data['threads_by_month'] = $threads_by_month;
-
-        // Fetch last activity counts by month
-        $data['activity_by_month'] = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $data['activity_by_month'][$i] = $this->db->where('MONTH(login_time)', $i)
-                ->count_all_results('login_logs'); // Replace 'activity_date' with your actual timestamp column
-        }
-
-        // Ambil acara yang akan datang
-        $this->db->where('start_date >=', date('Y-m-d'));  // Pastikan start_date lebih besar atau sama dengan hari ini
-        $this->db->or_where('end_date >=', date('Y-m-d'));  // Atau end_date lebih besar atau sama dengan hari ini
-        $this->db->order_by('start_date', 'ASC');  // Urutkan berdasarkan start_date secara ascending
-        $data['upcoming_events'] = $this->db->get('events')->result();
-
-        $data['nonaktif_users'] = $this->db->where('status', 'NONAKTIF')
-            ->order_by('created_at', 'DESC') // Replace 'id' with the column you want to order by
-            ->get('users')
-            ->result();
+        $data['title'] = 'Notification List';
 
         // Memanggil fungsi-fungsi yang ditambahkan
         $user_logs = $this->user_log();
@@ -91,7 +37,8 @@ class Notification extends CI_Controller
         foreach ($user_logs as $log) {
             $notifications[] = [
                 'type' => 'user_log',
-                'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
+                'title' => 'Pendaftaran Akun Baru',
+                'message' => $log->username . ', telah berhasil mendaftarkan akun baru.',
                 'timestamp' => $log->created_at
             ];
         }
@@ -99,6 +46,7 @@ class Notification extends CI_Controller
         foreach ($upload_logs as $log) {
             $notifications[] = [
                 'type' => 'upload_log',
+                'title' => 'Upload Dokumen Baru',
                 'message' => $log->username . ' ' . $log->message . '.',
                 'timestamp' => $log->upload_time
             ];
@@ -115,6 +63,7 @@ class Notification extends CI_Controller
             if ($log_detail) {
                 $notifications[] = [
                     'type' => 'user_read_log',
+                    'title' => 'Notifikasi Telah Dibaca',
                     'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
                     'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
                 ];
@@ -132,6 +81,7 @@ class Notification extends CI_Controller
                 if ($user) {
                     $notifications[] = [
                         'type' => 'invitation_thread_log',
+                        'title' => 'Undangan Thread Baru',
                         'message' => $user->username . ' ' . $log->message,
                         'timestamp' => $log->invitation_time
                     ];
@@ -150,9 +100,66 @@ class Notification extends CI_Controller
         // Menghitung total notifikasi
         $data['total_notifications'] = count($notifications);
 
+        // Initialize a variable to track relevant notifications
+        $relevant_notifications = [];
+
+        // Fetch user logs (only for the current user)
+        foreach ($user_logs as $log) {
+            $relevant_notifications[] = [
+                'type' => 'user_log',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
+                'timestamp' => $log->created_at
+            ];
+        }
+
+        // Fetch upload logs
+        foreach ($upload_logs as $log) {
+            // Check if the report is related to the current user
+            if ($log->user_id == $this->session->userdata('id')) {
+                $relevant_notifications[] = [
+                    'type' => 'upload_log',
+                    'message' => $log->username . ' ' . $log->message . '.',
+                    'timestamp' => $log->upload_time
+                ];
+            }
+        }
+
+        // Fetch user read logs
+        foreach ($user_read_logs as $log_id) {
+            $this->db->select('*');
+            $this->db->from('user_read_logs');
+            $this->db->where('log_id', $log_id);
+            $log_detail = $this->db->get()->row();
+
+            if ($log_detail) {
+                $relevant_notifications[] = [
+                    'type' => 'user_read_log',
+                    'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
+                    'timestamp' => $log_detail->read_time
+                ];
+            }
+        }
+
+        // Fetch invitation thread logs
+        foreach ($invitation_thread_logs as $log) {
+            $user_ids = explode(',', $log->user_id);
+            foreach ($user_ids as $user_id) {
+                if ($user_id == $this->session->userdata('id')) { // Check if the user is the current user
+                    $relevant_notifications[] = [
+                        'type' => 'invitation_thread_log',
+                        'message' => $log->message,
+                        'timestamp' => $log->invitation_time
+                    ];
+                }
+            }
+        }
+
+        // Count only relevant notifications
+        $data['total_relevant_notifications'] = count($relevant_notifications);
+
         // Load the view
         $this->load->view('template/cms/header', $data);
-        $this->load->view('admin/dashboard', $data);
+        $this->load->view('admin/notification', $data);
         $this->load->view('template/cms/footer');
     }
 
@@ -200,14 +207,5 @@ class Notification extends CI_Controller
         $this->db->limit(5);
         $query = $this->db->get();
         return $query->result();
-    }
-
-
-    // Controller
-    public function activate_user($user_id)
-    {
-        // Update the status to AKTIF
-        $this->db->where('id', $user_id)->update('users', ['status' => 'AKTIF']);
-        echo json_encode(['status' => 'success']);
     }
 }

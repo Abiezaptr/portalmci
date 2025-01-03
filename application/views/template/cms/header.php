@@ -376,7 +376,7 @@
                                 <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                     aria-labelledby="alertsDropdown">
                                     <h6 class="dropdown-header" style="background-color: maroon;">
-                                        Notifikasi Terbaru
+                                        Recent Notification
                                     </h6>
 
                                     <!-- Display each "NONAKTIF" user with a new account request message -->
@@ -398,7 +398,7 @@
                                         <a class="dropdown-item text-center small text-gray-500" href="#">No new alerts</a>
                                     <?php endif; ?>
 
-                                    <a class="dropdown-item text-center small text-gray-500" href="#">Read All</a>
+                                    <a class="dropdown-item text-center small text-gray-500" href="<?= site_url('admin/notification') ?>">Read All</a>
 
                                 </div>
                             </li>
