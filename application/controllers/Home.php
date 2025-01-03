@@ -146,7 +146,6 @@ class Home extends CI_Controller
 		return $query->result();
 	}
 
-
 	// Method untuk mengambil semua log
 	public function get_upload_logs()
 	{

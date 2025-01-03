@@ -418,6 +418,38 @@
             justify-content: space-between;
             align-items: center;
         }
+
+        @keyframes pulse {
+            0% {
+                transform: translateY(-50%) scale(1);
+            }
+
+            50% {
+                transform: translateY(-50%) scale(1.2);
+                /* Scale up */
+            }
+
+            100% {
+                transform: translateY(-50%) scale(1);
+                /* Scale back to original */
+            }
+        }
+
+        .notification-icon {
+            position: absolute;
+            top: 26%;
+            /* Center vertically */
+            left: 17px;
+            /* Adjust this value to position it horizontally to the left of the bell */
+            transform: translateY(-50%);
+            /* Center the icon vertically */
+            font-size: 0.6rem;
+            /* Adjust size as needed */
+            color: white;
+            /* Change color if needed */
+            animation: pulse 1s infinite;
+            /* Apply the pulse animation */
+        }
     </style>
 </head>
 
@@ -429,24 +461,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link" href="#" id="mobileMenu" role="button" aria-haspopup="true" aria-expanded="false">Mobile</a>
-                    <div class="dropdown-menu" aria-labelledby="mobileMenu">
-                        <span class="ml-3 mb-4"><b>Mobile</b> &nbsp; - &nbsp; <span style="font-weight: 100;">Quickly find what you need from our curated library of resources.</span></span>
-                        <div class="submenu mt-4">
-                            <div>
-                                <h5><a href="#" class="text-white"><small>5G-Advanced</small></a></h5>
-                            </div>
-                            <div>
-                                <h5><a href="" class="text-white"><small>Breaking Barriers</small></a></h5>
-                            </div>
-                            <div>
-                                <h5><a href="" class="text-white"><small>Gender Equality</small></a></h5>
-                            </div>
-                        </div>
-                    </div>
-                </li> -->
-
                 <li class="nav-item">
                     <a class="nav-link" href="<?= site_url('mobile') ?>" style="font-size: 14px;">Mobile</a>
                 </li>
@@ -462,12 +476,23 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?= site_url('contact-us') ?>" style="font-size: 14px;">Contact Us</a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="<?= site_url('notification') ?>">
+                        <?php if ($total_relevant_notifications > 0): ?>
+                            <i class="fas fa-circle notification-icon"></i> <!-- Circular icon -->
+                        <?php endif; ?>
+                        <i class="fas fa-bell"></i>
+                    </a>
+                </li>
                 <?php if ($this->session->userdata('id')): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="<?= base_url('assets/images/user.png') ?>" alt="User Image" class="user-image" style="width: 30px; height: 30px; border-radius: 50%;">
+                            <img src="<?= base_url('assets/images/user.png') ?>" alt="User Image" class="user-image" style="width: 25px; height: 25px; border-radius: 40%;">
                         </a>
                         <div class="dropdown-menu" aria-labelledby="userDropdown">
+                            <?php if (in_array($this->session->userdata('role'), [1, 3, 4, 5, 6])): ?>
+                                <a class="dropdown-item" href="<?= site_url('dashboard') ?>">Dashboard</a>
+                            <?php endif; ?>
                             <a class="dropdown-item" href="<?= site_url('login/logout') ?>">Logout</a>
                         </div>
                     </li>

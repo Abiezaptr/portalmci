@@ -540,10 +540,18 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="<?= site_url('contact') ?>" style="font-size: 14px;">Contact</a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="<?= site_url('notification') ?>">
+                        <?php if ($total_relevant_notifications > 0): ?>
+                            <i class="fas fa-circle notification-icon"></i> <!-- Circular icon -->
+                        <?php endif; ?>
+                        <i class="fas fa-bell"></i>
+                    </a>
+                </li>
                 <?php if ($this->session->userdata('id')): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="<?= base_url('assets/images/user.png') ?>" alt="User Image" class="user-image" style="width: 30px; height: 30px; border-radius: 50%;">
+                            <img src="<?= base_url('assets/images/user.png') ?>" alt="User Image" class="user-image" style="width: 25px; height: 25px; border-radius: 40%;">
                         </a>
                         <div class="dropdown-menu" aria-labelledby="userDropdown">
                             <?php if (in_array($this->session->userdata('role'), [1, 3, 4, 5, 6])): ?>

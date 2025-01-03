@@ -24,7 +24,7 @@
                 $formatted_date = date('d F Y, H:i', strtotime($notification['timestamp'])) . ' WIB';
             ?>
                 <div class="card" style="border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 15px; padding: 15px; background-color: #ffffff; box-shadow: none; position: relative;">
-                    <i class="fas fa-circle notification-icon" style="position: absolute; top: 10px; right: 10px; color:#e7edf0;"></i>
+                    <i class="fas fa-circle notification-icons" style="position: absolute; top: 10px; right: 10px; color:#e7edf0;"></i>
                     <div class="card-title" style="font-weight: bold; color: #333;"><?php echo $notification['title']; ?></div>
                     <div class="card-text" style="color: #666;"><?php echo $notification['message']; ?></div>
                     <div class="card-date" style="font-size: 0.9em; color: #999;"><?php echo $formatted_date; ?></div>
@@ -46,7 +46,7 @@
         /* Light gray background for the entire page */
     }
 
-    .notification-icon {
+    .notification-icons {
         font-size: 1.0em;
         /* Adjust icon size as needed */
     }

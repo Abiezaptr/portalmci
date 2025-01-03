@@ -15,6 +15,91 @@ class Notification extends CI_Controller
         }
     }
 
+    // public function index()
+    // {
+    //     $data['title'] = 'Notification List';
+
+    //     // Memanggil fungsi-fungsi yang ditambahkan
+    //     $user_logs = $this->user_log();
+    //     $upload_logs = $this->get_upload_logs();
+    //     $user_read_logs = $this->get_user_read_logs();
+    //     $invitation_thread_logs = $this->get_invitation_thread_logs();
+
+    //     // Menggabungkan semua log ke dalam satu array
+    //     $notifications = [];
+
+    //     foreach ($user_logs as $log) {
+    //         $notifications[] = [
+    //             'type' => 'user_log',
+    //             'title' => 'Pendaftaran Akun Baru',
+    //             'message' => ' Terima kasih, registrasi Akun Anda berhasil.',
+    //             'timestamp' => $log->created_at
+    //         ];
+    //     }
+
+    //     foreach ($upload_logs as $log) {
+    //         $notifications[] = [
+    //             'type' => 'upload_log',
+    //             'title' => 'Upload Dokumen Baru',
+    //             'message' => $log->username . ' ' . $log->message . '.',
+    //             'timestamp' => $log->upload_time
+    //         ];
+    //     }
+
+    //     foreach ($user_read_logs as $log_id) {
+    //         // Anda perlu mengambil detail log berdasarkan log_id jika diperlukan
+    //         // Misalnya, ambil detail dari tabel user_read_logs
+    //         $this->db->select('*');
+    //         $this->db->from('user_read_logs');
+    //         $this->db->where('log_id', $log_id);
+    //         $log_detail = $this->db->get()->row();
+
+    //         if ($log_detail) {
+    //             $notifications[] = [
+    //                 'type' => 'user_read_log',
+    //                 'title' => 'Notifikasi Telah Dibaca',
+    //                 'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
+    //                 'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
+    //             ];
+    //         }
+    //     }
+
+    //     foreach ($invitation_thread_logs as $log) {
+    //         $user_ids = explode(',', $log->user_id);
+    //         foreach ($user_ids as $user_id) {
+    //             $this->db->select('username');
+    //             $this->db->from('users');
+    //             $this->db->where('id', $user_id);
+    //             $user = $this->db->get()->row();
+
+    //             if ($user) {
+    //                 $notifications[] = [
+    //                     'type' => 'invitation_thread_log',
+    //                     'title' => 'Undangan Thread Baru',
+    //                     'message' => 'Anda telah' . ' ' . $log->message,
+    //                     'timestamp' => $log->invitation_time
+    //                 ];
+    //             }
+    //         }
+    //     }
+
+    //     // Mengurutkan notifikasi berdasarkan timestamp
+    //     usort($notifications, function ($a, $b) {
+    //         return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+    //     });
+
+    //     // Batasi jumlah notifikasi yang ditampilkan (misalnya 5)
+    //     $data['notifications'] = array_slice($notifications, 0, 5);
+
+    //     // Menghitung total notifikasi
+    //     $data['total_notifications'] = count($notifications);
+
+    //     // Load the views with the data
+    //     $this->load->view('template/content/header', $data);
+    //     $this->load->view('notification', $data);
+    //     $this->load->view('template/content/footer');
+    // }
+
     public function index()
     {
         $data['title'] = 'Notification List';
@@ -94,11 +179,69 @@ class Notification extends CI_Controller
         // Menghitung total notifikasi
         $data['total_notifications'] = count($notifications);
 
+        // Initialize a variable to track relevant notifications
+        $relevant_notifications = [];
+
+        // Fetch user logs (only for the current user)
+        foreach ($user_logs as $log) {
+            $relevant_notifications[] = [
+                'type' => 'user_log',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
+                'timestamp' => $log->created_at
+            ];
+        }
+
+        // Fetch upload logs
+        foreach ($upload_logs as $log) {
+            // Check if the report is related to the current user
+            if ($log->user_id == $this->session->userdata('id')) {
+                $relevant_notifications[] = [
+                    'type' => 'upload_log',
+                    'message' => $log->username . ' ' . $log->message . '.',
+                    'timestamp' => $log->upload_time
+                ];
+            }
+        }
+
+        // Fetch user read logs
+        foreach ($user_read_logs as $log_id) {
+            $this->db->select('*');
+            $this->db->from('user_read_logs');
+            $this->db->where('log_id', $log_id);
+            $log_detail = $this->db->get()->row();
+
+            if ($log_detail) {
+                $relevant_notifications[] = [
+                    'type' => 'user_read_log',
+                    'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
+                    'timestamp' => $log_detail->read_time
+                ];
+            }
+        }
+
+        // Fetch invitation thread logs
+        foreach ($invitation_thread_logs as $log) {
+            $user_ids = explode(',', $log->user_id);
+            foreach ($user_ids as $user_id) {
+                if ($user_id == $this->session->userdata('id')) { // Check if the user is the current user
+                    $relevant_notifications[] = [
+                        'type' => 'invitation_thread_log',
+                        'message' => $log->message,
+                        'timestamp' => $log->invitation_time
+                    ];
+                }
+            }
+        }
+
+        // Count only relevant notifications
+        $data['total_relevant_notifications'] = count($relevant_notifications);
+
         // Load the views with the data
         $this->load->view('template/content/header', $data);
         $this->load->view('notification', $data);
         $this->load->view('template/content/footer');
     }
+
 
     // Fungsi-fungsi yang ditambahkan
     public function user_log()

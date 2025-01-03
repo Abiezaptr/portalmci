@@ -544,13 +544,9 @@
                         <?php if ($total_relevant_notifications > 0): ?>
                             <i class="fas fa-circle notification-icon"></i> <!-- Circular icon -->
                         <?php endif; ?>
-
                         <i class="fas fa-bell"></i>
                     </a>
                 </li>
-
-
-
                 <?php if ($this->session->userdata('id')): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
