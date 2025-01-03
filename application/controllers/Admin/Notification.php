@@ -1,13 +1,12 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Role extends CI_Controller
+class Notification extends CI_Controller
 {
 
     public function __construct()
     {
         parent::__construct();
-
         date_default_timezone_set('Asia/Jakarta');
 
         // Cek apakah session user_id ada, jika tidak redirect ke halaman login
@@ -24,17 +23,61 @@ class Role extends CI_Controller
 
     public function index()
     {
-        $data['title'] = 'Role Administration';
+        $data['title'] = 'Dashboard';
 
-        // Fetch users with role_id 3, 4, or 5
-        $this->db->where_in('role', [3, 4, 5, 6]);
-        $data['users'] = $this->db->get('users')->result_array();
+        // Total Count
+        $data['total_users'] = $this->db->where_in('role', [1, 3, 4, 5, 6])->count_all_results('users');
+        $data['report'] = $this->db->where('type', 'pdf')->count_all_results('reports');
+        $data['article'] = $this->db->where('type', 'article')->count_all_results('reports');
+        $data['videos'] = $this->db->count_all('videos');
+        // Query to get count of users with status "NONAKTIF"
+        $data['nonaktif_count'] = $this->db->where('status', 'NONAKTIF')->count_all_results('users');
 
-        // Fetch permissions for each user
-        foreach ($data['users'] as &$user) {
-            $permissions = $this->db->get_where('permissions', ['user_id' => $user['id']])->row_array();
-            $user['permissions'] = $permissions;
+        // Count reports and videos by category
+        $categories = ['Mobile', 'Fixed', 'Digital Insight', 'Global'];
+        $data['report_counts'] = ['pdf' => [], 'article' => [], 'videos' => []];
+
+        foreach ($categories as $category) {
+            // Count PDF reports by category
+            $data['report_counts']['pdf'][$category] = $this->db->where('type', 'pdf')
+                ->where('category', $category)
+                ->count_all_results('reports');
+
+            // Count Article reports by category
+            $data['report_counts']['article'][$category] = $this->db->where('type', 'article')
+                ->where('category', $category)
+                ->count_all_results('reports');
+
+            // Count Videos by category
+            $data['report_counts']['videos'][$category] = $this->db->where('category', $category)
+                ->count_all_results('videos');
         }
+
+        // Fetch thread count by month
+        $threads_by_month = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $threads_by_month[] = $this->db->where('MONTH(created_at)', $i)
+                ->count_all_results('forum_threads');
+        }
+        $data['threads_by_month'] = $threads_by_month;
+
+        // Fetch last activity counts by month
+        $data['activity_by_month'] = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $data['activity_by_month'][$i] = $this->db->where('MONTH(login_time)', $i)
+                ->count_all_results('login_logs'); // Replace 'activity_date' with your actual timestamp column
+        }
+
+        // Ambil acara yang akan datang
+        $this->db->where('start_date >=', date('Y-m-d'));  // Pastikan start_date lebih besar atau sama dengan hari ini
+        $this->db->or_where('end_date >=', date('Y-m-d'));  // Atau end_date lebih besar atau sama dengan hari ini
+        $this->db->order_by('start_date', 'ASC');  // Urutkan berdasarkan start_date secara ascending
+        $data['upcoming_events'] = $this->db->get('events')->result();
+
+        $data['nonaktif_users'] = $this->db->where('status', 'NONAKTIF')
+            ->order_by('created_at', 'DESC') // Replace 'id' with the column you want to order by
+            ->get('users')
+            ->result();
 
         // Memanggil fungsi-fungsi yang ditambahkan
         $user_logs = $this->user_log();
@@ -107,9 +150,9 @@ class Role extends CI_Controller
         // Menghitung total notifikasi
         $data['total_notifications'] = count($notifications);
 
-        // Load the views
+        // Load the view
         $this->load->view('template/cms/header', $data);
-        $this->load->view('admin/role_view', $data);
+        $this->load->view('admin/dashboard', $data);
         $this->load->view('template/cms/footer');
     }
 
@@ -159,58 +202,12 @@ class Role extends CI_Controller
         return $query->result();
     }
 
-    public function update_permissions()
+
+    // Controller
+    public function activate_user($user_id)
     {
-        // Ambil data dari POST
-        $user_id = $this->input->post('user_id');
-        $permission_type = $this->input->post('permission'); // Tipe permission
-        $value = $this->input->post('value');
-
-        // Debug: Pastikan data yang diterima benar
-        log_message('debug', 'User ID: ' . $user_id . ' Permission Type: ' . $permission_type . ' Value: ' . $value);
-
-        // Cek apakah user_id valid
-        if (!$user_id || !$permission_type) {
-            echo json_encode(['status' => 'error', 'message' => 'User ID or Permission Type is missing.']);
-            return;
-        }
-
-        // Siapkan data untuk diinsert atau diupdate
-        $data = [$permission_type => $value];
-
-        // Cek apakah data sudah ada di tabel
-        $existing_permission = $this->db->get_where('permissions', ['user_id' => $user_id])->row();
-
-        if ($existing_permission) {
-            // Jika data sudah ada, lakukan update
-            $this->db->where('user_id', $user_id);
-            $this->db->update('permissions', $data);
-
-            if ($this->db->affected_rows() > 0) {
-                // Fetch updated permissions
-                $updated_permissions = $this->db->get_where('permissions', ['user_id' => $user_id])->row_array();
-                // Set updated permissions in session
-                $this->session->set_userdata('permissions', $updated_permissions);
-
-                echo json_encode(['status' => 'success', 'message' => 'Permission updated successfully.']);
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'No rows updated.']);
-            }
-        } else {
-            // Jika data belum ada, lakukan insert
-            $data['user_id'] = $user_id; // Tambahkan user_id ke data
-            $this->db->insert('permissions', $data);
-
-            if ($this->db->affected_rows() > 0) {
-                // Fetch updated permissions
-                $updated_permissions = $this->db->get_where('permissions', ['user_id' => $user_id])->row_array();
-                // Set updated permissions in session
-                $this->session->set_userdata('permissions', $updated_permissions);
-
-                echo json_encode(['status' => 'success', 'message' => 'Permission inserted successfully.']);
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to insert permission.']);
-            }
-        }
+        // Update the status to AKTIF
+        $this->db->where('id', $user_id)->update('users', ['status' => 'AKTIF']);
+        echo json_encode(['status' => 'success']);
     }
 }

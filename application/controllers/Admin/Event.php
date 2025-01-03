@@ -16,6 +16,12 @@ class Event extends CI_Controller
         if (!$this->session->userdata('id')) {
             redirect('login'); // Ganti 'login' sesuai dengan route halaman login Anda
         }
+
+        // Cek apakah session role ada dan apakah role termasuk dalam daftar yang diizinkan
+        $allowed_roles = [1, 3, 4, 5, 6];
+        if (!in_array($this->session->userdata('role'), $allowed_roles)) {
+            redirect('login'); // Ganti 'unauthorized' sesuai dengan route halaman yang diinginkan
+        }
     }
 
     // Menampilkan semua event
