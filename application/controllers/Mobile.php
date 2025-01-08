@@ -295,7 +295,8 @@ class Mobile extends CI_Controller
         if (!empty($search_query)) {
             // Pencarian berdasarkan judul, kategori, dan tipe
             $this->db->like('title', $search_query);
-            $this->db->where('category', $category); // Filter berdasarkan kategori
+            $this->db->or_like('keyword', $search_query);
+            $this->db->where('category', $category);
             $this->db->where('type', $type); // Filter berdasarkan type
             $query = $this->db->get('reports'); // Mengambil laporan dari database
 

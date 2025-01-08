@@ -21,7 +21,7 @@
 
                 <!-- Title Row (Full Width) -->
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="title" style="font-size: 13px; font-weight: 600;">Title</label>
                             <div class="input-group">
@@ -32,21 +32,35 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
+                <?php
+                // Misalkan ini adalah data keyword yang diambil dari database  
+                $keywordsArray = explode(',', $report['keywords']); // Mengambil dari database dan memisahkan berdasarkan koma  
+                ?>
+
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="form-group">
-                            <label for="category" style="font-size: 13px; font-weight: 600;">Category</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-list"></i></span>
-                                </div>
-                                <select class="form-control" id="category" name="category">
-                                    <option value="mobile" <?= $report['category'] == 'mobile' ? 'selected' : ''; ?>>Mobile</option>
-                                    <option value="fixed" <?= $report['category'] == 'fixed' ? 'selected' : ''; ?>>Fixed</option>
-                                    <option value="digital insight" <?= $report['category'] == 'digital insight' ? 'selected' : ''; ?>>Digital Insight</option>
-                                    <option value="global" <?= $report['category'] == 'global' ? 'selected' : ''; ?>>Global</option>
-                                </select>
+                            <label for="category" style="font-size: 13px; font-weight: 600;">Keyword</label>
+                            <div id="keyword-container" class="mb-2">
+                                <!-- Keyword akan ditampilkan di sini -->
+                                <?php if ($report['keywords'] !== null && !empty($keywordsArray)): ?>
+                                    <?php foreach ($keywordsArray as $keyword): ?>
+                                        <span class="badge badge-primary mr-1"><?= htmlspecialchars(trim($keyword)) ?>
+                                            <button class="close ml-1" onclick="removeKeyword(this)">×</button>
+                                        </span>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </div>
+                            <input type="text" id="new-keyword" class="form-control mt-2" placeholder="Masukkan keyword baru" style="display: none;">
+                            <button type="button" id="add-button" class="btn btn-danger btn-sm btn-icon-split mt-2" onclick="toggleInput()">
+                                <span class="icon text-white-50">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                <span class="text">Add keyword</span>
+                            </button>
+                            <input type="hidden" id="keyword-input-hidden" name="keywords" value="<?= htmlspecialchars($report['keywords']) ?>">
                         </div>
                     </div>
                 </div>
@@ -93,3 +107,65 @@
 
 </div>
 <!-- /.container-fluid -->
+
+<script>
+    function toggleInput() {
+        const input = document.getElementById('new-keyword');
+        const button = document.getElementById('add-button');
+
+        if (input.style.display === 'none') {
+            input.style.display = 'block'; // Tampilkan input      
+            input.focus(); // Fokus pada input      
+            button.querySelector('.text').textContent = 'Submit keyword'; // Ubah teks tombol  
+        } else {
+            addKeyword(); // Jika input sudah terlihat, tambahkan keyword      
+            input.style.display = 'none'; // Sembunyikan input setelah menambahkan      
+            button.querySelector('.text').textContent = 'Add keyword'; // Kembalikan teks tombol  
+        }
+    }
+
+    function addKeyword() {
+        const input = document.getElementById('new-keyword');
+        const keywordContainer = document.getElementById('keyword-container');
+
+        if (input.value.trim() !== '') {
+            // Buat elemen baru untuk keyword        
+            const keywordTag = document.createElement('span');
+            keywordTag.className = 'badge badge-primary mr-1'; // Gaya untuk tag        
+            keywordTag.textContent = input.value;
+
+            // Buat tombol untuk menghapus tag        
+            const removeButton = document.createElement('button');
+            removeButton.className = 'close ml-1';
+            removeButton.innerHTML = '&times;'; // Simbol untuk menghapus        
+            removeButton.onclick = function() {
+                keywordContainer.removeChild(keywordTag);
+                updateHiddenInput(); // Update input tersembunyi setelah menghapus      
+            };
+
+            // Tambahkan tombol ke tag        
+            keywordTag.appendChild(removeButton);
+            // Tambahkan tag ke container        
+            keywordContainer.appendChild(keywordTag);
+
+            // Kosongkan input setelah menambahkan        
+            input.value = '';
+
+            // Update input tersembunyi      
+            updateHiddenInput();
+        }
+    }
+
+    function removeKeyword(button) {
+        const keywordContainer = document.getElementById('keyword-container');
+        keywordContainer.removeChild(button.parentElement); // Hapus tag keyword      
+        updateHiddenInput(); // Update input tersembunyi setelah menghapus      
+    }
+
+    function updateHiddenInput() {
+        const keywordContainer = document.getElementById('keyword-container');
+        const hiddenInput = document.getElementById('keyword-input-hidden');
+        const keywords = Array.from(keywordContainer.children).map(tag => tag.textContent.replace('×', '').trim());
+        hiddenInput.value = keywords.join(', '); // Format keyword dengan koma      
+    }
+</script>

@@ -241,8 +241,7 @@ class Mobile extends CI_Controller
     {
         // Get form data
         $title = $this->input->post('title');
-        $category = $this->input->post('category');
-        $type = $this->input->post('type');
+        $keywords = $this->input->post('keywords');
 
         // Handle file uploads
         $image = $_FILES['image']['name'];
@@ -297,6 +296,9 @@ class Mobile extends CI_Controller
             'file' => $file,
             'created_at' => date('Y-m-d H:i:s'), // Optional: add created timestamp
         );
+
+        // Tambahkan ke data untuk update  
+        $data['keywords'] = $keywords; // Pastikan kolom 'keywords' ada di tabel 'reports'  
 
         // Insert into the reports table
         $this->db->insert('reports', $data);
@@ -417,24 +419,21 @@ class Mobile extends CI_Controller
 
     public function update($id)
     {
-        // Get form data
+        // Get form data  
         $title = $this->input->post('title');
-        $category = $this->input->post('category');
-        $type = $this->input->post('type');
+        $keywords = $this->input->post('keywords');
 
-        // Prepare data for updating
+        // Prepare data for updating  
         $data = array(
             'title' => $title,
-            'category' => $category,
-            'type' => $type,
         );
 
-        // Get old report details
+        // Get old report details  
         $old_report = $this->db->get_where('reports', ['id' => $id])->row_array();
 
-        // Handle image upload
+        // Handle image upload  
         if ($_FILES['image']['name']) {
-            // Configure upload for image
+            // Configure upload for image  
             $config['upload_path'] = './uploads/image/';
             $config['allowed_types'] = 'jpg|jpeg|png';
             $this->upload->initialize($config);
@@ -444,22 +443,22 @@ class Mobile extends CI_Controller
                 echo "Image upload error: " . $error;
                 return;
             } else {
-                // Delete old image if exists
+                // Delete old image if exists  
                 $old_image_path = './uploads/image/' . $old_report['image'];
                 if (file_exists($old_image_path)) {
-                    unlink($old_image_path); // Delete old image
+                    unlink($old_image_path); // Delete old image  
                 }
-                // Update the image data
+                // Update the image data  
                 $data['image'] = $this->upload->data('file_name');
             }
         } else {
-            // If no new image is uploaded, keep the old image
+            // If no new image is uploaded, keep the old image  
             $data['image'] = $old_report['image'];
         }
 
-        // Handle file upload
+        // Handle file upload  
         if ($_FILES['file']['name']) {
-            // Configure upload for report
+            // Configure upload for report  
             $config['upload_path'] = './uploads/report/';
             $config['allowed_types'] = 'pdf';
             $this->upload->initialize($config);
@@ -469,26 +468,30 @@ class Mobile extends CI_Controller
                 echo "File upload error: " . $error;
                 return;
             } else {
-                // Delete old file if exists
+                // Delete old file if exists  
                 $old_file_path = './uploads/report/' . $old_report['file'];
                 if (file_exists($old_file_path)) {
-                    unlink($old_file_path); // Delete old file
+                    unlink($old_file_path); // Delete old file  
                 }
-                // Update the file data
+                // Update the file data  
                 $data['file'] = $this->upload->data('file_name');
             }
         } else {
-            // If no new file is uploaded, keep the old file
+            // If no new file is uploaded, keep the old file  
             $data['file'] = $old_report['file'];
         }
 
-        // Update the report in the database
+        // Check if keywords are empty and set to NULL if so  
+        $data['keywords'] = !empty($keywords) ? $keywords : NULL; // Set to NULL if empty  
+
+        // Update the report in the database  
         $this->db->update('reports', $data, ['id' => $id]);
 
-        // Redirect with success message
+        // Redirect with success message  
         $this->session->set_flashdata('success', 'Report updated successfully.');
-        redirect('admin/mobile'); // Redirect to the mobile page or another page
+        redirect('admin/mobile'); // Redirect to the mobile page or another page  
     }
+
 
 
     public function delete($id)

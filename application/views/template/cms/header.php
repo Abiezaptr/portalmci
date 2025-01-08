@@ -35,6 +35,17 @@
 </head>
 
 <style>
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5em 0.75em;
+        border-radius: 0.5em;
+        background-color: rgb(240, 240, 240);
+        /* Warna latar belakang */
+        color: black;
+        /* Warna teks */
+    }
+
     .checkbox-group {
         display: flex;
         flex-wrap: wrap;
@@ -369,7 +380,7 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-bell fa-fw"></i>
-                                    <span class="badge badge-danger badge-counter"><?php echo $total_notifications; ?></span>
+                                    <span class="badge badge-secondary badge-counter"><?php echo $total_notifications; ?></span>
                                 </a>
 
                                 <!-- Dropdown - Alerts -->

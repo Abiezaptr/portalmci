@@ -241,7 +241,7 @@ class Digital extends CI_Controller
     {
         // Get form data
         $title = $this->input->post('title');
-        $category = $this->input->post('category');
+        $keywords = $this->input->post('keywords');
 
         // Handle file uploads
         $image = $_FILES['image']['name'];
@@ -296,6 +296,8 @@ class Digital extends CI_Controller
             'file' => $file,
             'created_at' => date('Y-m-d H:i:s'), // Optional: add created timestamp
         );
+
+        $data['keywords'] = $keywords;
 
         // Insert into the database
         $this->db->insert('reports', $data);
@@ -414,12 +416,11 @@ class Digital extends CI_Controller
     {
         // Get form data
         $title = $this->input->post('title');
-        $category = $this->input->post('category');
+        $keywords = $this->input->post('keywords');
 
         // Prepare data for updating
         $data = array(
             'title' => $title,
-            'category' => $category,
         );
 
         // Get old report details
@@ -474,6 +475,9 @@ class Digital extends CI_Controller
             // If no new file is uploaded, keep the old file
             $data['file'] = $old_report['file'];
         }
+
+        // Check if keywords are empty and set to NULL if so    
+        $data['keywords'] = !empty($keywords) ? $keywords : NULL; // Set to NULL if empty 
 
         // Update the report in the database
         $this->db->update('reports', $data, ['id' => $id]);
