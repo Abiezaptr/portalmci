@@ -1,17 +1,87 @@
 <!-- New section for "Our latest news" -->
 <style>
-    .placeholder {
-        background-color: #e0e0e0;
-        height: 200px;
-        /* Adjust this height according to your image size */
-        display: flex;
+    .badge {
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        text-align: center;
+        padding: 0.5em 0.75em;
+        border-radius: 0.5em;
+        background-color: rgb(240, 240, 240);
+        /* Warna latar belakang */
+        color: black;
+        /* Warna teks */
     }
 
-    #searchField {
-        border-radius: 10px;
+    .document-directory {
+        padding: 20px;
+        background-color: #f9f9f9;
+    }
+
+    .search-filters {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-control {
+        padding: 10px 12px;
+        /* Tambahkan padding horizontal */
+        border: 2px solid #ccc;
+        border-radius: 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+        transition: border-color 0.3s;
+        flex-grow: 1;
+        /* Membuat field mengisi ruang */
+        min-width: 150px;
+        /* Atur lebar minimum untuk field */
+        height: auto;
+        /* Pastikan tinggi otomatis */
+        line-height: 1.5;
+        /* Atur line-height untuk meningkatkan keterbacaan */
+    }
+
+
+    .form-control:focus {
+        border-color: rgb(155, 17, 13);
+        outline: none;
+    }
+
+    .filter-button {
+        padding: 10px 20px;
+        background-color: rgb(155, 17, 13);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .selected-filters {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .filter-tag {
+        background-color: #e0f7fa;
+        padding: 5px 10px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .remove-tag {
+        margin-left: 5px;
+        cursor: pointer;
+        color: rgb(155, 17, 13);
+    }
+
+    .clear-all {
+        margin-left: auto;
+        background-color: transparent;
+        border: none;
+        color: rgb(155, 17, 13);
+        cursor: pointer;
     }
 </style>
 
@@ -29,18 +99,31 @@
     </nav>
     <br>
 
-    <div class="row">
-        <div class="col-md-12">
-            <input type="text" id="searchField" class="form-control" placeholder="Search reports...">
-        </div>
-    </div>
-
-
     <!-- carousel report -->
     <div class="d-flex justify-content-between align-items-center mt-5">
         <h5>Report</h5>
     </div>
     <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="document-directory">
+                <div class="search-filters">
+                    <input type="text" id="fileNameField" class="form-control" placeholder="File Name" oninput="updateSelectedFilters()">
+                    <input type="text" id="keywordsField" class="form-control" placeholder="Keywords" oninput="updateSelectedFilters()">
+                    <select id="categoryField" class="form-control" onchange="updateSelectedFilters()">
+                        <option value="">Categories</option>
+                        <option value="Department 1">Department 1</option>
+                        <option value="Department 2">Department 2</option>
+                    </select>
+                    <input type="text" id="postedDateField" class="form-control" placeholder="Posted Date" oninput="updateSelectedFilters()">
+                    <button class="filter-button" onclick="applyFilters()">Search</button>
+                </div>
+                <div class="selected-filters" id="selectedFilters">
+
+                </div>
+            </div>
+        </div>
+    </div>
     <br>
     <div id="carouselExampleControls1" class="carousel slide" data-ride="carousel" data-interval="5000">
         <div class="carousel-inner">
@@ -332,4 +415,39 @@
             });
         });
     });
+</script>
+
+<script>
+    function updateSelectedFilters() {
+        const fileName = document.getElementById('fileNameField').value;
+        const keywords = document.getElementById('keywordsField').value;
+        const category = document.getElementById('categoryField').value;
+        const postedDate = document.getElementById('postedDateField').value;
+
+        const selectedFilters = document.getElementById('selectedFilters');
+        selectedFilters.innerHTML = ''; // Clear previous filters  
+
+        if (fileName) {
+            selectedFilters.innerHTML += `<span class="badge badge-primary mr-1">${fileName}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
+        }
+        if (keywords) {
+            selectedFilters.innerHTML += `<span class="badge badge-primary mr-1">${keywords}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
+        }
+        if (category) {
+            selectedFilters.innerHTML += `<span class="badge badge-primary mr-1">${category}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
+        }
+        if (postedDate) {
+            selectedFilters.innerHTML += `<span class="badge badge-primary mr-1">${postedDate}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
+        }
+    }
+
+    function removeKeyword(button) {
+        const badge = button.parentElement;
+        badge.remove();
+    }
+
+    function applyFilters() {
+        // Logic to apply filters can be added here  
+        alert('Filters applied!');
+    }
 </script>

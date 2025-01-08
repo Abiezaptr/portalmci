@@ -5,14 +5,14 @@
          <div class="card shadow mb-4">
              <div class="card-header py-3 d-flex justify-content-between align-items-center">
                  <!-- Title on the left -->
-                 <h6 class="m-0 font-weight-bold" style="color: maroon;">Fixed Articles</h6>
+                 <h6 class="m-0 font-weight-bold" style="color: maroon;">FIXED ARTICLES LIST</h6>
 
                  <!-- Add button on the right -->
                  <a href="#" data-toggle="modal" data-target="#addArticleModal" class="btn btn-danger btn-sm btn-icon-split">
                      <span class="icon text-white-50">
                          <i class="fas fa-plus"></i>
                      </span>
-                     <span class="text">New Articles</span>
+                     <span class="text">ADD ROW</span>
                  </a>
              </div>
 
@@ -22,11 +22,11 @@
                          <thead>
                              <tr>
                                  <th>#</th>
-                                 <th>Title</th>
-                                 <th>Image</th>
-                                 <th>Description</th>
-                                 <th>Category</th>
-                                 <th>File</th>
+                                 <th>TITLE</th>
+                                 <th>IMAGE</th>
+                                 <th>DESCRIPTION</th>
+                                 <th>GROUP</th>
+                                 <th>FILE</th>
                                  <th></th>
                              </tr>
                          </thead>
@@ -47,7 +47,9 @@
                                          </td>
                                          <td><?= $report['desc']; ?></td>
                                          <td>
-                                             <span class="badge badge-warning"><?= $report['category']; ?></span>
+                                             <div style="border: 1px solid #ffc107; border-radius: 5px; padding: 5px; background-color: #fff3cd; color: #856404;">
+                                                 <center> <strong>Fixed</strong>
+                                             </div>
                                          </td>
                                          <td>
                                              <?php if (!empty($report['file'])): ?>
@@ -57,16 +59,25 @@
                                              <?php endif; ?>
                                          </td>
                                          <td>
-                                             <a href="#" class="btn btn-sm" class="btn btn-sm" data-toggle="modal" data-target="#editArticleModal<?= $report['id']; ?>"><i class="fa fa-pencil-alt" style="color: maroon;"></i></a>&nbsp;
-                                             <?php if ($this->session->userdata('role') == 1) : ?>
-                                                 <a href="<?= site_url('delete/fixed-article/' . $report['id']); ?>" class="btn btn-sm"><i class="fa fa-trash-alt" style="color: maroon;"></i></a>
-                                             <?php endif; ?>
+                                             <!-- Dropdown button -->
+                                             <div class="dropdown">
+                                                 <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                     Action
+                                                 </button>
+                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editArticleModal<?= $report['id']; ?>">Update</a>
+                                                     <?php if ($this->session->userdata('role') == 1) : ?>
+                                                         <div class="dropdown-divider" style="border-top: 1px dashed #ccc; margin: 5px 0;"></div>
+                                                         <a class="dropdown-item" href="<?= site_url('delete/fixed-article/' . $report['id']); ?>">Remove</a>
+                                                     <?php endif; ?>
+                                                 </div>
+                                             </div>
                                          </td>
                                      </tr>
                                  <?php endforeach; ?>
                              <?php else : ?>
                                  <tr>
-                                     <td colspan="6" class="text-center">No articles mobile found.</td>
+                                     <td colspan="7" class="text-center">No articles found.</td>
                                  </tr>
                              <?php endif; ?>
                          </tbody>
