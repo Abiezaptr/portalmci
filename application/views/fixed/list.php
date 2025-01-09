@@ -1,17 +1,87 @@
 <!-- New section for "Our latest news" -->
 <style>
-    .placeholder {
-        background-color: #e0e0e0;
-        height: 200px;
-        /* Adjust this height according to your image size */
-        display: flex;
+    .badge {
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        text-align: center;
+        padding: 0.5em 0.75em;
+        border-radius: 0.5em;
+        background-color: rgb(240, 240, 240);
+        /* Warna latar belakang */
+        color: black;
+        /* Warna teks */
     }
 
-    #searchField {
-        border-radius: 10px;
+    .document-directory {
+        padding: 20px;
+        background-color: #f9f9f9;
+    }
+
+    .search-filters {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-control {
+        padding: 10px 12px;
+        /* Tambahkan padding horizontal */
+        border: 2px solid #ccc;
+        border-radius: 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+        transition: border-color 0.3s;
+        flex-grow: 1;
+        /* Membuat field mengisi ruang */
+        min-width: 150px;
+        /* Atur lebar minimum untuk field */
+        height: auto;
+        /* Pastikan tinggi otomatis */
+        line-height: 1.5;
+        /* Atur line-height untuk meningkatkan keterbacaan */
+    }
+
+
+    .form-control:focus {
+        border-color: rgb(155, 17, 13);
+        outline: none;
+    }
+
+    .filter-button {
+        padding: 10px 20px;
+        background-color: rgb(155, 17, 13);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .selected-filters {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .filter-tag {
+        background-color: #e0f7fa;
+        padding: 5px 10px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .remove-tag {
+        margin-left: 5px;
+        cursor: pointer;
+        color: rgb(155, 17, 13);
+    }
+
+    .clear-all {
+        margin-left: auto;
+        background-color: transparent;
+        border: none;
+        color: rgb(155, 17, 13);
+        cursor: pointer;
     }
 </style>
 
@@ -27,19 +97,34 @@
             </li>
         </ol>
     </nav>
-    <br>
-
-    <div class="row">
-        <div class="col-md-12">
-            <input type="text" id="searchField" class="form-control" placeholder="Search reports...">
-        </div>
-    </div>
 
     <!-- carousel report -->
     <div class="d-flex justify-content-between align-items-center mt-5">
         <h5>Report</h5>
     </div>
     <hr>
+
+    <!-- filter search report -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="document-directory">
+                <div class="search-filters">
+                    <input type="text" id="fileNameField" class="form-control" placeholder="Search by name" oninput="updateSelectedFilters()">
+                    <input type="text" id="keywordsField" class="form-control" placeholder="Search by keyword" oninput="updateSelectedFilters()">
+                    <select id="categoryField" class="form-control" onchange="updateSelectedFilters()">
+                        <option value="" hidden>Categories</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input type="date" id="postedDateField" class="form-control" placeholder="Posted Date" oninput="updateSelectedFilters()">
+                    <button class="filter-button" onclick="applyFilters()">Search</button>
+                </div>
+                <div class="selected-filters" id="selectedFilters"></div>
+            </div>
+        </div>
+    </div>
+
     <br>
     <div id="carouselExampleControls1" class="carousel slide" data-ride="carousel" data-interval="5000">
         <div class="carousel-inner">
@@ -277,61 +362,117 @@
 </div>
 
 <script>
-    $(document).ready(function() {
-        $('#searchField').on('input', function() {
-            var query = $(this).val();
+    function updateSelectedFilters() {
+        const fileName = document.getElementById('fileNameField').value;
+        const keywords = document.getElementById('keywordsField').value;
+        const categorySelect = document.getElementById('categoryField');
+        const categoryName = categorySelect.options[categorySelect.selectedIndex].text; // Ambil nama kategori  
+        const categoryId = categorySelect.value; // Ambil ID kategori  
+        const postedDate = document.getElementById('postedDateField').value;
 
-            $.ajax({
-                url: '<?= site_url('fixed/search_reports') ?>', // Adjust the controller method URL
-                type: 'POST',
-                data: {
-                    search_query: query
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status == 'success') {
-                        // Update the carousel with the new reports
-                        var carouselContent = '';
-                        var carouselIndicators = '';
-                        $.each(response.reports, function(index, chunk) {
-                            carouselContent += '<div class="carousel-item' + (index === 0 ? ' active' : '') + '">';
-                            carouselContent += '<div class="row">';
-                            $.each(chunk, function(i, report) {
-                                var title = report.title.replace(/\s+/g, '-');
-                                var url = report.type === 'article' ? 'view-article/' + encodeURIComponent(title) : 'view-report/' + encodeURIComponent(title);
-                                carouselContent += '<div class="col-md-3">';
-                                carouselContent += '<a href="<?= site_url('') ?>' + url + '">';
-                                carouselContent += '<div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">';
-                                carouselContent += '<div class="skeleton">';
-                                carouselContent += '<img src="<?= base_url('uploads/image/') ?>' + report.image + '" class="card-img-top" alt="">';
-                                carouselContent += '<div class="card-body">';
-                                carouselContent += '<p class="card-text text-dark"><small>' + (report.title.length > 50 ? report.title.substring(0, 50) + '...' : report.title) + '</small></p>';
-                                carouselContent += '</div>';
-                                carouselContent += '</div>';
-                                carouselContent += '</div>';
-                                carouselContent += '</a>';
-                                carouselContent += '</div>';
-                            });
-                            carouselContent += '</div>';
-                            carouselContent += '</div>';
-                        });
+        const selectedFilters = document.getElementById('selectedFilters');
+        selectedFilters.innerHTML = ''; // Clear previous filters          
 
-                        // Update the carousel inner
-                        $('#carouselExampleControls1 .carousel-inner').html(carouselContent);
+        if (fileName) {
+            selectedFilters.innerHTML += `<span class="badge badge-primary mr-1">${fileName}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
+        }
+        if (keywords) {
+            selectedFilters.innerHTML += `<span class="badge badge-primary mr-1">${keywords}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
+        }
+        if (categoryId) {
+            selectedFilters.innerHTML += `<span class="badge badge-primary mr-1" data-category-id="${categoryId}">${categoryName}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
+        }
+        if (postedDate) {
+            selectedFilters.innerHTML += `<span class="badge badge-primary mr-1">${postedDate}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
+        }
+    }
 
-                        // Update carousel indicators
-                        var indicatorHtml = '';
-                        $.each(response.reports, function(index, chunk) {
-                            indicatorHtml += '<li data-target="#carouselExampleControls1" data-slide-to="' + index + '" class="' + (index === 0 ? 'active' : '') + '"></li>';
-                        });
-                        $('#carouselExampleControls1 .carousel-indicators').html(indicatorHtml);
-                    } else {
-                        // If no reports found, display a message
-                        $('#carouselExampleControls1 .carousel-inner').html('<p>No reports found.</p>');
-                        $('#carouselExampleControls1 .carousel-indicators').html('');
-                    }
-                }
-            });
+    function removeKeyword(button) {
+        const badge = button.parentElement;
+        badge.remove();
+
+        // Check if all badges are removed    
+        const selectedFilters = document.getElementById('selectedFilters');
+        if (selectedFilters.innerHTML.trim() === '') {
+            // Clear all input fields    
+            document.getElementById('fileNameField').value = '';
+            document.getElementById('keywordsField').value = '';
+            document.getElementById('categoryField').value = '';
+            document.getElementById('postedDateField').value = '';
+
+            // Apply filters with empty values to show initial data    
+            applyFilters();
+        }
+    }
+
+    function applyFilters() {
+        const fileName = document.getElementById('fileNameField').value;
+        const keywords = document.getElementById('keywordsField').value;
+        const category = document.getElementById('categoryField').value;
+        const postedDate = document.getElementById('postedDateField').value;
+
+        console.log("Sending data:", {
+            file_name: fileName,
+            keywords: keywords,
+            category: category,
+            posted_date: postedDate
         });
-    });
+
+        // AJAX call to apply filters      
+        $.ajax({
+            url: '<?= site_url('fixed/search_reports') ?>', // Adjust the controller method URL      
+            type: 'POST',
+            data: {
+                file_name: fileName,
+                keywords: keywords,
+                category: category,
+                posted_date: postedDate
+            },
+            dataType: 'json',
+            success: function(response) {
+                console.log("Response from server:", response);
+                if (response.status == 'success') {
+                    // Update the carousel with the new reports      
+                    var carouselContent = '';
+                    var carouselIndicators = '';
+                    $.each(response.reports, function(index, chunk) {
+                        carouselContent += '<div class="carousel-item' + (index === 0 ? ' active' : '') + '">';
+                        carouselContent += '<div class="row">';
+                        $.each(chunk, function(i, report) {
+                            var title = report.title.replace(/\s+/g, '-');
+                            var url = report.type === 'article' ? 'view-article/' + encodeURIComponent(title) : 'view-report/' + encodeURIComponent(title);
+                            carouselContent += '<div class="col-md-3">';
+                            carouselContent += '<a href="<?= site_url('') ?>' + url + '">';
+                            carouselContent += '<div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">';
+                            carouselContent += '<div class="skeleton">';
+                            carouselContent += '<img src="<?= base_url('uploads/image/') ?>' + report.image + '" class="card-img-top" alt="">';
+                            carouselContent += '<div class="card-body">';
+                            carouselContent += '<p class="card-text text-dark"><small>' + (report.title.length > 50 ? report.title.substring(0, 50) + '...' : report.title) + '</small></p>';
+                            carouselContent += '</div>';
+                            carouselContent += '</div>';
+                            carouselContent += '</div>';
+                            carouselContent += '</a>';
+                            carouselContent += '</div>';
+                        });
+                        carouselContent += '</div>';
+                        carouselContent += '</div>';
+                    });
+
+                    // Update the carousel inner      
+                    $('#carouselExampleControls1 .carousel-inner').html(carouselContent);
+
+                    // Update carousel indicators      
+                    var indicatorHtml = '';
+                    $.each(response.reports, function(index, chunk) {
+                        indicatorHtml += '<li data-target="#carouselExampleControls1" data-slide-to="' + index + '" class="' + (index === 0 ? 'active' : '') + '"></li>';
+                    });
+                    $('#carouselExampleControls1 .carousel-indicators').html(indicatorHtml);
+                } else {
+                    // If no reports found, display a message      
+                    $('#carouselExampleControls1 .carousel-inner').html('<p>No reports found.</p>');
+                    $('#carouselExampleControls1 .carousel-indicators').html('');
+                }
+            }
+        });
+    }
 </script>

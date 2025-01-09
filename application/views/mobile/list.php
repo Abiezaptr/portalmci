@@ -97,33 +97,35 @@
             </li>
         </ol>
     </nav>
-    <br>
 
     <!-- carousel report -->
     <div class="d-flex justify-content-between align-items-center mt-5">
         <h5>Report</h5>
     </div>
     <hr>
+
+    <!-- filter search report -->
     <div class="row">
         <div class="col-md-12">
             <div class="document-directory">
                 <div class="search-filters">
-                    <input type="text" id="fileNameField" class="form-control" placeholder="File Name" oninput="updateSelectedFilters()">
-                    <input type="text" id="keywordsField" class="form-control" placeholder="Keywords" oninput="updateSelectedFilters()">
+                    <input type="text" id="fileNameField" class="form-control" placeholder="Search by name" oninput="updateSelectedFilters()">
+                    <input type="text" id="keywordsField" class="form-control" placeholder="Search by keyword" oninput="updateSelectedFilters()">
                     <select id="categoryField" class="form-control" onchange="updateSelectedFilters()">
-                        <option value="">Categories</option>
-                        <option value="Department 1">Department 1</option>
-                        <option value="Department 2">Department 2</option>
+                        <option value="" hidden>Categories</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+                        <?php endforeach; ?>
                     </select>
-                    <input type="text" id="postedDateField" class="form-control" placeholder="Posted Date" oninput="updateSelectedFilters()">
+                    <input type="date" id="postedDateField" class="form-control" placeholder="Posted Date" oninput="updateSelectedFilters()">
                     <button class="filter-button" onclick="applyFilters()">Search</button>
                 </div>
-                <div class="selected-filters" id="selectedFilters">
-
-                </div>
+                <div class="selected-filters" id="selectedFilters"></div>
             </div>
         </div>
     </div>
+
+
     <br>
     <div id="carouselExampleControls1" class="carousel slide" data-ride="carousel" data-interval="5000">
         <div class="carousel-inner">
@@ -356,76 +358,17 @@
 </div>
 
 
-
-<script>
-    $(document).ready(function() {
-        $('#searchField').on('input', function() {
-            var query = $(this).val();
-
-            $.ajax({
-                url: '<?= site_url('mobile/search_reports') ?>', // Adjust the controller method URL
-                type: 'POST',
-                data: {
-                    search_query: query
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status == 'success') {
-                        // Update the carousel with the new reports
-                        var carouselContent = '';
-                        var carouselIndicators = '';
-                        $.each(response.reports, function(index, chunk) {
-                            carouselContent += '<div class="carousel-item' + (index === 0 ? ' active' : '') + '">';
-                            carouselContent += '<div class="row">';
-                            $.each(chunk, function(i, report) {
-                                var title = report.title.replace(/\s+/g, '-');
-                                var url = report.type === 'article' ? 'view-article/' + encodeURIComponent(title) : 'view-report/' + encodeURIComponent(title);
-                                carouselContent += '<div class="col-md-3">';
-                                carouselContent += '<a href="<?= site_url('') ?>' + url + '">';
-                                carouselContent += '<div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">';
-                                carouselContent += '<div class="skeleton">';
-                                carouselContent += '<img src="<?= base_url('uploads/image/') ?>' + report.image + '" class="card-img-top" alt="">';
-                                carouselContent += '<div class="card-body">';
-                                carouselContent += '<p class="card-text text-dark"><small>' + (report.title.length > 50 ? report.title.substring(0, 50) + '...' : report.title) + '</small></p>';
-                                carouselContent += '</div>';
-                                carouselContent += '</div>';
-                                carouselContent += '</div>';
-                                carouselContent += '</a>';
-                                carouselContent += '</div>';
-                            });
-                            carouselContent += '</div>';
-                            carouselContent += '</div>';
-                        });
-
-                        // Update the carousel inner
-                        $('#carouselExampleControls1 .carousel-inner').html(carouselContent);
-
-                        // Update carousel indicators
-                        var indicatorHtml = '';
-                        $.each(response.reports, function(index, chunk) {
-                            indicatorHtml += '<li data-target="#carouselExampleControls1" data-slide-to="' + index + '" class="' + (index === 0 ? 'active' : '') + '"></li>';
-                        });
-                        $('#carouselExampleControls1 .carousel-indicators').html(indicatorHtml);
-                    } else {
-                        // If no reports found, display a message
-                        $('#carouselExampleControls1 .carousel-inner').html('<p>No reports found.</p>');
-                        $('#carouselExampleControls1 .carousel-indicators').html('');
-                    }
-                }
-            });
-        });
-    });
-</script>
-
 <script>
     function updateSelectedFilters() {
         const fileName = document.getElementById('fileNameField').value;
         const keywords = document.getElementById('keywordsField').value;
-        const category = document.getElementById('categoryField').value;
+        const categorySelect = document.getElementById('categoryField');
+        const categoryName = categorySelect.options[categorySelect.selectedIndex].text; // Ambil nama kategori  
+        const categoryId = categorySelect.value; // Ambil ID kategori  
         const postedDate = document.getElementById('postedDateField').value;
 
         const selectedFilters = document.getElementById('selectedFilters');
-        selectedFilters.innerHTML = ''; // Clear previous filters  
+        selectedFilters.innerHTML = ''; // Clear previous filters          
 
         if (fileName) {
             selectedFilters.innerHTML += `<span class="badge badge-primary mr-1">${fileName}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
@@ -433,8 +376,8 @@
         if (keywords) {
             selectedFilters.innerHTML += `<span class="badge badge-primary mr-1">${keywords}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
         }
-        if (category) {
-            selectedFilters.innerHTML += `<span class="badge badge-primary mr-1">${category}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
+        if (categoryId) {
+            selectedFilters.innerHTML += `<span class="badge badge-primary mr-1" data-category-id="${categoryId}">${categoryName}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
         }
         if (postedDate) {
             selectedFilters.innerHTML += `<span class="badge badge-primary mr-1">${postedDate}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
@@ -444,10 +387,89 @@
     function removeKeyword(button) {
         const badge = button.parentElement;
         badge.remove();
+
+        // Check if all badges are removed    
+        const selectedFilters = document.getElementById('selectedFilters');
+        if (selectedFilters.innerHTML.trim() === '') {
+            // Clear all input fields    
+            document.getElementById('fileNameField').value = '';
+            document.getElementById('keywordsField').value = '';
+            document.getElementById('categoryField').value = '';
+            document.getElementById('postedDateField').value = '';
+
+            // Apply filters with empty values to show initial data    
+            applyFilters();
+        }
     }
 
     function applyFilters() {
-        // Logic to apply filters can be added here  
-        alert('Filters applied!');
+        const fileName = document.getElementById('fileNameField').value;
+        const keywords = document.getElementById('keywordsField').value;
+        const category = document.getElementById('categoryField').value;
+        const postedDate = document.getElementById('postedDateField').value;
+
+        console.log("Sending data:", {
+            file_name: fileName,
+            keywords: keywords,
+            category: category,
+            posted_date: postedDate
+        });
+
+        // AJAX call to apply filters      
+        $.ajax({
+            url: '<?= site_url('mobile/search_reports') ?>', // Adjust the controller method URL      
+            type: 'POST',
+            data: {
+                file_name: fileName,
+                keywords: keywords,
+                category: category,
+                posted_date: postedDate
+            },
+            dataType: 'json',
+            success: function(response) {
+                console.log("Response from server:", response);
+                if (response.status == 'success') {
+                    // Update the carousel with the new reports      
+                    var carouselContent = '';
+                    var carouselIndicators = '';
+                    $.each(response.reports, function(index, chunk) {
+                        carouselContent += '<div class="carousel-item' + (index === 0 ? ' active' : '') + '">';
+                        carouselContent += '<div class="row">';
+                        $.each(chunk, function(i, report) {
+                            var title = report.title.replace(/\s+/g, '-');
+                            var url = report.type === 'article' ? 'view-article/' + encodeURIComponent(title) : 'view-report/' + encodeURIComponent(title);
+                            carouselContent += '<div class="col-md-3">';
+                            carouselContent += '<a href="<?= site_url('') ?>' + url + '">';
+                            carouselContent += '<div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">';
+                            carouselContent += '<div class="skeleton">';
+                            carouselContent += '<img src="<?= base_url('uploads/image/') ?>' + report.image + '" class="card-img-top" alt="">';
+                            carouselContent += '<div class="card-body">';
+                            carouselContent += '<p class="card-text text-dark"><small>' + (report.title.length > 50 ? report.title.substring(0, 50) + '...' : report.title) + '</small></p>';
+                            carouselContent += '</div>';
+                            carouselContent += '</div>';
+                            carouselContent += '</div>';
+                            carouselContent += '</a>';
+                            carouselContent += '</div>';
+                        });
+                        carouselContent += '</div>';
+                        carouselContent += '</div>';
+                    });
+
+                    // Update the carousel inner      
+                    $('#carouselExampleControls1 .carousel-inner').html(carouselContent);
+
+                    // Update carousel indicators      
+                    var indicatorHtml = '';
+                    $.each(response.reports, function(index, chunk) {
+                        indicatorHtml += '<li data-target="#carouselExampleControls1" data-slide-to="' + index + '" class="' + (index === 0 ? 'active' : '') + '"></li>';
+                    });
+                    $('#carouselExampleControls1 .carousel-indicators').html(indicatorHtml);
+                } else {
+                    // If no reports found, display a message      
+                    $('#carouselExampleControls1 .carousel-inner').html('<p>No reports found.</p>');
+                    $('#carouselExampleControls1 .carousel-indicators').html('');
+                }
+            }
+        });
     }
 </script>

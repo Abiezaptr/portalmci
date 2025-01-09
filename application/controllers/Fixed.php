@@ -18,6 +18,10 @@ class Fixed extends CI_Controller
 	public function index()
 	{
 		$data['title'] = 'Fixed';
+
+		// Ambil data kategori dari tabel forum_category
+		$data['categories'] = $this->db->get('reports_category')->result_array();
+
 		// Query to get data from the 'reports' table where category is 'fixed' and type is 'pdf'
 		$data['reports'] = $this->db->where('category', 'fixed')
 			->where('type', 'pdf')
@@ -692,34 +696,49 @@ class Fixed extends CI_Controller
 
 	public function search_reports()
 	{
-		$search_query = $this->input->post('search_query');
-		$category = 'fixed'; // Kategori yang ingin dicari
-		$type = 'pdf'; // Tambahkan filter berdasarkan type
+		$file_name = $this->input->post('file_name');
+		$keyword = $this->input->post('keywords'); // Expecting a single keyword  
+		$posted_date = $this->input->post('posted_date');
+		$categories = $this->input->post('category'); // Ambil category_id dari input      
+		$group = 'fixed'; // Kategori yang ingin dicari      
+		$type = 'pdf'; // Tambahkan filter berdasarkan type      
 
-		// Jika ada pencarian, ambil semua data yang sesuai dengan kata kunci
-		if (!empty($search_query)) {
-			// Pencarian berdasarkan judul, kategori, dan tipe
-			$this->db->like('title', $search_query);
-			$this->db->where('category', $category); // Filter berdasarkan kategori
-			$this->db->where('type', $type); // Filter berdasarkan type
-			$query = $this->db->get('reports'); // Mengambil laporan dari database
+		$this->db->where('category', $group); // Filter berdasarkan category      
+		$this->db->where('type', $type); // Filter berdasarkan type      
 
-			$reports = $query->result_array();
-		} else {
-			// Jika tidak ada pencarian, ambil hanya 5 data pertama, urutkan dengan 'created_at' (contoh)
-			$this->db->limit(5); // Batasi hanya 5 data
-			$this->db->where('category', $category); // Filter berdasarkan kategori
-			$this->db->where('type', $type); // Filter berdasarkan type
-			$this->db->order_by('created_at', 'DESC'); // Urutkan berdasarkan kolom 'created_at' (terbaru)
-			$query = $this->db->get('reports');
-
-			$reports = $query->result_array();
+		// Cek setiap filter secara terpisah  
+		if (!empty($file_name)) {
+			$this->db->like('title', $file_name);
 		}
 
-		// Format laporan menjadi chunk (untuk carousel)
+		if (!empty($keyword)) {
+			// Gunakan WHERE untuk mencocokkan keyword  
+			$this->db->where('keywords', $keyword); // Mencocokkan keyword  
+		}
+
+		if (!empty($categories)) {
+			$this->db->where('report_category_id', $categories);
+		}
+
+		if (!empty($posted_date)) {
+			$this->db->where('DATE(created_at)', $posted_date); // Mencocokkan tanggal 
+		}
+
+		// Hapus limit default jika ada pencarian  
+		if (empty($file_name) && empty($keyword) && empty($categories) && empty($posted_date)) {
+			$this->db->limit(5);
+		}
+
+		$this->db->order_by('created_at', 'DESC');
+
+		$query = $this->db->get('reports'); // Mengambil laporan dari database      
+
+		$reports = $query->result_array();
+
+		// Format laporan menjadi chunk (untuk carousel)      
 		$chunks = array_chunk($reports, 4);
 
-		// Kembalikan hasil pencarian sebagai JSON
+		// Kembalikan hasil pencarian sebagai JSON      
 		if ($reports) {
 			echo json_encode([
 				'status' => 'success',
