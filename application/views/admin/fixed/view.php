@@ -7,13 +7,24 @@
                  <!-- Title on the left -->
                  <h6 class="m-0 font-weight-bold" style="color: maroon;">FIXED REPORT LIST</h6>
 
-                 <!-- Add button on the right -->
-                 <a href="<?= site_url('add/fixed-report') ?>" class="btn btn-danger btn-sm btn-icon-split">
-                     <span class="icon text-white-50">
-                         <i class="fas fa-plus"></i>
-                     </span>
-                     <span class="text">ADD ROW</span>
-                 </a>
+                 <!-- Button group on the right -->
+                 <div class="btn-group" role="group">
+                     <!-- Add button -->
+                     <a href="<?= site_url('add/fixed-report') ?>" class="btn btn-danger btn-sm btn-icon-split">
+                         <span class="icon text-white-50">
+                             <i class="fas fa-plus"></i>
+                         </span>
+                         <span class="text">ADD ROW</span>
+                     </a>
+
+                     <!-- New button for category report -->
+                     <a href="<?= site_url('admin/category/report') ?>" class="btn btn-info btn-sm btn-icon-split ml-2">
+                         <span class="icon text-white-50">
+                             <i class="fas fa-list"></i>
+                         </span>
+                         <span class="text">CATEGORY REPORT</span>
+                     </a>
+                 </div>
              </div>
 
              <div class="card-body">
