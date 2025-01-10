@@ -68,7 +68,42 @@
         <a href="<?= site_url('events-calendar') ?>" class="btn-quick btn-danger">Events</a>
         <a href="https://tsel.id/RequestResearch" target="_blank" class="btn-quick btn-danger">Request</a>
     </div>
+    <!-- <hr id="search-result-hr" style="display: none;">
+    <h4 id="search-result-title" style="display: none;">Search Result</h4>
+    <div id="search-report" style="display: none;"></div> -->
+
 </div>
+
+<div id="search-result-hr" style="display: none;" class="page-content">
+    <h4 id="search-result-title" style="display: none;">Search Result</h4>
+</div>
+
+<div id="search-report" style="display: none;" class="page-content page-2">
+    <div id="searchCarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
+        <div class="carousel-inner">
+            <!-- Hasil pencarian akan dimasukkan di sini oleh JavaScript -->
+        </div>
+
+        <!-- Next and Previous buttons with added maroon color and spacing -->
+        <a class="carousel-control-prev" href="#searchCarousel" role="button" data-slide="prev" style="width: 5%; left: -4%; color: maroon;">
+            <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: maroon; border-radius: 50%;"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#searchCarousel" role="button" data-slide="next" style="width: 5%; right: -4%; color: maroon;">
+            <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: maroon; border-radius: 50%;"></span>
+            <span class="sr-only">Next</span>
+        </a>
+
+        <br><br><br><br>
+        <ol class="carousel-indicators custom-indicators mt-4">
+            <!-- Indikator carousel akan dimasukkan di sini oleh JavaScript -->
+        </ol>
+    </div>
+
+</div>
+
+
+<!-- pembatas -->
 
 <div class="page-content">
     <h4>Latest report</h4>

@@ -7,67 +7,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth', // Tampilan default bulan
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            timeZone: 'Asia/Jakarta', // Zona waktu
-            nowIndicator: true, // Garis waktu saat ini
-            events: function(fetchInfo, successCallback, failureCallback) {
-                // Ambil data dari server
-                fetch('<?= base_url("events/getEvents") ?>')
-                    .then(response => response.json())
-                    .then(data => {
-                        // Update data event dengan warna dari database
-                        data.forEach(event => {
-                            event.backgroundColor = event.color; // Menambahkan warna dari field 'color' di database
-                        });
-                        successCallback(data);
-                    })
-                    .catch(error => failureCallback(error));
-            },
-            eventClick: function(info) {
-                // SweetAlert2 untuk menampilkan detail event
-                const startDate = new Date(info.event.start);
-                const formattedStartDate = startDate.toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric'
-                });
-
-                Swal.fire({
-                    title: info.event.title, // Judul event
-                    html: `
-                    <hr style="border: 0; border-top: 1px dashed #ccc; margin: 10px 0;">
-                    <div style="font-size: 16px; color: #333; line-height: 1.6;">
-                        <div style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                            <p style="margin-bottom: 10px;">
-                                ${info.event.extendedProps.description || 'No description available.'}
-                            </p>
-                            <p style="font-size: 14px; color: #007bff; font-weight: bold;">
-                                 ${info.event.extendedProps.location || 'Location not available'}
-                            </p>
-                            <hr style="border: 0; border-top: 1px dashed #ccc; margin: 10px 0;">
-                            <p style="font-size: 14px; color: #555; margin-top: 10px;">${formattedStartDate}</p>
-                        </div>
-                    </div>
-                `,
-                    icon: 'info',
-                    confirmButtonText: 'Close',
-                });
-            }
-        });
-
-        calendar.render();
-    });
-</script> -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');

@@ -17,6 +17,9 @@
     <!-- jQuery and Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 
     <style>
@@ -513,6 +516,44 @@
             animation: pulse 1s infinite;
             /* Apply the pulse animation */
         }
+
+        .search-container {
+            position: relative;
+            /* Untuk posisi ikon */
+        }
+
+        .search-input {
+            width: 350px;
+            /* Lebar input yang lebih panjang */
+            padding: 10px;
+            /* Padding untuk input */
+            border: 2px solid #007bff;
+            /* Warna border */
+            border-radius: 25px;
+            /* Membuat sudut input melengkung */
+            font-size: 16px;
+            /* Ukuran font untuk teks input */
+            transition: border-color 0.3s, box-shadow 0.3s;
+            /* Transisi untuk efek hover */
+            outline: none;
+            /* Menghilangkan outline default */
+        }
+
+        .search-input::placeholder {
+            color: #aaa;
+            /* Warna placeholder */
+            font-size: 10px;
+            /* Ukuran font placeholder lebih kecil */
+            opacity: 1;
+            /* Opacity placeholder */
+        }
+
+        .search-input:focus {
+            border-color: #0056b3;
+            /* Warna border saat fokus */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            /* Efek bayangan saat fokus */
+        }
     </style>
 </head>
 
@@ -539,6 +580,16 @@
                 <li class="nav-item">
                     <a class="nav-link" style="font-size: 14px;" href="<?= site_url('contact-us') ?>">Contact</a>
                 </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="search-icon" style="background: none; border: none; cursor: pointer;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </li>
+                <div id="search-field" style="display: none;">
+                    <div class="search-container">
+                        <input class="mt-1 form-control" type="text" placeholder="by name or keyword" id="search-input" autocomplete="off" style="font-size: 0.8em;">
+                    </div>
+                </div>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="<?= site_url('notification') ?>">
                         <?php if ($total_relevant_notifications > 0): ?>

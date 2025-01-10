@@ -179,4 +179,22 @@ class Home extends CI_Controller
 		$query = $this->db->get();
 		return $query->result();
 	}
+
+	public function search()
+	{
+		// Get the query from the POST request      
+		$query = $this->input->post('query');
+
+		// Query to search in the reports table      
+		$this->db->group_start(); // Mulai grup kondisi  
+		$this->db->like('title', $query);
+		$this->db->or_like('keywords', $query);
+		$this->db->group_end(); // Akhiri grup kondisi  
+
+		$this->db->where('type', 'pdf'); // Tambahkan kondisi untuk hanya mengambil type 'pdf'    
+		$result = $this->db->get('reports');
+
+		// Return results as JSON      
+		echo json_encode($result->result_array()); // Use result_array() for easier JSON encoding      
+	}
 }
