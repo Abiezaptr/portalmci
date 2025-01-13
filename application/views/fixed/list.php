@@ -366,12 +366,12 @@
         const fileName = document.getElementById('fileNameField').value;
         const keywords = document.getElementById('keywordsField').value;
         const categorySelect = document.getElementById('categoryField');
-        const categoryName = categorySelect.options[categorySelect.selectedIndex].text; // Ambil nama kategori  
-        const categoryId = categorySelect.value; // Ambil ID kategori  
+        const categoryName = categorySelect.options[categorySelect.selectedIndex].text; // Ambil nama kategori    
+        const categoryId = categorySelect.value; // Ambil ID kategori    
         const postedDate = document.getElementById('postedDateField').value;
 
         const selectedFilters = document.getElementById('selectedFilters');
-        selectedFilters.innerHTML = ''; // Clear previous filters          
+        selectedFilters.innerHTML = ''; // Clear previous filters            
 
         if (fileName) {
             selectedFilters.innerHTML += `<span class="badge badge-primary mr-1">${fileName}<button class="close ml-1" onclick="removeKeyword(this)">×</button></span>`;
@@ -391,16 +391,16 @@
         const badge = button.parentElement;
         badge.remove();
 
-        // Check if all badges are removed    
+        // Check if all badges are removed      
         const selectedFilters = document.getElementById('selectedFilters');
         if (selectedFilters.innerHTML.trim() === '') {
-            // Clear all input fields    
+            // Clear all input fields      
             document.getElementById('fileNameField').value = '';
             document.getElementById('keywordsField').value = '';
             document.getElementById('categoryField').value = '';
             document.getElementById('postedDateField').value = '';
 
-            // Apply filters with empty values to show initial data    
+            // Apply filters with empty values to show initial data      
             applyFilters();
         }
     }
@@ -418,9 +418,9 @@
             posted_date: postedDate
         });
 
-        // AJAX call to apply filters      
+        // AJAX call to apply filters        
         $.ajax({
-            url: '<?= site_url('fixed/search_reports') ?>', // Adjust the controller method URL      
+            url: '<?= site_url('fixed/search_reports') ?>', // Adjust the controller method URL        
             type: 'POST',
             data: {
                 file_name: fileName,
@@ -432,7 +432,7 @@
             success: function(response) {
                 console.log("Response from server:", response);
                 if (response.status == 'success') {
-                    // Update the carousel with the new reports      
+                    // Update the carousel with the new reports        
                     var carouselContent = '';
                     var carouselIndicators = '';
                     $.each(response.reports, function(index, chunk) {
@@ -458,21 +458,77 @@
                         carouselContent += '</div>';
                     });
 
-                    // Update the carousel inner      
+                    // Update the carousel inner        
                     $('#carouselExampleControls1 .carousel-inner').html(carouselContent);
 
-                    // Update carousel indicators      
+                    // Update carousel indicators        
                     var indicatorHtml = '';
                     $.each(response.reports, function(index, chunk) {
                         indicatorHtml += '<li data-target="#carouselExampleControls1" data-slide-to="' + index + '" class="' + (index === 0 ? 'active' : '') + '"></li>';
                     });
                     $('#carouselExampleControls1 .carousel-indicators').html(indicatorHtml);
                 } else {
-                    // If no reports found, display a message      
+                    // If no reports found, display a message        
                     $('#carouselExampleControls1 .carousel-inner').html('<p>No reports found.</p>');
                     $('#carouselExampleControls1 .carousel-indicators').html('');
                 }
             }
         });
     }
+
+    // Add event listener for Enter key on the input fields  
+    document.getElementById('fileNameField').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default action  
+            applyFilters(); // Call the applyFilters function  
+        }
+    });
+
+    document.getElementById('keywordsField').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default action  
+            applyFilters(); // Call the applyFilters function  
+        }
+    });
+
+    document.getElementById('postedDateField').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default action  
+            applyFilters(); // Call the applyFilters function  
+        }
+    });
+
+    // Optionally, you can also add it to the category select if you want to trigger on Enter  
+    document.getElementById('categoryField').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default action  
+            applyFilters(); // Call the applyFilters function  
+        }
+    });
+
+    // Add event listener to clear filters when input is cleared  
+    document.getElementById('fileNameField').addEventListener('input', function() {
+        if (this.value.trim() === '') {
+            applyFilters(); // Call applyFilters to reset to default data  
+        }
+    });
+
+    document.getElementById('keywordsField').addEventListener('input', function() {
+        if (this.value.trim() === '') {
+            applyFilters(); // Call applyFilters to reset to default data  
+        }
+    });
+
+    document.getElementById('postedDateField').addEventListener('input', function() {
+        if (this.value.trim() === '') {
+            applyFilters(); // Call applyFilters to reset to default data  
+        }
+    });
+
+    // Optionally, you can also add it to the category select if you want to trigger on input clear  
+    document.getElementById('categoryField').addEventListener('change', function() {
+        if (this.value === '') {
+            applyFilters(); // Call applyFilters to reset to default data  
+        }
+    });
 </script>
