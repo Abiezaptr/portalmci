@@ -586,10 +586,16 @@
                     </button>
                 </li>
                 <div id="search-field" style="display: none;">
-                    <div class="search-container">
+                    <div class="input-group">
                         <input class="mt-1 form-control" type="text" placeholder="by name or keyword" id="search-input" autocomplete="off" style="font-size: 0.8em;">
+                        <div class="input-group-append">
+                            <button class="btn btn-sm btn-primary" id="search-button" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
+
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="<?= site_url('notification') ?>">
                         <?php if ($total_relevant_notifications > 0): ?>

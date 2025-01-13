@@ -132,7 +132,7 @@
      });
  </script>
 
- <script>
+ <!-- <script>
      var searchIcon = document.getElementById('search-icon');
      var searchField = document.getElementById('search-field');
      var searchInput = document.getElementById('search-input');
@@ -272,7 +272,160 @@
              searchReport.style.display = 'none'; // Sembunyikan elemen    
          }
      });
- </script>
+ </script> -->
+
+ <script>  
+    var searchIcon = document.getElementById('search-icon');  
+    var searchField = document.getElementById('search-field');  
+    var searchInput = document.getElementById('search-input');  
+    var searchReport = document.getElementById('search-report');  
+    var searchResultHr = document.getElementById('search-result-hr');  
+    var searchResultTitle = document.getElementById('search-result-title');  
+    var searchButton = document.getElementById('search-button'); // New search button  
+  
+    searchIcon.addEventListener('click', function(event) {  
+        event.preventDefault(); // Prevent default button action  
+  
+        if (searchField.style.display === 'none' || searchField.style.display === '') {  
+            searchField.style.display = 'block'; // Show search field  
+            searchIcon.style.display = 'none'; // Hide search icon  
+        } else {  
+            searchField.style.display = 'none'; // Hide search field  
+            searchIcon.style.display = 'block'; // Show search icon  
+        }  
+    });  
+  
+    // Event listener for clicks outside the search field  
+    document.addEventListener('click', function(event) {  
+        // Check if the click is outside the search icon and search field  
+        if (!searchIcon.contains(event.target) && !searchField.contains(event.target)) {  
+            searchField.style.display = 'none'; // Hide search field  
+            searchIcon.style.display = 'block'; // Show search icon  
+        }  
+    });  
+  
+    // Function to handle search  
+    function handleSearch() {  
+        var query = searchInput.value.trim(); // Get query from input and trim spaces  
+        if (query === '') { // Check if query is empty  
+            Swal.fire({  
+                icon: 'warning',  
+                title: 'Input Required',  
+                text: 'Please enter a keyword or name to search for reports.',  
+                confirmButtonText: 'OK'  
+            });  
+            return; // Exit function if input is empty  
+        }  
+  
+        var baseUrl = '<?= site_url('home/search') ?>'; // URL for search controller  
+  
+        // AJAX call for search  
+        var xhr = new XMLHttpRequest();  
+        xhr.open('POST', baseUrl, true);  
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');  
+        xhr.onreadystatechange = function() {  
+            if (xhr.readyState === 4 && xhr.status === 200) {  
+                // Display search results  
+                var results = JSON.parse(xhr.responseText); // Assume response is JSON  
+                var html = '';  
+                var indicatorsHtml = '';  
+  
+                // Reset search results display  
+                searchResultHr.style.display = 'block';  
+                searchResultTitle.style.display = 'block';  
+                searchReport.style.display = 'block';  
+  
+                if (results.length > 0) {  
+                    // Group results into carousel  
+                    var chunks = [];  
+                    for (var i = 0; i < results.length; i += 4) {  
+                        chunks.push(results.slice(i, i + 4));  
+                    }  
+  
+                    chunks.forEach(function(chunk, index) {  
+                        html += '<div class="carousel-item ' + (index === 0 ? 'active' : '') + '">';  
+                        html += '<div class="row">';  
+                        chunk.forEach(function(report) {  
+                            html += '<div class="col-md-3">';  
+                            html += '    <a href="' + (report.type === 'article' ?  
+                                '<?= site_url('view-article/') ?>' + encodeURIComponent(report.title.replace(/ /g, '-')) :  
+                                '<?= site_url('view-report/') ?>' + encodeURIComponent(report.title.replace(/ /g, '-'))) + '">';  
+                            html += '        <div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">';  
+                            html += '            <div class="skeleton">';  
+                            html += '                <img src="<?= base_url('uploads/image/') ?>' + report.image + '" class="card-img-top" alt="">';  
+                            html += '                <div class="card-body">';  
+                            html += '                    <p class="card-text text-dark"><small>' + report.title + '</small></p>';  
+                            html += '                </div>';  
+                            html += '            </div>';  
+                            html += '        </div>';  
+                            html += '    </a>';  
+                            html += '</div>';  
+                        });  
+                        html += '</div>'; // Close row          
+                        html += '</div>'; // Close carousel-item          
+                    });  
+  
+                    // Create carousel indicators          
+                    chunks.forEach(function(_, index) {  
+                        indicatorsHtml += '<li data-target="#searchCarousel" data-slide-to="' + index + '" class="' + (index === 0 ? 'active' : '') + '"></li>';  
+                    });  
+  
+                } else {  
+                    // If no results, hide elements and show SweetAlert2      
+                    searchResultHr.style.display = 'none'; // Hide element      
+                    searchReport.style.display = 'none'; // Hide element      
+                    Swal.fire({  
+                        icon: 'warning',  
+                        title: 'No Results Found',  
+                        text: 'Sorry, no reports match your search criteria.',  
+                        confirmButtonText: 'OK'  
+                    });  
+                    return; // Exit function if no results      
+                }  
+  
+                // Insert results into carousel          
+                searchReport.querySelector('.carousel-inner').innerHTML = html;  
+                searchReport.querySelector('.carousel-indicators').innerHTML = indicatorsHtml;  
+  
+                // Update carousel references          
+                var carouselId = 'searchCarousel'; // New ID for carousel          
+  
+                // Inside AJAX call, update references to carousel          
+                searchReport.querySelector('.carousel-control-prev').setAttribute('href', '#' + carouselId);  
+                searchReport.querySelector('.carousel-control-next').setAttribute('href', '#' + carouselId);  
+  
+                // Scroll to search-result-hr      
+                searchResultHr.scrollIntoView({  
+                    behavior: 'smooth'  
+                }); // Scroll to element      
+            }  
+        };  
+        xhr.send('query=' + encodeURIComponent(query)); // Send query              
+    }  
+  
+    // Event listener for pressing Enter in the input field  
+    searchInput.addEventListener('keypress', function(event) {  
+        if (event.key === 'Enter') {  
+            event.preventDefault(); // Prevent default Enter action  
+            handleSearch(); // Call search function  
+        }  
+    });  
+  
+    // Event listener for the search button  
+    searchButton.addEventListener('click', function() {  
+        handleSearch(); // Call search function  
+    });  
+  
+    // Event listener to clear search results when input is cleared  
+    searchInput.addEventListener('input', function() {  
+        if (searchInput.value.trim() === '') {  
+            // If input is empty, hide search results    
+            searchResultHr.style.display = 'none'; // Hide element      
+            searchReport.style.display = 'none'; // Hide element      
+        }  
+    });  
+</script>  
+
 
 
  </body>
