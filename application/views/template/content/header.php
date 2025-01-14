@@ -400,6 +400,52 @@
             animation: pulse 1s infinite;
             /* Apply the pulse animation */
         }
+
+        /* New styles for the news section */
+        .news-section {
+            background: url('./assets/images/contact.jpg') no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 160px;
+            text-align: left;
+            padding-left: 100px;
+        }
+
+        .news-section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .news-section p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .news-section .btn {
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+
+        .news-section .btn:hover {
+            background-color: white;
+            /* Keep the background color on hover */
+            color: #000000;
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+        }
     </style>
 </head>
 
