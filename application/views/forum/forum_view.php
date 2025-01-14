@@ -85,7 +85,7 @@
                     <!-- Tampilan jika tidak ada data -->
                     <div class="no-data" style="text-align: center; margin-top: 50px;">
                         <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No data" style="width: 150px; height: auto;">
-                        <p style="font-size: 16px; color: #6c757d; margin-top: 20px;">Tidak ada thread yang tersedia saat ini. Silakan periksa kembali nanti.</p>
+                        <p style="font-size: 16px; color: #6c757d; margin-top: 20px;">Tidak ada thread yang tersedia pada pencarian saat ini.</p>
                     </div>
                 <?php endif; ?>
             </div>

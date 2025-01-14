@@ -235,6 +235,75 @@ class Forum extends CI_Controller
             return $category['id'] != $category_id; // Ambil kategori lain yang ID-nya tidak sama dengan kategori saat ini
         });
 
+        // Initialize a variable to track relevant notifications
+        $relevant_notifications = [];
+
+        // Fetch user logs (only for the current user)
+        $user_logs = $this->user_log();
+        foreach ($user_logs as $log) {
+            $relevant_notifications[] = [
+                'type' => 'user_log',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
+                'timestamp' => $log->created_at
+            ];
+        }
+
+        // Fetch upload logs
+        $upload_logs = $this->get_upload_logs();
+        foreach ($upload_logs as $log) {
+            // Check if the report is related to the current user
+            if ($log->user_id == $this->session->userdata('id')) {
+                $relevant_notifications[] = [
+                    'type' => 'upload_log',
+                    'message' => $log->username . ' ' . $log->message . '.',
+                    'timestamp' => $log->upload_time
+                ];
+            }
+        }
+
+        // Fetch user read logs
+        $user_read_logs = $this->get_user_read_logs();
+        foreach ($user_read_logs as $log_id) {
+            $this->db->select('*');
+            $this->db->from('user_read_logs');
+            $this->db->where('log_id', $log_id);
+            $log_detail = $this->db->get()->row();
+
+            if ($log_detail) {
+                $relevant_notifications[] = [
+                    'type' => 'user_read_log',
+                    'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
+                    'timestamp' => $log_detail->read_time
+                ];
+            }
+        }
+
+        // Fetch invitation thread logs
+        $invitation_thread_logs = $this->get_invitation_thread_logs();
+        foreach ($invitation_thread_logs as $log) {
+            $user_ids = explode(',', $log->user_id);
+            foreach ($user_ids as $user_id) {
+                if ($user_id == $this->session->userdata('id')) { // Check if the user is the current user
+                    $relevant_notifications[] = [
+                        'type' => 'invitation_thread_log',
+                        'message' => $log->message,
+                        'timestamp' => $log->invitation_time
+                    ];
+                }
+            }
+        }
+
+        // Sort notifications by timestamp
+        usort($relevant_notifications, function ($a, $b) {
+            return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+        });
+
+        // Limit the number of notifications displayed
+        $data['notifications'] = array_slice($relevant_notifications, 0, 5);
+
+        // Count only relevant notifications
+        $data['total_relevant_notifications'] = count($relevant_notifications);
+
         // Load view dengan kategori yang difilter dan nama kategori yang dipilih
         $this->load->view('template/content/header', $data);
         $this->load->view('forum/forum_view', $data);

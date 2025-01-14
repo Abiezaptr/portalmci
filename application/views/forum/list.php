@@ -16,67 +16,69 @@
         <div class="col-md-8">
             <div class="thread-list" id="threadList">
                 <?php foreach ($threads as $thread): ?>
-                    <div class="card thread-card" style="margin-bottom: 20px; padding: 20px; position: relative; border-radius: 0;">
-                        <div class="border-gradient" style="
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    bottom: 0;
-                    width: 8px;
-                    background: linear-gradient(180deg, #ff6a00, #ee0979, #fc6767, #ec008c); /* Gradasi warna */
-                    border-radius: 0;
+                    <a href="<?php echo base_url('form-discussion/' . $thread['id']); ?>" style="text-decoration: none; color: inherit;">
+                        <div class="card thread-card" style="margin-bottom: 20px; padding: 20px; position: relative; border-radius: 0;">
+                            <div class="border-gradient" style="  
+                    position: absolute;  
+                    left: 0;  
+                    top: 0;  
+                    bottom: 0;  
+                    width: 8px;  
+                    background: linear-gradient(180deg, #ff6a00, #ee0979, #fc6767, #ec008c); /* Gradasi warna */  
+                    border-radius: 0;  
                 "></div>
 
-                        <div class="thread-info" style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <a href="<?php echo base_url('form-discussion/' . $thread['id']); ?>" class="thread-title" style="font-weight: bold; color: #800000;"><?php echo $thread['title']; ?></a>
-                            </div>
-                        </div>
-
-                        <!-- Menambahkan gambar di sini -->
-                        <img src="<?php echo base_url('uploads/forum_threads/' . $thread['image']); ?>" alt="Deskripsi Gambar" style="width: 100%; max-height: 220px; height: auto; margin-top: 5px; margin-bottom: 5px;">
-
-
-                        <div class="thread-meta" style="display: flex; align-items: center; margin-top: 2px;">
-                            <div class="user-avatars">
-                                <?php
-                                // Get the users array and limit to the last 3 users
-                                $latest_users = array_slice($thread['users'], -3); // Get the last 3 users
-
-                                foreach ($latest_users as $user): ?>
-                                    <div class="user-avatar" style="background-color: #6c757d;">
-                                        <?php echo strtoupper(substr($user['username'], 0, 1)); // Inisial dari username 
-                                        ?>
-                                    </div>
-                                <?php endforeach; ?>
-
-                                <?php if (count($thread['users']) > 3): ?>
-                                    <div class="user-avatar" style="background-color: #6c757d;">
-                                        <?php echo '3+'; // Indikator jika ada lebih dari 3 users 
-                                        ?>
-                                    </div>
-                                <?php endif; ?>
+                            <div class="thread-info" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <span class="thread-title" style="font-weight: bold; color: #800000;"><?php echo $thread['title']; ?></span>
+                                </div>
                             </div>
 
-                            <span class="posted-time small text-muted" style="margin-left: 10px;" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
-                                <?= htmlspecialchars($thread['contribution_count']); ?> kontribusi&nbsp; ·&nbsp;
-                                <span style="font-size: 12px;" class="posted-time" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
-                                    <span style="font-weight: 500;" class="waktu-lalu"></span>
+                            <!-- Menambahkan gambar di sini -->
+                            <img src="<?php echo base_url('uploads/forum_threads/' . $thread['image']); ?>" alt="Deskripsi Gambar" style="width: 100%; max-height: 220px; height: auto; margin-top: 5px; margin-bottom: 5px;">
+
+                            <div class="thread-meta" style="display: flex; align-items: center; margin-top: 2px;">
+                                <div class="user-avatars">
+                                    <?php
+                                    // Get the users array and limit to the last 3 users  
+                                    $latest_users = array_slice($thread['users'], -3); // Get the last 3 users  
+
+                                    foreach ($latest_users as $user): ?>
+                                        <div class="user-avatar" style="background-color: #6c757d;">
+                                            <?php echo strtoupper(substr($user['username'], 0, 1)); // Inisial dari username   
+                                            ?>
+                                        </div>
+                                    <?php endforeach; ?>
+
+                                    <?php if (count($thread['users']) > 3): ?>
+                                        <div class="user-avatar" style="background-color: #6c757d;">
+                                            <?php echo '3+'; // Indikator jika ada lebih dari 3 users   
+                                            ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <span class="posted-time small text-muted" style="margin-left: 10px;" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
+                                    <?= htmlspecialchars($thread['contribution_count']); ?> kontribusi&nbsp; ·&nbsp;
+                                    <span style="font-size: 12px;" class="posted-time" data-transaction-time="<?= htmlspecialchars($thread['created_at']); ?>">
+                                        <span style="font-weight: 500;" class="waktu-lalu"></span>
+                                    </span>
                                 </span>
-                            </span>
-                        </div>
+                            </div>
 
-                        <p class="thread-description" style="font-size: 14px; color: black; margin-left: 2px; margin-top: 12px;">
-                            <?= htmlspecialchars($thread['content']); ?>
-                        </p>
+                            <p class="thread-description" style="font-size: 14px; color: black; margin-left: 2px; margin-top: 12px;">
+                                <?= htmlspecialchars($thread['content']); ?>
+                            </p>
 
-                        <!-- Bagian kategori -->
-                        <div class="thread-category" style="font-size: 12px; color: black; margin-left: 2px; margin-top: 0px;">
-                            <strong><?php echo $thread['category_name']; ?></strong>
+                            <!-- Bagian kategori -->
+                            <div class="thread-category" style="font-size: 12px; color: black; margin-left: 2px; margin-top: 0px;">
+                                <strong><?php echo $thread['category_name']; ?></strong>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 <?php endforeach; ?>
             </div>
+
         </div>
 
 
