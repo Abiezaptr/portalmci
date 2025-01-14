@@ -35,7 +35,7 @@
                             </div>
 
                             <!-- Menambahkan gambar di sini -->
-                            <img src="<?php echo base_url('uploads/forum_threads/' . $thread['image']); ?>" alt="Deskripsi Gambar" style="width: 100%; max-height: 220px; height: auto; margin-top: 5px; margin-bottom: 5px;">
+                            <img src="<?php echo base_url('uploads/forum_threads/' . $thread['image']); ?>" alt="Deskripsi Gambar" style="width: 100%; max-height: 200px; height: auto; margin-top: 5px; margin-bottom: 5px;">
 
                             <div class="thread-meta" style="display: flex; align-items: center; margin-top: 2px;">
                                 <div class="user-avatars">
@@ -109,7 +109,7 @@
 
             <!-- Button to see all topics with an icon on the right -->
             <div class="text-center mt-4">
-                <a href="<?php echo base_url('all-topics'); ?>" class="btn btn-block" style="
+                <a href="<?php echo base_url('forum/all_topic'); ?>" class="btn btn-block" style="
         padding: 10px 30px;
         font-size: 16px;
         font-weight: 500;
