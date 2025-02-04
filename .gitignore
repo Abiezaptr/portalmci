@@ -14,6 +14,7 @@ application/logs/*
 # Ignore file autoload.php, config.php, dan database.php dalam folder config
 application/config/config.php
 application/config/database.php
+application/controllers/microsoft.php
 
 
 composer.lock

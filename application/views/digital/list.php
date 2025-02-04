@@ -99,7 +99,7 @@
     </nav>
 
     <!-- carousel report -->
-    <h5 class="mt-5">Report</h5>
+    <h5 class="mt-5">New Report</h5>
     <hr>
 
     <!-- filter search report -->

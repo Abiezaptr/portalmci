@@ -100,7 +100,7 @@
 
     <!-- carousel report -->
     <div class="d-flex justify-content-between align-items-center mt-5">
-        <h5>Report</h5>
+        <h5>New Report</h5>
     </div>
     <hr>
 
