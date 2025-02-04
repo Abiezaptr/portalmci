@@ -12,8 +12,9 @@ class Libraries extends CI_Controller
         $this->load->library('form_validation');
         $this->load->model(array('Model'));
 
-        // Cek jika role bukan '1' dan juga bukan '2'
-        if ($this->session->userdata('role') != '1' && $this->session->userdata('role') != '2') {
+        // Cek jika role bukan '1', '2', '3', atau '4'
+        $allowed_roles = array('1', '2', '3', '4', '5', '6');
+        if (!in_array($this->session->userdata('role'), $allowed_roles)) {
             redirect('login');
         }
     }
