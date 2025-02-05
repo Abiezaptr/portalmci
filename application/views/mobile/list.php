@@ -104,27 +104,6 @@
     </div>
     <hr>
 
-    <!-- filter search report -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="document-directory">
-                <div class="search-filters">
-                    <input type="text" id="fileNameField" class="form-control" placeholder="Search by name" oninput="updateSelectedFilters()">
-                    <input type="text" id="keywordsField" class="form-control" placeholder="Search by keyword" oninput="updateSelectedFilters()">
-                    <select id="categoryField" class="form-control" onchange="updateSelectedFilters()">
-                        <option value="" hidden>Categories</option>
-                        <?php foreach ($categories as $category): ?>
-                            <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <input type="date" id="postedDateField" class="form-control" placeholder="Posted Date" oninput="updateSelectedFilters()">
-                    <button class="filter-button" onclick="applyFilters()">Search</button>
-                </div>
-                <div class="selected-filters" id="selectedFilters"></div>
-            </div>
-        </div>
-    </div>
-
 
     <br>
     <div id="carouselExampleControls1" class="carousel slide" data-ride="carousel" data-interval="5000">
