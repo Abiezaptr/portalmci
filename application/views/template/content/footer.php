@@ -7,7 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
 
@@ -69,10 +69,75 @@
 
         calendar.render();
     });
-</script>
+</script> -->
 
 <script>
-    // Removed JavaScript that toggles the 'red' class
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            timeZone: 'Asia/Jakarta',
+            nowIndicator: true,
+            events: function(fetchInfo, successCallback, failureCallback) {
+                fetch('<?= base_url("events/getEvents") ?>')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Events loaded:", data); // Debugging
+
+                        data.forEach(event => {
+                            event.backgroundColor = event.color;
+                        });
+
+                        successCallback(data);
+                    })
+                    .catch(error => failureCallback(error));
+            },
+            eventClick: function(info) {
+                const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+                const eventDate = new Date(info.event.start).toISOString().split('T')[0]; // Pastikan format sama
+
+                // Tentukan tempat event masuk (Upcoming atau Past)
+                const eventSection = eventDate < today ?
+                    document.querySelector('.past-event-section') :
+                    document.querySelector('.upcoming-event-section');
+
+                // Kosongkan jika pertama kali event diklik
+                eventSection.innerHTML = '';
+
+                // Construct the image URL
+                const imageUrl = `<?= base_url('uploads/event/') ?>${info.event.extendedProps.image || 'default-event.png'}`;
+
+                // Tambahkan event ke card yang sesuai
+                eventSection.innerHTML = `
+            <div class="event-card mb-4 p-3" style="border-radius: 10px; background-color: #f9f9f9; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <div class="text-center">
+                    <img src="${imageUrl}" alt="${info.event.title}" style="width: 100%; height: auto; border-radius: 10px 10px 0 0;">
+                </div>
+                <div style="padding: 10px;">
+                    <h6 style="font-weight: bold; color: #800000;">
+                      ${info.event.title}
+                    </h6>
+                    <hr>
+                    <p style="font-size: 14px; color: #777; margin-bottom: 5px;">
+                        <i class="fa fa-calendar-day"></i>&nbsp; ${eventDate}
+                    </p>
+                    <p style="font-size: 14px; color: #555; margin-top: -5px;">
+                        <i class="fa fa-map-marker-alt"></i>&nbsp; ${info.event.extendedProps.location || 'Location not available'}
+                    </p>
+                </div>
+            </div>
+        `;
+            }
+        });
+
+        calendar.render();
+    });
 </script>
 
 <script>

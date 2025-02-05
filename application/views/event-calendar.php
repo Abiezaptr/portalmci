@@ -48,6 +48,44 @@
                         <p class="text-center mt-3"><small>No upcoming events found.</small></p>
                     </div>
                 </div>
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold" style="color: maroon;">Past Event</h6>
+                    </div>
+                    <div class="card-body past-event-section">
+                        <?php if (!empty($past_events)): ?>
+                            <?php foreach ($past_events as $event): ?>
+                                <div class="event-card mb-4 p-3" style="border-radius: 10px; background-color: #f9f9f9; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                                    <div class="text-center">
+                                        <img src="<?= base_url('uploads/event/' . $event->image) ?>"
+                                            alt="<?= htmlspecialchars($event->title) ?>"
+                                            style="width: 100%; height: auto; border-radius: 10px 10px 0 0;">
+                                    </div>
+                                    <div style="padding: 10px;">
+                                        <h6 style="font-weight: bold; color: #800000;">
+                                            <?= htmlspecialchars($event->title) ?>
+                                        </h6>
+                                        <hr>
+                                        <p style="font-size: 14px; color: #777; margin-bottom: 5px;">
+                                            <i class="fa fa-calendar-day"></i>&nbsp;
+                                            <?= date('d M Y', strtotime($event->start_date)) ?> - <?= date('d M Y', strtotime($event->end_date)) ?>
+                                        </p>
+                                        <p style="font-size: 14px; color: #555; margin-top: -5px;">
+                                            <i class="fa fa-map-marker-alt"></i>&nbsp;
+                                            <?= htmlspecialchars($event->location) ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="text-center">
+                                <img src="<?= base_url('assets/images/no-comments.png') ?>" alt="No Past Events" style="width: 100px; height: auto;">
+                            </div>
+                            <p class="text-center mt-3"><small>No past events found.</small></p>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
 
         </div>

@@ -68,9 +68,6 @@
         <a href="<?= site_url('events-calendar') ?>" class="btn-quick btn-danger">Events</a>
         <a href="https://tsel.id/RequestResearch" target="_blank" class="btn-quick btn-danger">Request</a>
     </div>
-    <!-- <hr id="search-result-hr" style="display: none;">
-    <h4 id="search-result-title" style="display: none;">Search Result</h4>
-    <div id="search-report" style="display: none;"></div> -->
 
 </div>
 

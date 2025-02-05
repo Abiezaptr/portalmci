@@ -94,6 +94,12 @@ class Events extends CI_Controller
         // Count only relevant notifications
         $data['total_relevant_notifications'] = count($relevant_notifications);
 
+        // Ambil 3 event terakhir yang sudah lewat
+        $this->db->where('end_date <', date('Y-m-d')); // Event yang sudah lewat
+        $this->db->order_by('end_date', 'DESC'); // Urutkan dari yang terbaru
+        $this->db->limit(3); // Batasi hanya 3 event
+        $data['past_events'] = $this->db->get('events')->result();
+
         // Load view dengan data
         $this->load->view('template/content/header', $data);
         $this->load->view('event-calendar', $data);
@@ -148,18 +154,39 @@ class Events extends CI_Controller
         return $query->result();
     }
 
+    // public function getEvents()
+    // {
+    //     // Ambil tanggal saat ini
+    //     $today = date('Y-m-d');
+
+    //     // Ambil event yang start_date lebih besar atau sama dengan hari ini, dan end_date lebih besar atau sama dengan hari ini
+    //     $this->db->where('start_date >=', $today);
+    //     $this->db->or_where('end_date >=', $today);
+    //     $events = $this->db->get('events')->result();
+
+    //     // Log the events to check if image data is present
+    //     log_message('info', print_r($events, true)); // This will log the events to your log file
+
+    //     $data = [];
+    //     foreach ($events as $event) {
+    //         $data[] = [
+    //             'title'       => $event->title,
+    //             'start'       => $event->start_date,
+    //             'end'         => $event->end_date ? date('Y-m-d', strtotime($event->end_date . ' +1 day')) : null,
+    //             'location'    => $event->location,
+    //             'description' => $event->description,
+    //             'color'       => $event->color,
+    //             'image'       => $event->image // Ensure this is being set
+    //         ];
+    //     }
+
+    //     echo json_encode($data);
+    // }
+
     public function getEvents()
     {
-        // Ambil tanggal saat ini
-        $today = date('Y-m-d');
-
-        // Ambil event yang start_date lebih besar atau sama dengan hari ini, dan end_date lebih besar atau sama dengan hari ini
-        $this->db->where('start_date >=', $today);
-        $this->db->or_where('end_date >=', $today);
+        $this->db->order_by('start_date', 'ASC'); // Urutkan berdasarkan tanggal
         $events = $this->db->get('events')->result();
-
-        // Log the events to check if image data is present
-        log_message('info', print_r($events, true)); // This will log the events to your log file
 
         $data = [];
         foreach ($events as $event) {
@@ -170,7 +197,7 @@ class Events extends CI_Controller
                 'location'    => $event->location,
                 'description' => $event->description,
                 'color'       => $event->color,
-                'image'       => $event->image // Ensure this is being set
+                'image'       => $event->image
             ];
         }
 
