@@ -542,6 +542,71 @@ class Document extends CI_Controller
         echo json_encode($data);
     }
 
+    // public function search_documents()
+    // {
+    //     $keyword = $this->input->post('keyword', true);
+    //     $type_id = $this->input->post('type_id', true);
+
+    //     // Escape dan sesuaikan format keyword
+    //     $keyword = $this->db->escape_like_str($keyword);
+    //     $keyword = str_replace(['_', '-'], ' ', $keyword);
+
+    //     // Query untuk mendapatkan dokumen berdasarkan keyword dan jenis dokumen
+    //     $sql = "SELECT 
+    //             document.id as document_id, 
+    //             document.description, 
+    //             document.summary, 
+    //             document.thumbnail, 
+    //             document.upload_date, 
+    //             document.name as document_name, 
+    //             file, 
+    //             type.name as work_type
+    //         FROM 
+    //             document
+    //         JOIN 
+    //             type ON type.id = document.type_id";
+
+    //     $sql .= " WHERE 1=1"; // Kondisi awal
+
+    //     // Tambahkan kondisi untuk pencarian berdasarkan keyword
+    //     if (!empty($keyword)) {
+    //         $sql .= " AND (REPLACE(REPLACE(document.name, '_', ' '), '-', ' ') LIKE '%$keyword%' 
+    //              OR REPLACE(REPLACE(file, '_', ' '), '-', ' ') LIKE '%$keyword%')";
+    //     }
+
+    //     // Tambahkan kondisi untuk jenis dokumen tertentu jika dipilih
+    //     if ($type_id != 'all') {
+    //         $type_id = $this->db->escape_str($type_id);
+    //         $sql .= " AND type.id = '$type_id'";
+    //     }
+
+    //     // Eksekusi query dan ambil hasilnya
+    //     $query = $this->db->query($sql);
+
+    //     // Format hasil query ke dalam array dokumen yang akan di-encode ke JSON
+    //     $documents = [];
+    //     foreach ($query->result() as $row) {
+    //         $filename = pathinfo($row->file, PATHINFO_FILENAME);
+    //         $filename = preg_replace('/[_\-]+/', ' ', $filename);
+    //         $filename = preg_replace('/\d{2,4}/', '', $filename);
+    //         $filename = ucwords($filename);
+    //         $documents[] = [
+    //             'document_id' => $row->document_id,
+    //             'name' => $row->document_name,
+    //             'label' => $filename,
+    //             'value' => $row->document_id,
+    //             'description' => $row->description,
+    //             'summary' => $row->summary,
+    //             'thumbnail' => $row->thumbnail,
+    //             'upload_date' => $row->upload_date,
+    //             'work_type' => $row->work_type
+    //         ];
+    //     }
+
+    //     // Encode array dokumen ke dalam format JSON dan kirimkan sebagai respons
+    //     echo json_encode($documents);
+    // }
+
     public function search_documents()
     {
         $keyword = $this->input->post('keyword', true);
@@ -551,38 +616,29 @@ class Document extends CI_Controller
         $keyword = $this->db->escape_like_str($keyword);
         $keyword = str_replace(['_', '-'], ' ', $keyword);
 
-        // Ambil user_id dan role dari session
-        $user_id = $this->session->userdata('id');
-        $role = $this->session->userdata('role');
-
         // Query untuk mendapatkan dokumen berdasarkan keyword dan jenis dokumen
         $sql = "SELECT 
-                document.id as document_id, 
-                document.description, 
-                document.summary, 
-                document.thumbnail, 
-                document.upload_date, 
-                document.name as document_name, 
-                file, 
-                type.name as work_type
-            FROM 
-                document
-            JOIN 
-                type ON type.id = document.type_id";
-
-        // Tambahkan join untuk memeriksa izin pengguna pada dokumen jika role adalah user (2)
-        if ($role == 2) {
-            $sql .= " INNER JOIN user_document_permissions 
-                  ON user_document_permissions.document_id = document.id 
-                  AND user_document_permissions.user_id = $user_id";
-        }
+            document.id as document_id, 
+            document.description, 
+            document.summary, 
+            document.keyword, 
+            document.thumbnail, 
+            document.upload_date, 
+            document.name as document_name, 
+            file, 
+            type.name as work_type
+        FROM 
+            document
+        JOIN 
+            type ON type.id = document.type_id";
 
         $sql .= " WHERE 1=1"; // Kondisi awal
 
-        // Tambahkan kondisi untuk pencarian berdasarkan keyword
+        // Tambahkan kondisi untuk pencarian berdasarkan keyword di document.name, file, dan document.keywords
         if (!empty($keyword)) {
             $sql .= " AND (REPLACE(REPLACE(document.name, '_', ' '), '-', ' ') LIKE '%$keyword%' 
-                 OR REPLACE(REPLACE(file, '_', ' '), '-', ' ') LIKE '%$keyword%')";
+                 OR REPLACE(REPLACE(file, '_', ' '), '-', ' ') LIKE '%$keyword%'
+                 OR REPLACE(REPLACE(document.keyword, '_', ' '), '-', ' ') LIKE '%$keyword%')";
         }
 
         // Tambahkan kondisi untuk jenis dokumen tertentu jika dipilih

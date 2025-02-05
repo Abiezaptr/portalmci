@@ -47,7 +47,7 @@
                                             <div class="form-icon form-icon-left">
                                                 <em class="icon ni ni-search"></em>
                                             </div>
-                                            <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Search document">
+                                            <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Search document by name or keyword">
                                         </div>
                                     </div>
                                 </div>
@@ -193,8 +193,20 @@
                             <div class="col-md-6">
                                 <h6><small><i><b><?= $d->type_name ?></b></i></small></h6>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 mb-2">
                                 <h6><small><i><b><em class="icon ni ni-clock"></em> Upload time : <?= date('d F Y', strtotime($d->upload_date)) ?></b></i></small></h6>
+                            </div>
+                            <hr>
+                            <div class="col-md-6">
+                                <h6><small><i><b>Keywords</b></i></small></h6>
+                            </div>
+                            <div class="col-md-6">
+                                <h6><small>
+                                        <?php
+                                        $keywords = explode(',', $d->keyword);
+                                        echo implode(', ', array_map('trim', $keywords));
+                                        ?>
+                                    </small></h6>
                             </div>
                         </div>
                         <hr>

@@ -69,16 +69,15 @@
                             </select>
                         </div>
                     </div>
-
-
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="users" style="font-size: 13px; font-weight: 600;">Users Joined</label>
                             <select class="form-control" id="users" name="user_id[]" multiple="multiple">
                                 <?php foreach ($users as $user): ?>
-                                    <option value="<?= $user['id']; ?>"><?= $user['username']; ?></option>
+                                    <option value="<?= $user['id']; ?>" selected><?= $user['username']; ?></option>
                                 <?php endforeach; ?>
                             </select>
+
                         </div>
                     </div>
 

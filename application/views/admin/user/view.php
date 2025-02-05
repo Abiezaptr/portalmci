@@ -1,4 +1,17 @@
      <!-- Begin Page Content -->
+     <style>
+         .purple {
+             background-color: rgb(77, 7, 61);
+             /* Warna latar belakang */
+             color: white;
+             /* Warna teks */
+         }
+
+         .maroon {
+             background-color: rgb(202, 119, 119);
+             color: white;
+         }
+     </style>
      <div class="container-fluid">
 
          <!-- DataTales Example -->
@@ -6,14 +19,6 @@
              <div class="card-header py-3 d-flex justify-content-between align-items-center">
                  <!-- Title on the left -->
                  <h6 class="m-0 font-weight-bold" style="color: maroon;">Manage User</h6>
-
-                 <!-- Add button on the right -->
-                 <!-- <a href="#" class="btn btn-danger btn-sm btn-icon-split" data-toggle="modal" data-target="#newUserModal">
-                     <span class="icon text-white-50">
-                         <i class="fas fa-plus"></i>
-                     </span>
-                     <span class="text">New Users</span>
-                 </a> -->
 
                  <a href="<?= site_url('admin/user/add') ?>" class="btn btn-danger btn-sm btn-icon-split">
                      <span class="icon text-white-50">
@@ -45,16 +50,18 @@
                                          <td><?= $user['username']; ?></td>
                                          <td style="color: maroon;"><?= $user['email']; ?></td>
                                          <td>
-                                             <?php if ($user['role'] == '3'): ?>
-                                                 <span class="badge badge-light">Admin Mobile</span>
-                                             <?php elseif ($user['role'] == '1'): ?>
-                                                 <span class="badge badge-light">Superadmin</span>
+                                             <?php if ($user['role'] == '1'): ?>
+                                                 <span class="badge bg-primary text-white">Superadmin</span>
+                                             <?php elseif ($user['role'] == '2'): ?>
+                                                 <span class="badge bg-danger text-white">Guest</span>
+                                             <?php elseif ($user['role'] == '3'): ?>
+                                                 <span class="badge bg-success text-white">Admin Mobile</span>
                                              <?php elseif ($user['role'] == '4'): ?>
-                                                 <span class="badge badge-light">Admin Fixed</span>
+                                                 <span class="badge bg-warning text-white">Admin Fixed</span>
                                              <?php elseif ($user['role'] == '5'): ?>
-                                                 <span class="badge badge-light">Admin Digital</span>
+                                                 <span class="badge purple text-white">Admin Digital</span>
                                              <?php elseif ($user['role'] == '6'): ?>
-                                                 <span class="badge badge-light">Admin Global</span>
+                                                 <span class="badge maroon">Admin Global</span>
                                              <?php endif; ?>
                                          </td>
                                          <td>
@@ -163,10 +170,12 @@
                              <div class="form-group">
                                  <label for="role">Role</label>
                                  <select class="form-control" id="role" name="role">
+                                     <option value="1" <?= $user['role'] == '1' ? 'selected' : ''; ?>>Superadmin</option>
                                      <option value="3" <?= $user['role'] == '3' ? 'selected' : ''; ?>>Admin Mobile</option>
                                      <option value="4" <?= $user['role'] == '4' ? 'selected' : ''; ?>>Admin Fixed</option>
                                      <option value="5" <?= $user['role'] == '5' ? 'selected' : ''; ?>>Admin Digital Insight</option>
                                      <option value="6" <?= $user['role'] == '6' ? 'selected' : ''; ?>>Admin Global</option>
+                                     <option value="2" <?= $user['role'] == '2' ? 'selected' : ''; ?>>Guest</option>
                                  </select>
                              </div>
                          </div>
