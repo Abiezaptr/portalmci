@@ -446,6 +446,60 @@
             cursor: pointer;
             animation: bounce 2s infinite;
         }
+
+        .notification-icon {
+            position: absolute;
+            top: 26%;
+            /* Center vertically */
+            left: 17px;
+            /* Adjust this value to position it horizontally to the left of the bell */
+            transform: translateY(-50%);
+            /* Center the icon vertically */
+            font-size: 0.6rem;
+            /* Adjust size as needed */
+            color: white;
+            /* Change color if needed */
+            animation: pulse 1s infinite;
+            /* Apply the pulse animation */
+        }
+
+        .search-container {
+            position: relative;
+            /* Untuk posisi ikon */
+        }
+
+        .search-input {
+            width: 350px;
+            /* Lebar input yang lebih panjang */
+            padding: 10px;
+            /* Padding untuk input */
+            border: 2px solid #007bff;
+            /* Warna border */
+            border-radius: 25px;
+            /* Membuat sudut input melengkung */
+            font-size: 16px;
+            /* Ukuran font untuk teks input */
+            transition: border-color 0.3s, box-shadow 0.3s;
+            /* Transisi untuk efek hover */
+            outline: none;
+            /* Menghilangkan outline default */
+        }
+
+        .search-input::placeholder {
+            color: #aaa;
+            /* Warna placeholder */
+            font-size: 10px;
+            /* Ukuran font placeholder lebih kecil */
+            opacity: 1;
+            /* Opacity placeholder */
+        }
+
+        .search-input:focus {
+            border-color: #0056b3;
+            /* Warna border saat fokus */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            /* Efek bayangan saat fokus */
+        }
     </style>
 </head>
 
@@ -476,6 +530,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?= site_url('contact-us') ?>" style="font-size: 14px;">Contact</a>
                 </li>
+                <!-- <li class="nav-item">
+                    <div id="search-field">
+                        <div class="input-group align-items-center">
+                            <input class="mt-1 form-control" type="text" placeholder="by name or keyword" id="search-input" autocomplete="off" style="font-size: 0.8em;">
+                            <div class="input-group-append">
+                                <button style="margin-top: 3px; background-color: #a81b1b; color:#f8f9fa; border: none; font-size: 1.2em; padding: 3px 10px;" id="search-button" type="button">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </li> -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="<?= site_url('notification') ?>">
                         <?php if ($total_relevant_notifications > 0): ?>

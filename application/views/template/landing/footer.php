@@ -132,301 +132,125 @@
      });
  </script>
 
- <!-- <script>
-     var searchIcon = document.getElementById('search-icon');
+ <script>
      var searchField = document.getElementById('search-field');
      var searchInput = document.getElementById('search-input');
      var searchReport = document.getElementById('search-report');
      var searchResultHr = document.getElementById('search-result-hr');
      var searchResultTitle = document.getElementById('search-result-title');
+     var searchButton = document.getElementById('search-button');
+     var searchResultsContainer = document.getElementById('search-results'); // Tambahkan elemen untuk hasil
 
-     searchIcon.addEventListener('click', function(event) {
-         event.preventDefault(); // Mencegah aksi default tombol              
+     // Tampilkan form pencarian langsung tanpa ikon
+     searchField.style.display = 'block';
 
-         if (searchField.style.display === 'none' || searchField.style.display === '') {
-             searchField.style.display = 'block'; // Tampilkan field pencarian                
-             searchIcon.style.display = 'none'; // Sembunyikan ikon pencarian              
-         } else {
-             searchField.style.display = 'none'; // Sembunyikan field pencarian                
-             searchIcon.style.display = 'block'; // Tampilkan kembali ikon pencarian              
+     function handleSearch() {
+         var query = searchInput.value.trim();
+         if (query === '') {
+             Swal.fire({
+                 icon: 'warning',
+                 title: 'Input Required',
+                 text: 'Please enter a keyword or name to search for reports.',
+                 confirmButtonText: 'OK'
+             });
+             return;
          }
-     });
 
-     // Event listener untuk klik di luar field pencarian              
-     document.addEventListener('click', function(event) {
-         // Cek apakah klik terjadi di luar ikon pencarian dan field pencarian              
-         if (!searchIcon.contains(event.target) && !searchField.contains(event.target)) {
-             searchField.style.display = 'none'; // Sembunyikan field pencarian              
-             searchIcon.style.display = 'block'; // Tampilkan kembali ikon pencarian              
-         }
-     });
+         var baseUrl = '<?= site_url('home/search') ?>';
 
-     // Event listener untuk menangani pencarian saat menekan Enter            
-     searchInput.addEventListener('keypress', function(event) {
-         if (event.key === 'Enter') {
-             event.preventDefault(); // Mencegah aksi default Enter            
+         var xhr = new XMLHttpRequest();
+         xhr.open('POST', baseUrl, true);
+         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+         xhr.onreadystatechange = function() {
+             if (xhr.readyState === 4 && xhr.status === 200) {
+                 var results = JSON.parse(xhr.responseText);
+                 var html = '';
+                 var indicatorsHtml = '';
 
-             var query = searchInput.value.trim(); // Ambil query dari input dan hapus spasi di awal/akhir  
-             if (query === '') { // Cek apakah query kosong  
-                 Swal.fire({
-                     icon: 'warning',
-                     title: 'Input Required',
-                     text: 'Please enter a keyword or name to search for reports.',
-                     confirmButtonText: 'OK'
-                 });
-                 return; // Keluar dari fungsi jika input kosong  
-             }
-
-             var baseUrl = '<?= site_url('home/search') ?>'; // URL untuk controller search        
-
-             // AJAX call untuk pencarian            
-             var xhr = new XMLHttpRequest();
-             xhr.open('POST', baseUrl, true);
-             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-             xhr.onreadystatechange = function() {
-                 if (xhr.readyState === 4 && xhr.status === 200) {
-                     // Tampilkan hasil pencarian            
-                     var results = JSON.parse(xhr.responseText); // Asumsikan respons adalah JSON            
-                     var html = '';
-                     var indicatorsHtml = '';
-
-                     // Reset tampilan hasil pencarian        
+                 if (results.length > 0) {
                      searchResultHr.style.display = 'block';
-                     searchResultTitle.style.display = 'block';
                      searchReport.style.display = 'block';
+                     searchResultTitle.style.display = 'block'; // Tampilkan judul hasil pencarian
 
-                     if (results.length > 0) {
-                         // Mengelompokkan hasil ke dalam carousel        
-                         var chunks = [];
-                         for (var i = 0; i < results.length; i += 4) {
-                             chunks.push(results.slice(i, i + 4));
-                         }
-
-                         chunks.forEach(function(chunk, index) {
-                             html += '<div class="carousel-item ' + (index === 0 ? 'active' : '') + '">';
-                             html += '<div class="row">';
-                             chunk.forEach(function(report) {
-                                 html += '<div class="col-md-3">';
-                                 html += '    <a href="' + (report.type === 'article' ?
-                                     '<?= site_url('view-article/') ?>' + encodeURIComponent(report.title.replace(/ /g, '-')) :
-                                     '<?= site_url('view-report/') ?>' + encodeURIComponent(report.title.replace(/ /g, '-'))) + '">';
-                                 html += '        <div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">';
-                                 html += '            <div class="skeleton">';
-                                 html += '                <img src="<?= base_url('uploads/image/') ?>' + report.image + '" class="card-img-top" alt="">';
-                                 html += '                <div class="card-body">';
-                                 html += '                    <p class="card-text text-dark"><small>' + report.title + '</small></p>';
-                                 html += '                </div>';
-                                 html += '            </div>';
-                                 html += '        </div>';
-                                 html += '    </a>';
-                                 html += '</div>';
-                             });
-                             html += '</div>'; // Close row        
-                             html += '</div>'; // Close carousel-item        
-                         });
-
-                         // Membuat indikator carousel        
-                         chunks.forEach(function(_, index) {
-                             indicatorsHtml += '<li data-target="#searchCarousel" data-slide-to="' + index + '" class="' + (index === 0 ? 'active' : '') + '"></li>';
-                         });
-
-                     } else {
-                         // Jika tidak ada hasil, sembunyikan elemen dan tampilkan SweetAlert2    
-                         searchResultHr.style.display = 'none'; // Sembunyikan elemen    
-                         searchReport.style.display = 'none'; // Sembunyikan elemen    
-                         Swal.fire({
-                             icon: 'warning',
-                             title: 'No Results Found',
-                             text: 'Sorry, no reports match your search criteria.',
-                             confirmButtonText: 'OK'
-                         });
-                         return; // Keluar dari fungsi jika tidak ada hasil    
+                     var chunks = [];
+                     for (var i = 0; i < results.length; i += 4) {
+                         chunks.push(results.slice(i, i + 4));
                      }
 
-                     // Menyisipkan hasil ke dalam carousel        
+                     chunks.forEach(function(chunk, index) {
+                         html += '<div class="carousel-item ' + (index === 0 ? 'active' : '') + '">';
+                         html += '<div class="row">';
+                         chunk.forEach(function(report) {
+                             html += '<div class="col-md-3">';
+                             html += '    <a href="' + (report.type === 'article' ?
+                                 '<?= site_url('view-article/') ?>' + encodeURIComponent(report.title.replace(/ /g, '-')) :
+                                 '<?= site_url('view-report/') ?>' + encodeURIComponent(report.title.replace(/ /g, '-'))) + '">';
+                             html += '        <div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">';
+                             html += '            <div class="skeleton">';
+                             html += '                <img src="<?= base_url('uploads/image/') ?>' + report.image + '" class="card-img-top" alt="">';
+                             html += '                <div class="card-body">';
+                             html += '                    <p class="card-text text-dark"><small>' + report.title + '</small></p>';
+                             html += '                </div>';
+                             html += '            </div>';
+                             html += '        </div>';
+                             html += '    </a>';
+                             html += '</div>';
+                         });
+                         html += '</div>';
+                         html += '</div>';
+                     });
+
+                     chunks.forEach(function(_, index) {
+                         indicatorsHtml += '<li data-target="#searchCarousel" data-slide-to="' + index + '" class="' + (index === 0 ? 'active' : '') + '"></li>';
+                     });
+
                      searchReport.querySelector('.carousel-inner').innerHTML = html;
                      searchReport.querySelector('.carousel-indicators').innerHTML = indicatorsHtml;
 
-                     // Ganti referensi ID di JavaScript        
-                     var carouselId = 'searchCarousel'; // ID baru untuk carousel        
+                     // Scroll ke hasil pencarian setelah data ditampilkan
+                     setTimeout(function() {
+                         searchResultHr.scrollIntoView({
+                             behavior: 'smooth',
+                             block: 'start'
+                         });
+                     }, 500);
 
-                     // Di dalam AJAX call, ubah referensi ke carousel        
-                     searchReport.querySelector('.carousel-control-prev').setAttribute('href', '#' + carouselId);
-                     searchReport.querySelector('.carousel-control-next').setAttribute('href', '#' + carouselId);
+                 } else {
+                     searchResultHr.style.display = 'none';
+                     searchReport.style.display = 'none';
+                     searchResultTitle.style.display = 'none'; // Sembunyikan jika tidak ada hasil
 
-                     // Scroll ke elemen search-result-hr    
-                     searchResultHr.scrollIntoView({
-                         behavior: 'smooth'
-                     }); // Menggulung ke elemen    
+                     Swal.fire({
+                         icon: 'warning',
+                         title: 'No Results Found',
+                         text: 'Sorry, no reports match your search criteria.',
+                         confirmButtonText: 'OK'
+                     });
                  }
-             };
-             xhr.send('query=' + encodeURIComponent(query)); // Kirimkan query            
+             }
+         };
+         xhr.send('query=' + encodeURIComponent(query));
+     }
+
+
+     searchInput.addEventListener('keypress', function(event) {
+         if (event.key === 'Enter') {
+             event.preventDefault();
+             handleSearch();
          }
      });
 
-     // Event listener untuk menghapus hasil pencarian saat input dihapus  
+     searchButton.addEventListener('click', function() {
+         handleSearch();
+     });
+
      searchInput.addEventListener('input', function() {
          if (searchInput.value.trim() === '') {
-             // Jika input kosong, sembunyikan hasil pencarian  
-             searchResultHr.style.display = 'none'; // Sembunyikan elemen    
-             searchReport.style.display = 'none'; // Sembunyikan elemen    
+             searchResultHr.style.display = 'none';
+             searchReport.style.display = 'none';
          }
      });
- </script> -->
-
- <script>  
-    var searchIcon = document.getElementById('search-icon');  
-    var searchField = document.getElementById('search-field');  
-    var searchInput = document.getElementById('search-input');  
-    var searchReport = document.getElementById('search-report');  
-    var searchResultHr = document.getElementById('search-result-hr');  
-    var searchResultTitle = document.getElementById('search-result-title');  
-    var searchButton = document.getElementById('search-button'); // New search button  
-  
-    searchIcon.addEventListener('click', function(event) {  
-        event.preventDefault(); // Prevent default button action  
-  
-        if (searchField.style.display === 'none' || searchField.style.display === '') {  
-            searchField.style.display = 'block'; // Show search field  
-            searchIcon.style.display = 'none'; // Hide search icon  
-        } else {  
-            searchField.style.display = 'none'; // Hide search field  
-            searchIcon.style.display = 'block'; // Show search icon  
-        }  
-    });  
-  
-    // Event listener for clicks outside the search field  
-    document.addEventListener('click', function(event) {  
-        // Check if the click is outside the search icon and search field  
-        if (!searchIcon.contains(event.target) && !searchField.contains(event.target)) {  
-            searchField.style.display = 'none'; // Hide search field  
-            searchIcon.style.display = 'block'; // Show search icon  
-        }  
-    });  
-  
-    // Function to handle search  
-    function handleSearch() {  
-        var query = searchInput.value.trim(); // Get query from input and trim spaces  
-        if (query === '') { // Check if query is empty  
-            Swal.fire({  
-                icon: 'warning',  
-                title: 'Input Required',  
-                text: 'Please enter a keyword or name to search for reports.',  
-                confirmButtonText: 'OK'  
-            });  
-            return; // Exit function if input is empty  
-        }  
-  
-        var baseUrl = '<?= site_url('home/search') ?>'; // URL for search controller  
-  
-        // AJAX call for search  
-        var xhr = new XMLHttpRequest();  
-        xhr.open('POST', baseUrl, true);  
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');  
-        xhr.onreadystatechange = function() {  
-            if (xhr.readyState === 4 && xhr.status === 200) {  
-                // Display search results  
-                var results = JSON.parse(xhr.responseText); // Assume response is JSON  
-                var html = '';  
-                var indicatorsHtml = '';  
-  
-                // Reset search results display  
-                searchResultHr.style.display = 'block';  
-                searchResultTitle.style.display = 'block';  
-                searchReport.style.display = 'block';  
-  
-                if (results.length > 0) {  
-                    // Group results into carousel  
-                    var chunks = [];  
-                    for (var i = 0; i < results.length; i += 4) {  
-                        chunks.push(results.slice(i, i + 4));  
-                    }  
-  
-                    chunks.forEach(function(chunk, index) {  
-                        html += '<div class="carousel-item ' + (index === 0 ? 'active' : '') + '">';  
-                        html += '<div class="row">';  
-                        chunk.forEach(function(report) {  
-                            html += '<div class="col-md-3">';  
-                            html += '    <a href="' + (report.type === 'article' ?  
-                                '<?= site_url('view-article/') ?>' + encodeURIComponent(report.title.replace(/ /g, '-')) :  
-                                '<?= site_url('view-report/') ?>' + encodeURIComponent(report.title.replace(/ /g, '-'))) + '">';  
-                            html += '        <div class="card" style="width: 100%; max-width: 250px; overflow: hidden; margin: 0 auto;">';  
-                            html += '            <div class="skeleton">';  
-                            html += '                <img src="<?= base_url('uploads/image/') ?>' + report.image + '" class="card-img-top" alt="">';  
-                            html += '                <div class="card-body">';  
-                            html += '                    <p class="card-text text-dark"><small>' + report.title + '</small></p>';  
-                            html += '                </div>';  
-                            html += '            </div>';  
-                            html += '        </div>';  
-                            html += '    </a>';  
-                            html += '</div>';  
-                        });  
-                        html += '</div>'; // Close row          
-                        html += '</div>'; // Close carousel-item          
-                    });  
-  
-                    // Create carousel indicators          
-                    chunks.forEach(function(_, index) {  
-                        indicatorsHtml += '<li data-target="#searchCarousel" data-slide-to="' + index + '" class="' + (index === 0 ? 'active' : '') + '"></li>';  
-                    });  
-  
-                } else {  
-                    // If no results, hide elements and show SweetAlert2      
-                    searchResultHr.style.display = 'none'; // Hide element      
-                    searchReport.style.display = 'none'; // Hide element      
-                    Swal.fire({  
-                        icon: 'warning',  
-                        title: 'No Results Found',  
-                        text: 'Sorry, no reports match your search criteria.',  
-                        confirmButtonText: 'OK'  
-                    });  
-                    return; // Exit function if no results      
-                }  
-  
-                // Insert results into carousel          
-                searchReport.querySelector('.carousel-inner').innerHTML = html;  
-                searchReport.querySelector('.carousel-indicators').innerHTML = indicatorsHtml;  
-  
-                // Update carousel references          
-                var carouselId = 'searchCarousel'; // New ID for carousel          
-  
-                // Inside AJAX call, update references to carousel          
-                searchReport.querySelector('.carousel-control-prev').setAttribute('href', '#' + carouselId);  
-                searchReport.querySelector('.carousel-control-next').setAttribute('href', '#' + carouselId);  
-  
-                // Scroll to search-result-hr      
-                searchResultHr.scrollIntoView({  
-                    behavior: 'smooth'  
-                }); // Scroll to element      
-            }  
-        };  
-        xhr.send('query=' + encodeURIComponent(query)); // Send query              
-    }  
-  
-    // Event listener for pressing Enter in the input field  
-    searchInput.addEventListener('keypress', function(event) {  
-        if (event.key === 'Enter') {  
-            event.preventDefault(); // Prevent default Enter action  
-            handleSearch(); // Call search function  
-        }  
-    });  
-  
-    // Event listener for the search button  
-    searchButton.addEventListener('click', function() {  
-        handleSearch(); // Call search function  
-    });  
-  
-    // Event listener to clear search results when input is cleared  
-    searchInput.addEventListener('input', function() {  
-        if (searchInput.value.trim() === '') {  
-            // If input is empty, hide search results    
-            searchResultHr.style.display = 'none'; // Hide element      
-            searchReport.style.display = 'none'; // Hide element      
-        }  
-    });  
-</script>  
-
-
+ </script>
 
  </body>
 

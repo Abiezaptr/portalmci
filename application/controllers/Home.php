@@ -197,4 +197,32 @@ class Home extends CI_Controller
 		// Return results as JSON      
 		echo json_encode($result->result_array()); // Use result_array() for easier JSON encoding      
 	}
+
+	public function search_report()
+	{
+		// Ambil query dari request POST
+		$query = $this->input->post('query');
+
+		// Cek jika query kosong
+		if (empty($query)) {
+			// Tidak ada query, redirect kembali ke halaman pencarian dengan pesan error
+			$this->session->set_flashdata('error', 'Please enter a search query.');
+			redirect('home');  // Ganti 'search_page' dengan URL halaman pencarian yang sesuai
+		}
+
+		// Query untuk mencari laporan berdasarkan title atau keywords
+		$this->db->group_start(); // Mulai grup kondisi  
+		$this->db->like('title', $query);
+		$this->db->or_like('keywords', $query);
+		$this->db->group_end(); // Akhiri grup kondisi  
+
+		$this->db->where('type', 'pdf'); // Filter untuk tipe 'pdf'
+		$result = $this->db->get('reports'); // Ambil data laporan
+
+		// Menyimpan hasil pencarian ke dalam session
+		$this->session->set_userdata('search_results', $result->result_array());
+
+		// Redirect kembali ke halaman pencarian
+		redirect('search_page');  // Ganti 'search_page' dengan URL halaman pencarian yang sesuai
+	}
 }

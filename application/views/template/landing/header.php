@@ -432,6 +432,11 @@
             cursor: pointer;
         }
 
+        .btn-search {
+            background-color: rgb(255, 253, 253);
+            color: white;
+        }
+
         .btn:hover {
             background-color: #a81b1b;
         }
@@ -580,21 +585,19 @@
                 <li class="nav-item">
                     <a class="nav-link" style="font-size: 14px;" href="<?= site_url('contact-us') ?>">Contact</a>
                 </li>
+
                 <li class="nav-item">
-                    <button class="nav-link" id="search-icon" style="background: none; border: none; cursor: pointer;">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </li>
-                <div id="search-field" style="display: none;">
-                    <div class="input-group">
-                        <input class="mt-1 form-control" type="text" placeholder="by name or keyword" id="search-input" autocomplete="off" style="font-size: 0.8em;">
-                        <div class="input-group-append">
-                            <button class="btn btn-sm btn-primary" id="search-button" type="button">
-                                <i class="fas fa-search"></i>
-                            </button>
+                    <div id="search-field">
+                        <div class="input-group align-items-center">
+                            <input class="mt-1 form-control" type="text" placeholder="by name or keyword" id="search-input" autocomplete="off" style="font-size: 0.8em;">
+                            <div class="input-group-append">
+                                <button style="margin-top: 3px; background-color: #a81b1b; color:#f8f9fa; border: none; font-size: 1.2em; padding: 3px 10px;" id="search-button" type="button">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </li>
 
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="<?= site_url('notification') ?>">
