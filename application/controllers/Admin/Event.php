@@ -181,6 +181,60 @@ class Event extends CI_Controller
     }
 
 
+    // public function insert()
+    // {
+    //     // Ambil data dari form
+    //     $event_name = $this->input->post('event_name');
+    //     $title = $this->input->post('title');
+    //     $start_date = $this->input->post('start_date');
+    //     $end_date = $this->input->post('end_date');
+    //     $location = $this->input->post('location');
+    //     $description = $this->input->post('description');
+    //     $color = $this->input->post('color');
+
+    //     // Tangani upload gambar
+    //     $image = $_FILES['image']['name'];
+
+    //     // Upload gambar
+    //     if ($image) {
+    //         // Konfigurasi upload untuk gambar
+    //         $config['upload_path'] = './uploads/event/'; // Path untuk gambar
+    //         $config['allowed_types'] = 'jpg|jpeg|png'; // Tipe gambar yang diizinkan
+
+    //         // Inisialisasi library upload dengan konfigurasi
+    //         $this->upload->initialize($config);
+
+    //         // Lakukan upload
+    //         if (!$this->upload->do_upload('image')) {
+    //             // Tangani error upload gambar
+    //             $error = $this->upload->display_errors();
+    //             echo "Error upload gambar: " . $error; // Pesan error dalam bahasa Indonesia
+    //             return;
+    //         } else {
+    //             $image = $this->upload->data('file_name'); // Dapatkan nama file yang diupload
+    //         }
+    //     }
+
+    //     // Siapkan data untuk dimasukkan
+    //     $data = array(
+    //         'event_name' => $event_name,
+    //         'title' => $title,
+    //         'start_date' => $start_date,
+    //         'end_date' => $end_date,
+    //         'location' => $location,
+    //         'description' => $description,
+    //         'color' => $color,
+    //         'image' => $image,
+    //     );
+
+    //     // Masukkan ke database
+    //     $this->db->insert('events', $data);
+
+    //     $this->session->set_flashdata('success', 'Event berhasil ditambahkan.');
+    //     // Redirect atau muat tampilan dengan pesan sukses
+    //     redirect('event'); // Redirect ke halaman yang diinginkan
+    // }
+
     public function insert()
     {
         // Ambil data dari form
@@ -191,6 +245,13 @@ class Event extends CI_Controller
         $location = $this->input->post('location');
         $description = $this->input->post('description');
         $color = $this->input->post('color');
+
+        // Validasi: end_date tidak boleh kurang dari start_date
+        if (strtotime($end_date) < strtotime($start_date)) {
+            $this->session->set_flashdata('error', 'The end date cannot be less than the start date.');
+            redirect('event'); // Redirect kembali ke halaman tambah event
+            return;
+        }
 
         // Tangani upload gambar
         $image = $_FILES['image']['name'];
@@ -208,7 +269,8 @@ class Event extends CI_Controller
             if (!$this->upload->do_upload('image')) {
                 // Tangani error upload gambar
                 $error = $this->upload->display_errors();
-                echo "Error upload gambar: " . $error; // Pesan error dalam bahasa Indonesia
+                $this->session->set_flashdata('error', "Error upload gambar: " . $error);
+                redirect('event/add');
                 return;
             } else {
                 $image = $this->upload->data('file_name'); // Dapatkan nama file yang diupload
@@ -231,11 +293,8 @@ class Event extends CI_Controller
         $this->db->insert('events', $data);
 
         $this->session->set_flashdata('success', 'Event berhasil ditambahkan.');
-        // Redirect atau muat tampilan dengan pesan sukses
         redirect('event'); // Redirect ke halaman yang diinginkan
     }
-
-
 
 
     // Memperbarui event
