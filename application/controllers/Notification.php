@@ -33,7 +33,9 @@ class Notification extends CI_Controller
                 'type' => 'user_log',
                 'title' => 'Pendaftaran Akun Baru',
                 'message' => ' Terima kasih, registrasi Akun Anda berhasil.',
-                'timestamp' => $log->created_at
+                'timestamp' => $log->created_at,
+                'id' => $log->id,
+                'is_read' => $log->is_read
             ];
         }
 
@@ -42,16 +44,16 @@ class Notification extends CI_Controller
                 'type' => 'upload_log',
                 'title' => 'Upload Dokumen Baru',
                 'message' => $log->username . ' ' . $log->message . '.',
-                'timestamp' => $log->upload_time
+                'timestamp' => $log->upload_time,
+                'id' => $log->id,
+                'is_read' => $log->is_read
             ];
         }
 
-        foreach ($user_read_logs as $log_id) {
-            // Anda perlu mengambil detail log berdasarkan log_id jika diperlukan
-            // Misalnya, ambil detail dari tabel user_read_logs
+        foreach ($user_read_logs as $log) {
             $this->db->select('*');
             $this->db->from('user_read_logs');
-            $this->db->where('log_id', $log_id);
+            $this->db->where('log_id', $log);
             $log_detail = $this->db->get()->row();
 
             if ($log_detail) {
@@ -75,9 +77,11 @@ class Notification extends CI_Controller
                 if ($user) {
                     $notifications[] = [
                         'type' => 'invitation_thread_log',
+                        'id' => $log->id,
                         'title' => 'Undangan Thread Baru',
                         'message' => 'Anda telah' . ' ' . $log->message,
-                        'timestamp' => $log->invitation_time
+                        'timestamp' => $log->invitation_time,
+                        'is_read' => $log->is_read
                     ];
                 }
             }
@@ -157,8 +161,6 @@ class Notification extends CI_Controller
         $this->load->view('template/content/footer');
     }
 
-
-    // Fungsi-fungsi yang ditambahkan
     public function user_log()
     {
         $user_id = $this->session->userdata('id');
@@ -172,7 +174,6 @@ class Notification extends CI_Controller
         return $query->result();
     }
 
-    // Method untuk mengambil semua log
     public function get_upload_logs()
     {
         $this->db->select('report_log.*, users.username, reports.title as document_name');
@@ -206,5 +207,25 @@ class Notification extends CI_Controller
         $this->db->limit(5);
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function update_notification_status()
+    {
+        $id = $this->input->post('id');
+        $type = $this->input->post('type');
+
+        // Update berdasarkan tipe notifikasi
+        if ($type === 'upload_log') {
+            $this->db->where('id', $id);
+            $this->db->update('report_log', ['is_read' => 1]);
+        } elseif ($type === 'user_read_log') {
+            $this->db->where('log_id', $id);
+            $this->db->update('user_read_logs', ['is_read' => 1]);
+        } elseif ($type === 'invitation_thread_log') {
+            $this->db->where('id', $id);
+            $this->db->update('invitation_thread_log', ['is_read' => 1]);
+        }
+
+        echo json_encode(['status' => 'success']);
     }
 }
