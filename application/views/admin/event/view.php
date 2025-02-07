@@ -7,13 +7,26 @@
                  <!-- Title on the left -->
                  <h6 class="m-0 font-weight-bold" style="color: maroon;">Events Calendar</h6>
 
-                 <a href="#" data-toggle="modal" data-target="#addUserModal" class="btn btn-danger btn-sm btn-icon-split">
-                     <span class="icon text-white-50">
-                         <i class="fas fa-plus"></i>
-                     </span>
-                     <span class="text">New Event</span>
-                 </a>
+                 <!-- Buttons on the right -->
+                 <div class="d-flex gap-2">
+                     <!-- New Event Button -->
+                     <a href="#" data-toggle="modal" data-target="#addUserModal" class="btn btn-danger btn-sm btn-icon-split">
+                         <span class="icon text-white-50">
+                             <i class="fas fa-plus"></i>
+                         </span>
+                         <span class="text">New Event</span>
+                     </a>&nbsp;
+
+                     <!-- List Events Button -->
+                     <a href="<?= site_url('admin/event/list') ?>" class="btn btn-primary btn-sm btn-icon-split">
+                         <span class="icon text-white-50">
+                             <i class="fas fa-list"></i>
+                         </span>
+                         <span class="text">Event list</span>
+                     </a>
+                 </div>
              </div>
+
 
              <div class="card-body">
                  <div id="calendar"></div>
@@ -40,14 +53,14 @@
                      <div class="modal-body">
                          <div class="form-group">
                              <label for="title">Event Name</label>
-                             <input type="text" name="event_name" id="title" class="form-control" required>
+                             <input type="text" name="title" id="title" class="form-control" placeholder="Enter your event name" required>
                          </div>
                          <div class="form-group">
-                             <label for="title">Event Title</label>
-                             <input type="text" name="title" id="title" class="form-control" required>
+                             <label for="title">Event Title <small class="text-danger">*optional</small></label>
+                             <input type="text" name="event_name" id="title" class="form-control" placeholder="Enter your event title">
                          </div>
                          <div class="form-group">
-                             <label for="title">Event Image <small class="text-danger">*opional</small></label>
+                             <label for="title">Event Image <small class="text-danger">*optional</small></label>
                              <input type="file" name="image" class="form-control">
                          </div>
                          <div class="row">

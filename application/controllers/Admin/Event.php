@@ -111,6 +111,93 @@ class Event extends CI_Controller
         $this->load->view('template/cms/footer');
     }
 
+    public function list()
+    {
+        $data['title'] = 'Event List';
+
+        // Memanggil fungsi-fungsi yang ditambahkan
+        $user_logs = $this->user_log();
+        $upload_logs = $this->get_upload_logs();
+        $user_read_logs = $this->get_user_read_logs();
+        $invitation_thread_logs = $this->get_invitation_thread_logs();
+
+        $this->db->select('*');
+        $this->db->from('events');
+        $this->db->order_by('start_date', 'DESC');
+        $query = $this->db->get();
+        $data['events'] = $query->result();
+
+        // Menggabungkan semua log ke dalam satu array
+        $notifications = [];
+
+        foreach ($user_logs as $log) {
+            $notifications[] = [
+                'type' => 'user_log',
+                'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
+                'timestamp' => $log->created_at
+            ];
+        }
+
+        foreach ($upload_logs as $log) {
+            $notifications[] = [
+                'type' => 'upload_log',
+                'message' => $log->username . ' ' . $log->message . '.',
+                'timestamp' => $log->upload_time
+            ];
+        }
+
+        foreach ($user_read_logs as $log_id) {
+            // Anda perlu mengambil detail log berdasarkan log_id jika diperlukan
+            // Misalnya, ambil detail dari tabel user_read_logs
+            $this->db->select('*');
+            $this->db->from('user_read_logs');
+            $this->db->where('log_id', $log_id);
+            $log_detail = $this->db->get()->row();
+
+            if ($log_detail) {
+                $notifications[] = [
+                    'type' => 'user_read_log',
+                    'message' => 'User telah membaca log dengan ID ' . $log_id . '.',
+                    'timestamp' => $log_detail->read_time // Ganti dengan kolom waktu yang sesuai
+                ];
+            }
+        }
+
+        foreach ($invitation_thread_logs as $log) {
+            $user_ids = explode(',', $log->user_id);
+            foreach ($user_ids as $user_id) {
+                $this->db->select('username');
+                $this->db->from('users');
+                $this->db->where('id', $user_id);
+                $user = $this->db->get()->row();
+
+                if ($user) {
+                    $notifications[] = [
+                        'type' => 'invitation_thread_log',
+                        'message' => $user->username . ' ' . $log->message,
+                        'timestamp' => $log->invitation_time
+                    ];
+                }
+            }
+        }
+
+        // Mengurutkan notifikasi berdasarkan timestamp
+        usort($notifications, function ($a, $b) {
+            return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+        });
+
+        // Batasi jumlah notifikasi yang ditampilkan (misalnya 5)
+        $data['notifications'] = array_slice($notifications, 0, 5);
+
+        // Menghitung total notifikasi
+        $data['total_notifications'] = count($notifications);
+
+
+        $this->load->view('template/cms/header', $data);
+        $this->load->view('admin/event/list', $data);
+        $this->load->view('template/cms/footer');
+    }
+
     // Fungsi-fungsi yang ditambahkan
     public function user_log()
     {
@@ -157,35 +244,6 @@ class Event extends CI_Controller
         return $query->result();
     }
 
-    // public function getEvents()
-    // {
-    //     // Ambil tanggal saat ini
-    //     $today = date('Y-m-d');
-
-    //     // Ambil event yang start_date lebih besar atau sama dengan hari ini, dan end_date lebih besar atau sama dengan hari ini
-    //     $this->db->where('start_date >=', $today);
-    //     $this->db->or_where('end_date >=', $today);
-    //     $events = $this->db->get('events')->result();
-
-    //     // Log the events to check if image data is present
-    //     log_message('info', print_r($events, true)); // This will log the events to your log file
-
-    //     $data = [];
-    //     foreach ($events as $event) {
-    //         $data[] = [
-    //             'title'       => $event->title,
-    //             'start'       => $event->start_date,
-    //             'end'         => $event->end_date ? date('Y-m-d', strtotime($event->end_date . ' +1 day')) : null,
-    //             'location'    => $event->location,
-    //             'description' => $event->description,
-    //             'color'       => $event->color,
-    //             'image'       => $event->image // Ensure this is being set
-    //         ];
-    //     }
-
-    //     echo json_encode($data);
-    // }
-
     public function getEvents()
     {
         $this->db->order_by('start_date', 'ASC'); // Urutkan berdasarkan tanggal
@@ -206,62 +264,6 @@ class Event extends CI_Controller
 
         echo json_encode($data);
     }
-
-
-
-    // public function insert()
-    // {
-    //     // Ambil data dari form
-    //     $event_name = $this->input->post('event_name');
-    //     $title = $this->input->post('title');
-    //     $start_date = $this->input->post('start_date');
-    //     $end_date = $this->input->post('end_date');
-    //     $location = $this->input->post('location');
-    //     $description = $this->input->post('description');
-    //     $color = $this->input->post('color');
-
-    //     // Tangani upload gambar
-    //     $image = $_FILES['image']['name'];
-
-    //     // Upload gambar
-    //     if ($image) {
-    //         // Konfigurasi upload untuk gambar
-    //         $config['upload_path'] = './uploads/event/'; // Path untuk gambar
-    //         $config['allowed_types'] = 'jpg|jpeg|png'; // Tipe gambar yang diizinkan
-
-    //         // Inisialisasi library upload dengan konfigurasi
-    //         $this->upload->initialize($config);
-
-    //         // Lakukan upload
-    //         if (!$this->upload->do_upload('image')) {
-    //             // Tangani error upload gambar
-    //             $error = $this->upload->display_errors();
-    //             echo "Error upload gambar: " . $error; // Pesan error dalam bahasa Indonesia
-    //             return;
-    //         } else {
-    //             $image = $this->upload->data('file_name'); // Dapatkan nama file yang diupload
-    //         }
-    //     }
-
-    //     // Siapkan data untuk dimasukkan
-    //     $data = array(
-    //         'event_name' => $event_name,
-    //         'title' => $title,
-    //         'start_date' => $start_date,
-    //         'end_date' => $end_date,
-    //         'location' => $location,
-    //         'description' => $description,
-    //         'color' => $color,
-    //         'image' => $image,
-    //     );
-
-    //     // Masukkan ke database
-    //     $this->db->insert('events', $data);
-
-    //     $this->session->set_flashdata('success', 'Event berhasil ditambahkan.');
-    //     // Redirect atau muat tampilan dengan pesan sukses
-    //     redirect('event'); // Redirect ke halaman yang diinginkan
-    // }
 
     public function insert()
     {
@@ -334,7 +336,8 @@ class Event extends CI_Controller
         // Data yang akan diperbarui
         $data = [
             'title' => $this->input->post('title'),
-            'date' => $this->input->post('date'),
+            'start_date' => $this->input->post('start_date'),
+            'end_date' => $this->input->post('end_date'),
             'location' => $this->input->post('location'),
             'description' => $this->input->post('description')
         ];
@@ -365,7 +368,7 @@ class Event extends CI_Controller
         $this->db->update('events', $data);
 
         $this->session->set_flashdata('success', 'Events update successfully.');
-        redirect('event');
+        redirect('admin/event/list');
     }
 
     // Menghapus event
@@ -383,6 +386,6 @@ class Event extends CI_Controller
         $this->db->delete('events', ['id' => $id]);
 
         $this->session->set_flashdata('success', 'Events delete successfully.');
-        redirect('event');
+        redirect('admin/event/list');
     }
 }
