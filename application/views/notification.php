@@ -152,6 +152,11 @@
 
                         // Show success Toastr notification
                         toastr.success('Notification successfully marked as read.', 'Success!');
+
+                        // Reload the page after a short delay to allow Toastr to display
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000); // Delay 1 detik sebelum reload
                     } else {
                         // Show error Toastr if update fails
                         toastr.error('Failed to update notification status. Please try again later.', 'Update Failed!');
