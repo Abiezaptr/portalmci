@@ -14,6 +14,7 @@ class Home extends CI_Controller
 			redirect('login'); // Ganti 'login' sesuai dengan route halaman login Anda
 		}
 	}
+
 	public function index()
 	{
 		// Fetch the latest videos from the 'videos' table
@@ -66,7 +67,8 @@ class Home extends CI_Controller
 			$relevant_notifications[] = [
 				'type' => 'user_log',
 				'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
-				'timestamp' => $log->created_at
+				'timestamp' => $log->created_at,
+				'is_read' => $log->is_read,
 			];
 		}
 
@@ -78,7 +80,8 @@ class Home extends CI_Controller
 				$relevant_notifications[] = [
 					'type' => 'upload_log',
 					'message' => $log->username . ' ' . $log->message . '.',
-					'timestamp' => $log->upload_time
+					'timestamp' => $log->upload_time,
+					'is_read' => $log->is_read,
 				];
 			}
 		}
@@ -109,7 +112,8 @@ class Home extends CI_Controller
 					$relevant_notifications[] = [
 						'type' => 'invitation_thread_log',
 						'message' => $log->message,
-						'timestamp' => $log->invitation_time
+						'timestamp' => $log->invitation_time,
+						'is_read' => $log->is_read,
 					];
 				}
 			}
@@ -124,7 +128,11 @@ class Home extends CI_Controller
 		$data['notifications'] = array_slice($relevant_notifications, 0, 5);
 
 		// Count only relevant notifications
-		$data['total_relevant_notifications'] = count($relevant_notifications);
+		$unread_notifications = array_filter($relevant_notifications, function ($notification) {
+			return isset($notification['is_read']) && $notification['is_read'] == 0;
+		});
+
+		$data['total_relevant_notifications'] = count($unread_notifications);
 
 		// Load the view with the video data
 		$this->load->view('template/landing/header', $data);

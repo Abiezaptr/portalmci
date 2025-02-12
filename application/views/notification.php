@@ -28,7 +28,7 @@
                 $cursor_style = isset($notification['is_read']) && $notification['is_read'] == 1 ? 'not-allowed' : 'pointer';
 
                 // Warna ikon lingkaran
-                $icon_color = isset($notification['is_read']) && $notification['is_read'] == 1 ? '#0056b3' : '#e7edf0';
+                $icon_color = isset($notification['is_read']) && $notification['is_read'] == 1 ? '#e7edf0' : '#0056b3';
 
                 // Tambahkan animasi jika belum dibaca
                 $icon_animation = isset($notification['is_read']) && $notification['is_read'] == 0 ? 'pulse' : '';
