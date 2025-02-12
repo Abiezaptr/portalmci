@@ -86,7 +86,7 @@
         <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: rgba(128, 0, 0, 1);">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-left" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-left" href="<?= site_url('admin/dashboard') ?>">
                 <div class="sidebar-brand-text mx-3">PORTAL CMS</div>
             </a>
 
