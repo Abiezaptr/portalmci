@@ -20,12 +20,23 @@
                  <!-- Title on the left -->
                  <h6 class="m-0 font-weight-bold" style="color: maroon;">Manage User</h6>
 
-                 <a href="<?= site_url('admin/user/add') ?>" class="btn btn-danger btn-sm btn-icon-split">
-                     <span class="icon text-white-50">
-                         <i class="fas fa-plus"></i>
-                     </span>
-                     <span class="text">New Users</span>
-                 </a>
+                 <div class="d-flex gap-2">
+                     <!-- New Event Button -->
+                     <a href="<?= site_url('admin/user/add') ?>" class="btn btn-danger btn-sm btn-icon-split">
+                         <span class="icon text-white-50">
+                             <i class="fas fa-plus"></i>
+                         </span>
+                         <span class="text">New Users</span>
+                     </a>&nbsp;
+
+                     <!-- Add button on the right -->
+                     <a href="" class="btn btn-success btn-sm btn-icon-split">
+                         <span class="icon text-white-50">
+                             <i class="fa-solid fa-file-arrow-down"></i>
+                         </span>
+                         <span class="text">Download</span>
+                     </a>
+                 </div>
              </div>
 
              <div class="card-body">

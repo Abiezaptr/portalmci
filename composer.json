@@ -12,7 +12,8 @@
 	},
 	"require": {
 		"php": ">=5.3.7",
-		"guzzlehttp/guzzle": "^7.9"
+		"guzzlehttp/guzzle": "^7.9",
+		"phpoffice/phpspreadsheet": "^1.12"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
