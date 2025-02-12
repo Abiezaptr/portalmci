@@ -86,7 +86,7 @@
         <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: rgba(128, 0, 0, 1);">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-left" href="<?= site_url('admin/dashboard') ?>">
+            <a class="sidebar-brand d-flex align-items-center justify-content-left" href="<?= site_url('dashboard') ?>">
                 <div class="sidebar-brand-text mx-3">PORTAL CMS</div>
             </a>
 
@@ -95,7 +95,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="<?= site_url('admin/dashboard') ?>">
+                <a class="nav-link" href="<?= site_url('dashboard') ?>">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
