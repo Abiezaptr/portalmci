@@ -564,7 +564,7 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <a class="navbar-brand" id="brand-title" href="<?= site_url('home') ?>" style="font-size: 17px;"><b>MCI ONLINE REPOSITORY</b></a>
+        <a class="navbar-brand" id="brand-title" href="<?= site_url('home') ?>" style="font-size: 17px;"><b>PORTAL MCI</b></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -588,8 +588,8 @@
 
                 <li class="nav-item">
                     <div id="search-field">
-                        <div class="input-group align-items-center">
-                            <input class="mt-1 form-control" type="text" placeholder="by name or keyword" id="search-input" autocomplete="off" style="font-size: 0.8em;">
+                        <div class="input-group align-items-center" style="width: 300px;">
+                            <input class="mt-1 form-control" type="text" placeholder="by name or keyword" id="search-input" autocomplete="off" style="font-size: 0.8em; width: 230px;">
                             <div class="input-group-append">
                                 <button style="margin-top: 3px; background-color: #a81b1b; color:#f8f9fa; border: none; font-size: 1.2em; padding: 3px 10px;" id="search-button" type="button">
                                     <i class="fas fa-search"></i>

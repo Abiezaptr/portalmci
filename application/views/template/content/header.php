@@ -533,8 +533,8 @@
                 <li class="nav-item">
                     <form action="<?= site_url('home/search_report'); ?>" method="POST">
                         <div id="search-field">
-                            <div class="input-group align-items-center">
-                                <input class="mt-1 form-control" type="text" name="query" placeholder="by name or keyword" autocomplete="off" style="font-size: 0.8em;">
+                            <div class="input-group align-items-center" style="width: 300px;">
+                                <input class="mt-1 form-control" type="text" name="query" placeholder="by name or keyword" autocomplete="off" style="font-size: 0.8em; width: 230px;">
                                 <div class="input-group-append">
                                     <button style="margin-top: 3px; background-color: #a81b1b; color:#f8f9fa; border: none; font-size: 1.2em; padding: 3px 10px;" type="submit">
                                         <i class="fas fa-search"></i>
