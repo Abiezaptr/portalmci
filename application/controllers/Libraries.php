@@ -40,13 +40,8 @@ class Libraries extends CI_Controller
             $this->db->join('users', 'users.id = document.user_id', 'left');
             $this->db->join('user_views', 'user_views.document_id = document.id AND user_views.user_id = ' . $user_id, 'left');
 
-            // if ($role == 2) {
-            //     // Jika role adalah user (2), tambahkan join untuk memeriksa izin pengguna pada dokumen
-            //     $this->db->join('user_document_permissions', 'user_document_permissions.document_id = document.id AND user_document_permissions.user_id = ' . $user_id . ' AND user_document_permissions.status = "open"', 'inner');
-            // }
-
             $this->db->where('document.type_id', $type->id);
-            $this->db->order_by('user_views.last_viewed', 'DESC'); // Urutkan berdasarkan last_viewed secara descending
+            $this->db->order_by('document.upload_date', 'DESC'); // Urutkan berdasarkan last_viewed secara descending
             $documents_by_type[$type->id] = $this->db->get()->result();
 
             // Batasi jumlah dokumen yang dikirim ke view
