@@ -200,9 +200,16 @@
                                 </li>
 
                                 <li class="nk-menu-item">
-                                    <a href="<?= site_url('libraries') ?>" class="nk-menu-link">
+                                    <a href="<?= site_url('home') ?>" class="nk-menu-link">
                                         <span class="nk-menu-icon"><em class="icon ni ni-home"></em></span>
-                                        <span class="nk-menu-text">Home</span>
+                                        <span class="nk-menu-text">Homepage</span>
+                                    </a>
+                                </li>
+
+                                <li class="nk-menu-item">
+                                    <a href="<?= site_url('libraries') ?>" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-file"></em></span>
+                                        <span class="nk-menu-text">Document</span>
                                     </a>
                                 </li>
 
