@@ -30,12 +30,14 @@
                      </a>&nbsp;
 
                      <!-- Add button on the right -->
-                     <a href="" class="btn btn-success btn-sm btn-icon-split">
+                     <a href="<?= site_url('admin/export-data') ?>"
+                         class="btn btn-success btn-sm btn-icon-split">
                          <span class="icon text-white-50">
                              <i class="fa-solid fa-file-arrow-down"></i>
                          </span>
                          <span class="text">Download</span>
                      </a>
+
                  </div>
              </div>
 

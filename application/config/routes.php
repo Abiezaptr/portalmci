@@ -90,6 +90,7 @@ $route['delete/global-videos/(:num)'] = 'admin/globals/delete_videos/$1';
 
 // rute manage user
 $route['manage-user'] = 'admin/user/index';
+$route['admin/export-data'] = 'admin/user/export_excel';
 $route['add-user'] = 'admin/user/insert';
 $route['update-user/(:num)'] = 'admin/user/update/$1';
 $route['delete-user/(:num)'] = 'admin/user/delete/$1';

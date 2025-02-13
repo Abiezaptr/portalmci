@@ -1,6 +1,12 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+require_once FCPATH . 'vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+
 class User extends CI_Controller
 {
 
@@ -333,5 +339,72 @@ class User extends CI_Controller
         }
 
         redirect('manage-user');
+    }
+
+    public function export_excel()
+    {
+        // Membuat objek spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Header kolom
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Name');
+        $sheet->setCellValue('C1', 'Email');
+        $sheet->setCellValue('D1', 'Microsoft ID');
+        $sheet->setCellValue('E1', 'Job Title');
+        $sheet->setCellValue('F1', 'Role');
+        $sheet->setCellValue('G1', 'Status');
+
+        // Ambil data dari tabel users
+        $users = $this->db->get('users')->result();
+
+        $row = 2; // Mulai dari baris kedua (baris pertama untuk header)
+        foreach ($users as $user) {
+            // Cek role dan ubah menjadi teks
+            if ($user->role == 1) {
+                $role_text = 'Superadmin';
+            } elseif ($user->role == 2) {
+                $role_text = 'Guest';
+            } elseif ($user->role == 3) {
+                $role_text = 'Admin Mobile';
+            } elseif ($user->role == 4) {
+                $role_text = 'Admin Fixed';
+            } elseif ($user->role == 5) {
+                $role_text = 'Admin Digital';
+            } elseif ($user->role == 6) {
+                $role_text = 'Admin Global';
+            } else {
+                $role_text = 'Unknown'; // Jika role tidak sesuai
+            }
+
+            // Isi data ke dalam spreadsheet
+            $sheet->setCellValue('A' . $row, $row - 1); // Nomor urut
+            $sheet->setCellValue('B' . $row, $user->username);
+            $sheet->setCellValue('C' . $row, $user->email);
+            $sheet->setCellValue('D' . $row, $user->microsoft_id);
+            $sheet->setCellValue('E' . $row, $user->job_title);
+            $sheet->setCellValue('F' . $row, $role_text); // Tampilkan role sebagai teks
+            $sheet->setCellValue('G' . $row, $user->status);
+            $row++;
+        }
+
+        // Set header untuk download file Excel
+        $filename = 'data_users.xlsx';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        // Bersihkan output buffer
+        ob_clean();
+        flush();
+
+        // Membuat objek writer untuk menyimpan file Excel
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+
+        exit;
     }
 }
