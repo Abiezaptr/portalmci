@@ -18,7 +18,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: maroon;">
-                                        <i class="fa fa-info-circle"></i>&nbsp; Notification
+                                        <i class="fa fa-bell"></i>&nbsp; Notification
                                     </div>
                                     <div class="h7 mb-0">You have <?php if (!empty($nonaktif_count) && $nonaktif_count > 0): ?>
                                             <?= $nonaktif_count ?>
@@ -201,7 +201,7 @@
             <div class="card shadow mb-4">
                 <!-- Card Header -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold" style="color: maroon;">Top 5 Users by Report Access</h6>
+                    <h6 class="m-0 font-weight-bold" style="color: maroon;">Top 5 Accounts by Report Access (This Month)</h6>
                 </div>
 
                 <!-- Card Body -->
@@ -210,52 +210,18 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Username</th>
+                                    <th>Account</th>
                                     <th>Accessed Report</th>
-                                    <!-- <th><i class="fa-solid fa-arrow-up-wide-short"></i></th> -->
+                                    <th><i class="fa-solid fa-clock-rotate-left"></i></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if (!empty($top_users)) : ?>
-                                    <?php foreach ($top_users as $index => $user) : ?>
+                                <?php if (!empty($user_reports)) : ?>
+                                    <?php foreach ($user_reports as $user) : ?>
                                         <tr>
                                             <td><?= htmlspecialchars(ucwords(strtolower($user->username))) ?></td>
-                                            <td>
-                                                <?php
-                                                $max_length = 50; // Max length before truncation
-                                                $reports = $user->accessed_reports ?: 'No reports accessed';
-                                                $short_text = htmlspecialchars(mb_strimwidth($reports, 0, $max_length, '...'));
-                                                ?>
-                                                <a href="#" data-toggle="modal" data-target="#reportModal<?= $index ?>">
-                                                    <?= $short_text ?>
-                                                </a>
-
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="reportModal<?= $index ?>" tabindex="-1" aria-labelledby="modalTitle<?= $index ?>" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="modalTitle<?= $index ?>">Accessed Reports</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <?php if ($user->accessed_reports) : ?>
-                                                                    <ul>
-                                                                        <?php foreach (explode(', ', $user->accessed_reports) as $report) : ?>
-                                                                            <li><?= htmlspecialchars($report) ?></li>
-                                                                        <?php endforeach; ?>
-                                                                    </ul>
-                                                                <?php else : ?>
-                                                                    <p>No reports accessed</p>
-                                                                <?php endif; ?>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <!-- <td><?= $user->total_views + $user->total_downloads ?></td> Total views + downloads -->
+                                            <td><?= htmlspecialchars($user->name) ?></td>
+                                            <td><?= htmlspecialchars($user->view_month_year) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else : ?>

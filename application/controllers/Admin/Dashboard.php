@@ -210,7 +210,7 @@ class Dashboard extends CI_Controller
             ->get('users')
             ->result();
 
-        // **Tambahkan Query untuk Top 10 Report yang Sering Dikunjungi**
+        // Tambahkan Query untuk Top 5 Report yang Sering Dikunjungi
         $data['top_reports'] = $this->db->select('dv.document_id, d.name, COUNT(*) AS visit_count')
             ->from('document_views dv')
             ->join('document d', 'dv.document_id = d.id')
@@ -219,6 +219,18 @@ class Dashboard extends CI_Controller
             ->limit(5)
             ->get()
             ->result();
+
+        $data['user_reports'] = $this->db->select("u.username, d.name, DATE_FORMAT(dv.view_time, '%b %Y') AS view_month_year")
+            ->from('document_views dv')
+            ->join('document d', 'dv.document_id = d.id')
+            ->join('users u', 'dv.user_id = u.id')
+            ->where('MONTH(dv.view_time)', date('m')) // Bulan saat ini
+            ->where('YEAR(dv.view_time)', date('Y'))  // Tahun saat ini
+            ->order_by('dv.view_time', 'DESC')
+            ->limit(5)
+            ->get()
+            ->result();
+
 
 
         // Memanggil fungsi-fungsi yang ditambahkan
