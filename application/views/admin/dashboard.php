@@ -161,6 +161,116 @@
 
     <div class="row">
 
+        <div class="col-xl-6 col-lg-7">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold" style="color: maroon;">Top 5 Most Viewed Reports</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Report Name</th>
+                                    <th><i class="fa-solid fa-arrow-up-wide-short"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($top_reports)) : ?>
+                                    <?php foreach ($top_reports as $report): ?>
+                                        <tr>
+                                            <td><?= $report->name; ?></td>
+                                            <td><?= number_format($report->visit_count) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else : ?>
+                                    <tr>
+                                        <td colspan="7" class="text-center">No reports found.</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-7">
+            <div class="card shadow mb-4">
+                <!-- Card Header -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold" style="color: maroon;">Top 5 Users by Report Access</h6>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Accessed Report</th>
+                                    <!-- <th><i class="fa-solid fa-arrow-up-wide-short"></i></th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($top_users)) : ?>
+                                    <?php foreach ($top_users as $index => $user) : ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars(ucwords(strtolower($user->username))) ?></td>
+                                            <td>
+                                                <?php
+                                                $max_length = 50; // Max length before truncation
+                                                $reports = $user->accessed_reports ?: 'No reports accessed';
+                                                $short_text = htmlspecialchars(mb_strimwidth($reports, 0, $max_length, '...'));
+                                                ?>
+                                                <a href="#" data-toggle="modal" data-target="#reportModal<?= $index ?>">
+                                                    <?= $short_text ?>
+                                                </a>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="reportModal<?= $index ?>" tabindex="-1" aria-labelledby="modalTitle<?= $index ?>" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="modalTitle<?= $index ?>">Accessed Reports</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <?php if ($user->accessed_reports) : ?>
+                                                                    <ul>
+                                                                        <?php foreach (explode(', ', $user->accessed_reports) as $report) : ?>
+                                                                            <li><?= htmlspecialchars($report) ?></li>
+                                                                        <?php endforeach; ?>
+                                                                    </ul>
+                                                                <?php else : ?>
+                                                                    <p>No reports accessed</p>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <!-- <td><?= $user->total_views + $user->total_downloads ?></td> Total views + downloads -->
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else : ?>
+                                    <tr>
+                                        <td colspan="3" class="text-center">No data available</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- Area Chart -->
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
