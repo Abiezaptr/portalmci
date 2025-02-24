@@ -219,7 +219,7 @@
                                 <?php if (!empty($user_reports)) : ?>
                                     <?php foreach ($user_reports as $user) : ?>
                                         <tr>
-                                            <td><?= htmlspecialchars(ucwords(strtolower($user->username))) ?></td>
+                                            <td><?= htmlspecialchars(ucwords(strtolower($user->username))) ?><br><span class="text-danger"><?= htmlspecialchars($user->email) ?></span></td>
                                             <td><?= htmlspecialchars($user->name) ?></td>
                                             <td><?= htmlspecialchars($user->view_month_year) ?></td>
                                         </tr>

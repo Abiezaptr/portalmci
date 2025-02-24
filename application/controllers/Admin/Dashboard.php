@@ -220,7 +220,7 @@ class Dashboard extends CI_Controller
             ->get()
             ->result();
 
-        $data['user_reports'] = $this->db->select("u.username, d.name, DATE_FORMAT(dv.view_time, '%b %Y') AS view_month_year")
+        $data['user_reports'] = $this->db->select("u.username, u.email, d.name, DATE_FORMAT(dv.view_time, '%b %Y') AS view_month_year")
             ->from('document_views dv')
             ->join('document d', 'dv.document_id = d.id')
             ->join('users u', 'dv.user_id = u.id')
