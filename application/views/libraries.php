@@ -135,7 +135,9 @@
                                                                     <!-- Contoh penggunaan dalam template HTML -->
                                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?= $doc->id ?>">
                                                                         <li><a class="dropdown-item download-link" href="<?= base_url('uploads/' . $doc->file) ?>" data-user-id="<?= $this->session->userdata('id') ?>" data-document-id="<?= $doc->id ?>" download>Download</a></li>
-                                                                        <li><a class="dropdown-item download-link" href="<?= base_url('document/update/' . $doc->id) ?>">Update</a></li>
+                                                                        <?php if ($this->session->userdata('role') == 1) : ?>
+                                                                            <li><a class="dropdown-item download-link" href="<?= base_url('document/update/' . $doc->id) ?>">Update</a></li>
+                                                                        <?php endif; ?>
                                                                     </ul>
 
                                                                 </div>

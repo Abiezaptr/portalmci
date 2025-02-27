@@ -18,7 +18,7 @@
 
                               <div class="row g-gs">
                                   <div class="col-md-12" style="width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                                      <iframe id="pdf-iframe" src="<?= base_url('uploads/' . $document->file) ?>#toolbar=0" style="width: 100%; height: 100%; border: none;" frameborder="0" allowfullscreen></iframe>
+                                      <iframe id="pdf-iframe" src="<?= base_url('uploads/' . urlencode($document->file)) ?>#toolbar=0" style="width: 100%; height: 100%; border: none;" frameborder="0" allowfullscreen></iframe>
                                   </div>
                               </div><!-- .row -->
                           </div><!-- .col -->
