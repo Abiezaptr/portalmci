@@ -68,7 +68,7 @@ class Home extends CI_Controller
 				'type' => 'user_log',
 				'message' => $log->username . ' telah berhasil mendaftarkan akun baru.',
 				'timestamp' => $log->created_at,
-				'is_read' => $log->is_read,
+				'is_read' => isset($log->is_read) ? $log->is_read : null,
 			];
 		}
 
@@ -81,7 +81,7 @@ class Home extends CI_Controller
 					'type' => 'upload_log',
 					'message' => $log->username . ' ' . $log->message . '.',
 					'timestamp' => $log->upload_time,
-					'is_read' => $log->is_read,
+					'is_read' => isset($log->is_read) ? $log->is_read : null,
 				];
 			}
 		}
@@ -113,7 +113,7 @@ class Home extends CI_Controller
 						'type' => 'invitation_thread_log',
 						'message' => $log->message,
 						'timestamp' => $log->invitation_time,
-						'is_read' => $log->is_read,
+						'is_read' => isset($log->is_read) ? $log->is_read : null,
 					];
 				}
 			}
@@ -143,16 +143,18 @@ class Home extends CI_Controller
 	// Update the user_log function to filter by the current user
 	public function user_log()
 	{
-		$user_id = $this->session->userdata('id'); // Get the current user's ID
-		$this->db->select('*');
+		$user_id = $this->session->userdata('id'); // Ambil ID user yang sedang login
+		$this->db->select('id, username, created_at, is_read'); // Pilih kolom yang dibutuhkan
 		$this->db->from('users');
-		$this->db->where('users.id', $user_id); // Filter by the current user's ID
-		$this->db->where('users.status', 'NONAKTIF'); // Adding condition for inactive status
-		$this->db->order_by('users.created_at', 'DESC'); // Sort by user creation time
-		$this->db->limit(5); // Get a maximum of 5 entries
+		$this->db->where('users.id', $user_id); // Filter berdasarkan ID user
+		$this->db->where('users.status', 'NONAKTIF'); // Hanya user dengan status NONAKTIF
+		$this->db->order_by('users.created_at', 'DESC'); // Urutkan berdasarkan waktu
+		$this->db->limit(5); // Ambil maksimal 5 data
 		$query = $this->db->get();
-		return $query->result();
+
+		return $query->result(); // Mengembalikan array objek
 	}
+
 
 	// Method untuk mengambil semua log
 	public function get_upload_logs()
