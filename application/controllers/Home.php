@@ -144,7 +144,7 @@ class Home extends CI_Controller
 	public function user_log()
 	{
 		$user_id = $this->session->userdata('id'); // Ambil ID user yang sedang login
-		$this->db->select('id, username, created_at, is_read'); // Pilih kolom yang dibutuhkan
+		$this->db->select('*'); // Pilih kolom yang dibutuhkan
 		$this->db->from('users');
 		$this->db->where('users.id', $user_id); // Filter berdasarkan ID user
 		$this->db->where('users.status', 'NONAKTIF'); // Hanya user dengan status NONAKTIF
