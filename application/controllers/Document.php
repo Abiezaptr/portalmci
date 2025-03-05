@@ -673,4 +673,37 @@ class Document extends CI_Controller
         // Encode array dokumen ke dalam format JSON dan kirimkan sebagai respons
         echo json_encode($documents);
     }
+    public function delete($id)
+    {
+        // Check if the ID is a valid integer
+        if (!is_numeric($id)) {
+            // Set an error message and redirect
+            $this->session->set_flashdata('error', 'Invalid document ID.');
+            redirect('libraries'); // Redirect to the document list page or any other appropriate page
+        }
+
+        // Start a transaction
+        $this->db->trans_start();
+
+        // Perform the deletion
+        $this->db->where('id', $id);
+        $result = $this->db->delete('document');
+
+        // Check if the deletion was successful
+        if ($result) {
+            // Commit the transaction
+            $this->db->trans_complete();
+
+            // Set a success message and redirect
+            $this->session->set_flashdata('success', 'Document deleted successfully.');
+            redirect('libraries'); // Redirect to the document list page or any other appropriate page
+        } else {
+            // Rollback the transaction in case of error
+            $this->db->trans_rollback();
+
+            // Set an error message and redirect
+            $this->session->set_flashdata('error', 'Failed to delete document.');
+            redirect('libraries'); // Redirect to the document list page or any other appropriate page
+        }
+    }
 }
